@@ -133,66 +133,57 @@ function getSampleGalleryItems() {
   return [
     {
       id: 'eg-img-1',
-      title: 'EVER GAIN Indoor Football',
+      title: 'EVER GAIN Turf Match',
       description: '',
       type: 'image',
-      url: 'assets/images/Evergain2.jpg',
-      thumbnail: 'assets/images/Evergain2.jpg',
+      url: 'assets/images/1793521507642_1000025672.jpg',
+      thumbnail: 'assets/images/1793521507642_1000025672.jpg',
       order: 1
     },
     {
       id: 'eg-img-2',
-      title: 'EVER GAIN Indoor Football',
+      title: 'EVER GAIN Arena Pitch',
       description: '',
       type: 'image',
-      url: 'assets/images/Evergain3.jpg',
-      thumbnail: 'assets/images/Evergain3.jpg',
+      url: 'assets/images/1793521696187_1000025671.jpg',
+      thumbnail: 'assets/images/1793521696187_1000025671.jpg',
       order: 2
     },
     {
       id: 'eg-img-3',
-      title: 'EVER GAIN Indoor Football',
+      title: 'Indoor Football Action',
       description: '',
       type: 'image',
-      url: 'assets/images/Evergain4.jpg',
-      thumbnail: 'assets/images/Evergain4.jpg',
+      url: 'assets/images/1793521712602_1000025661.jpg',
+      thumbnail: 'assets/images/1793521712602_1000025661.jpg',
       order: 3
     },
     {
       id: 'eg-img-4',
-      title: 'EVER GAIN Indoor Football',
+      title: 'Turf Night Game',
       description: '',
       type: 'image',
-      url: 'assets/images/Evergain5.jpg',
-      thumbnail: 'assets/images/Evergain5.jpg',
+      url: 'assets/images/1793521726714_1000025663.jpg',
+      thumbnail: 'assets/images/1793521726714_1000025663.jpg',
       order: 4
     },
     {
       id: 'eg-img-5',
-      title: 'EVER GAIN Indoor Football',
+      title: 'Turf Arena Lighting',
       description: '',
       type: 'image',
-      url: 'assets/images/Evergain6.jpg',
-      thumbnail: 'assets/images/Evergain6.jpg',
+      url: 'assets/images/1793521738771_1000025662.jpg',
+      thumbnail: 'assets/images/1793521738771_1000025662.jpg',
       order: 5
     },
     {
       id: 'eg-img-6',
-      title: 'EVER GAIN Indoor Football',
+      title: 'EVER GAIN Sports Facility',
       description: '',
       type: 'image',
-      url: 'assets/images/Evergain7.jpg',
-      thumbnail: 'assets/images/Evergain7.jpg',
+      url: 'assets/images/1793521749075_1000025664.jpg',
+      thumbnail: 'assets/images/1793521749075_1000025664.jpg',
       order: 6
-    },
-    {
-      id: 'eg-img-7',
-      title: 'EVER GAIN Indoor Football',
-      description: '',
-      type: 'image',
-      url: 'assets/images/Evergain8.jpg',
-      thumbnail: 'assets/images/Evergain8.jpg',
-      order: 7
     }
   ];
 }
@@ -255,16 +246,19 @@ function renderGallery(items) {
     const thumbUrl = item.thumbnail || item.url || '';
 
     card.innerHTML = `
-      <div class="gallery-item-inner" style="position: relative; width: 100%; height: 100%;">
+      <div class="gallery-item-inner">
+        <span class="gallery-photo-chip"><i class="fas fa-camera"></i> #${index + 1}</span>
         <img 
           src="${escapeHtml(thumbUrl)}" 
           alt="${escapeHtml(item.title || 'EVER GAIN Turf')}" 
           class="gallery-img"
           loading="lazy"
-          onerror="if (!this.dataset.fallbackTried && this.getAttribute('src') && this.getAttribute('src').indexOf('assets/images/') !== -1) { this.dataset.fallbackTried = '1'; this.src = 'https://raw.githubusercontent.com/srpshouro/Ever-gain-/main/' + this.getAttribute('src'); }"
+          onerror="if (!this.dataset.fallbackTried && this.getAttribute('src') && this.getAttribute('src').indexOf('assets/images/') !== -1) { this.dataset.fallbackTried = '1'; this.src = 'https://raw.githubusercontent.com/srpshouro/Ever-gain-demo/main/' + this.getAttribute('src'); }"
         >
+        <div class="gallery-gradient-overlay" aria-hidden="true"></div>
         <div class="gallery-hover-indicator" aria-hidden="true">
-          <i class="fas fa-expand"></i>
+          <i class="fas fa-magnifying-glass-plus"></i>
+          <span>View Photo</span>
         </div>
       </div>
     `;

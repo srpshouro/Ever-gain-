@@ -54,6 +54,7 @@
       this.adminSidebar = document.getElementById('adminSidebar');
       this.sidebarBackdrop = document.getElementById('sidebarBackdrop');
       this.adminSidebarToggle = document.getElementById('adminSidebarToggle');
+      this.adminSidebarCloseBtn = document.getElementById('adminSidebarCloseBtn');
 
       // Auth elements
       this.loginForm = document.getElementById('adminLoginForm');
@@ -126,10 +127,18 @@
         });
       }
 
-      // 4. Sidebar Toggle (Mobile)
+      // 4. Sidebar Toggle & Mobile Navigation
       if (this.adminSidebarToggle && this.adminSidebar) {
-        this.adminSidebarToggle.addEventListener('click', function () {
+        this.adminSidebarToggle.addEventListener('click', function (e) {
+          e.stopPropagation();
           self.toggleSidebar();
+        });
+      }
+
+      if (this.adminSidebarCloseBtn) {
+        this.adminSidebarCloseBtn.addEventListener('click', function (e) {
+          e.stopPropagation();
+          self.closeSidebar();
         });
       }
 
@@ -146,6 +155,9 @@
           e.preventDefault();
           const tabName = this.getAttribute('data-tab');
           self.switchTab(tabName);
+          if (window.innerWidth <= 992) {
+            self.closeSidebar();
+          }
         });
       });
 
@@ -617,26 +629,36 @@
 
     toggleSidebar() {
       if (!this.adminSidebar) return;
-      const isOpen = this.adminSidebar.classList.contains('mobile-open');
+      const isOpen = this.adminSidebar.classList.contains('mobile-open') ||
+                     this.adminSidebar.classList.contains('active') ||
+                     this.adminSidebar.classList.contains('open');
       if (isOpen) {
         this.closeSidebar();
       } else {
-        this.adminSidebar.classList.add('mobile-open');
-        if (this.sidebarBackdrop) {
-          this.sidebarBackdrop.classList.add('active');
-          this.sidebarBackdrop.classList.remove('hidden');
-        }
+        this.openSidebar();
       }
+    },
+
+    openSidebar() {
+      if (this.adminSidebar) {
+        this.adminSidebar.classList.add('mobile-open', 'active', 'open');
+      }
+      if (this.sidebarBackdrop) {
+        this.sidebarBackdrop.classList.add('active');
+        this.sidebarBackdrop.classList.remove('hidden');
+      }
+      document.body.classList.add('sidebar-locked');
     },
 
     closeSidebar() {
       if (this.adminSidebar) {
-        this.adminSidebar.classList.remove('mobile-open');
+        this.adminSidebar.classList.remove('mobile-open', 'active', 'open');
       }
       if (this.sidebarBackdrop) {
         this.sidebarBackdrop.classList.remove('active');
         this.sidebarBackdrop.classList.add('hidden');
       }
+      document.body.classList.remove('sidebar-locked');
     },
 
     // =======================================================================
@@ -1885,10 +1907,7 @@
                 </button>
               </div>
               <div>
-                <button type="button" class="btn btn-sm btn-secondary" onclick="AdminApp.editMediaModal('${item.id}')" title="Edit">
-                  <i class="fas fa-edit"></i>
-                </button>
-                <button type="button" class="btn btn-sm btn-danger" onclick="AdminApp.deleteMedia('${item.id}', '${item.githubPath || item.storagePath || ''}')" title="Delete">
+                <button type="button" class="btn btn-sm btn-danger" onclick="AdminApp.deleteMedia('${item.id}', '${item.githubPath || item.storagePath || ''}')" title="Delete Photo">
                   <i class="fas fa-trash"></i>
                 </button>
               </div>
@@ -2507,13 +2526,12 @@
           };
 
           const defaultGallery = {
-            item_1: { title: 'EVER GAIN Turf', description: '', type: 'image', url: 'assets/images/Evergain2.jpg', thumbnail: 'assets/images/Evergain2.jpg', order: 1, createdAt: Date.now() },
-            item_2: { title: 'EVER GAIN Turf', description: '', type: 'image', url: 'assets/images/Evergain3.jpg', thumbnail: 'assets/images/Evergain3.jpg', order: 2, createdAt: Date.now() },
-            item_3: { title: 'EVER GAIN Turf', description: '', type: 'image', url: 'assets/images/Evergain4.jpg', thumbnail: 'assets/images/Evergain4.jpg', order: 3, createdAt: Date.now() },
-            item_4: { title: 'EVER GAIN Turf', description: '', type: 'image', url: 'assets/images/Evergain5.jpg', thumbnail: 'assets/images/Evergain5.jpg', order: 4, createdAt: Date.now() },
-            item_5: { title: 'EVER GAIN Turf', description: '', type: 'image', url: 'assets/images/Evergain6.jpg', thumbnail: 'assets/images/Evergain6.jpg', order: 5, createdAt: Date.now() },
-            item_6: { title: 'EVER GAIN Turf', description: '', type: 'image', url: 'assets/images/Evergain7.jpg', thumbnail: 'assets/images/Evergain7.jpg', order: 6, createdAt: Date.now() },
-            item_7: { title: 'EVER GAIN Turf', description: '', type: 'image', url: 'assets/images/Evergain8.jpg', thumbnail: 'assets/images/Evergain8.jpg', order: 7, createdAt: Date.now() }
+            item_1: { title: 'EVER GAIN Turf Arena', description: 'FIFA-standard high-performance artificial grass surface under daylight', type: 'image', url: 'assets/images/1793521507642_1000025672.jpg', thumbnail: 'assets/images/1793521507642_1000025672.jpg', order: 1, createdAt: Date.now() },
+            item_2: { title: 'Night Match Atmosphere', description: 'High-lux LED floodlights delivering daytime clarity for midnight football', type: 'image', url: 'assets/images/1793521696187_1000025671.jpg', thumbnail: 'assets/images/1793521696187_1000025671.jpg', order: 2, createdAt: Date.now() },
+            item_3: { title: 'Pro Perimeter & Goalpost', description: 'Safety nets, padded sideboards, and heavy-duty goalposts', type: 'image', url: 'assets/images/1793521712602_1000025661.jpg', thumbnail: 'assets/images/1793521712602_1000025661.jpg', order: 3, createdAt: Date.now() },
+            item_4: { title: 'Championship Pitch', description: 'Smooth, shock-absorbent infill preventing ankle injuries', type: 'image', url: 'assets/images/1793521726714_1000025663.jpg', thumbnail: 'assets/images/1793521726714_1000025663.jpg', order: 4, createdAt: Date.now() },
+            item_5: { title: 'Spectator Lounge & Sideview', description: 'Clear viewing gallery with dugout seating for teams', type: 'image', url: 'assets/images/1793521738771_1000025662.jpg', thumbnail: 'assets/images/1793521738771_1000025662.jpg', order: 5, createdAt: Date.now() },
+            item_6: { title: 'Arena Aerial & Perspective', description: 'Full pitch dimensions crafted for high-tempo 5-a-side and 7-a-side matches', type: 'image', url: 'assets/images/1793521749075_1000025664.jpg', thumbnail: 'assets/images/1793521749075_1000025664.jpg', order: 6, createdAt: Date.now() }
           };
 
           const updates = {
