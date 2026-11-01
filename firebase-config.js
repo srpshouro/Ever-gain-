@@ -1127,7 +1127,7 @@
 
       // Contact Page
       contactTitle: 'Contact & Location',
-      contactSubtitle: 'Get in touch with EVER GAIN Indoor Football Arena or get turn-by-turn directions',
+      contactSubtitle: 'Get in touch with EVER GAIN Avenue Indoor Football Turf or get turn-by-turn directions',
       cardHoursTitle: 'Business Hours',
       cardHoursDesc: 'Open round the clock for football',
       formTitle: 'Send Us a Message',
@@ -1136,15 +1136,15 @@
 
       // Gallery Page
       galleryTitle: 'Our Gallery',
-      gallerySubtitle: 'Photos and match highlight videos of EVER GAIN Arena',
+      gallerySubtitle: 'Photos and match highlight videos of EVER GAIN Avenue',
       filterAll: 'All',
       filterImages: 'Photos',
       filterVideos: 'Videos',
       emptyGalleryMsg: 'No media items added yet',
 
       // New Ultra-Premium Homepage Additions
-      heroLivePill: '🟢 LIVE ARENA: OPEN 24/7 • PREMIUM ARTIFICIAL TURF • INSTANT CONFIRMATION',
-      heroTourBtn: 'Arena Video Tour',
+      heroLivePill: '🟢 EVERGAIN AVENUE: OPEN 24/7 • PREMIUM ARTIFICIAL TURF • INSTANT CONFIRMATION',
+      heroTourBtn: 'Avenue Video Tour',
       badgeRating: '4.9/5 Rating (500+ Happy Teams)',
       badgeTurf: 'Premium Quality Shock-Pad Turf (Zero Injury)',
       badgeLight: '4K Ultra HD Anti-Glare Lights (Flicker-Free)',
