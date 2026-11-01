@@ -100,21 +100,15 @@
   <header class="section gallery-header text-center">
     <div class="container">
       <div class="badge badge-available mb-2 animate-in">
-        <i class="fas fa-camera-retro"></i> <span>ফটো ও ভিডিও গ্যালারি</span>
+        <i class="fas fa-camera-retro"></i> <span>ফটো গ্যালারি</span>
       </div>
       <h1 class="section-title animate-in" data-i18n="galleryTitle">আমাদের গ্যালারি</h1>
-      <p class="section-subtitle animate-in" data-i18n="gallerySubtitle">EVER GAIN ইনডোর ফুটবল গ্রাউন্ডের ছবি ও ভিডিও</p>
+      <p class="section-subtitle animate-in" data-i18n="gallerySubtitle">EVER GAIN ইনডোর ফুটবল গ্রাউন্ডের এক্সক্লুসিভ ছবি</p>
 
       <!-- Filter Buttons -->
       <div class="gallery-filter animate-in" id="galleryFilter" role="tablist" aria-label="গ্যালারি ফিল্টার">
         <button type="button" class="gallery-filter-btn active" data-filter="all" role="tab" aria-selected="true">
-          <i class="fas fa-border-all"></i> <span data-i18n="filterAll">সব</span>
-        </button>
-        <button type="button" class="gallery-filter-btn" data-filter="image" role="tab" aria-selected="false">
-          <i class="fas fa-image"></i> <span data-i18n="filterImages">ছবি</span>
-        </button>
-        <button type="button" class="gallery-filter-btn" data-filter="video" role="tab" aria-selected="false">
-          <i class="fas fa-play-circle"></i> <span data-i18n="filterVideos">ভিডিও</span>
+          <i class="fas fa-images"></i> <span data-i18n="filterAll">সকল ছবি</span>
         </button>
       </div>
     </div>
@@ -140,10 +134,10 @@
       <!-- Empty State -->
       <div class="card card-premium text-center hidden" id="emptyState">
         <div class="card-icon">
-          <i class="fas fa-photo-film"></i>
+          <i class="fas fa-images"></i>
         </div>
         <h3 class="card-title" data-i18n="emptyGalleryMsg">গ্যালারিতে এখনো কিছু যোগ করা হয়নি</h3>
-        <p class="card-text">আমরা খুব শীঘ্রই নতুন ছবি ও ম্যাচ হাইলাইটস ভিডিও আপলোড করব। নিয়মিত আপডেট পেতে আমাদের সাথেই থাকুন!</p>
+        <p class="card-text">আমরা খুব শীঘ্রই নতুন ছবি আপলোড করব। নিয়মিত আপডেট পেতে আমাদের সাথেই থাকুন!</p>
         <button type="button" class="btn btn-secondary btn-sm mt-2" id="emptyRefreshBtn">
           <i class="fas fa-rotate-right"></i> পুনরায় লোড করুন
         </button>
@@ -168,11 +162,7 @@
 
       <div class="lightbox-content-box">
         <div class="lightbox-media-wrapper" id="lightboxMediaWrapper">
-          <img class="lightbox-img" id="lightboxImg" src="" alt="গ্যালারি মিডিয়া">
-          <div class="lightbox-video-container hidden" id="lightboxVideoContainer">
-            <video class="lightbox-video" id="lightboxVideo" controls playsinline preload="metadata"></video>
-            <iframe class="lightbox-iframe hidden" id="lightboxIframe" title="গ্যালারি ভিডিও" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-          </div>
+          <img class="lightbox-img" id="lightboxImg" src="" alt="গ্যালারি ছবি">
         </div>
 
         <div class="lightbox-details">

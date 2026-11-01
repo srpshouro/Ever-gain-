@@ -75,7 +75,7 @@ function loadGallery() {
               id: childSnap.key,
               title: data.title || 'ইনডোর ফুটবল',
               description: data.description || '',
-              type: data.type === 'video' ? 'video' : 'image',
+              type: 'image',
               url: data.url || '',
               thumbnail: data.thumbnail || data.url || '',
               order: typeof data.order === 'number' ? data.order : 999,
@@ -247,31 +247,25 @@ function renderGallery(items) {
     const card = document.createElement('div');
     card.className = `gallery-item animate-in stagger-${(index % 6) + 1}`;
     card.setAttribute('data-index', index);
-    card.setAttribute('data-type', item.type);
+    card.setAttribute('data-type', 'image');
     card.setAttribute('role', 'button');
     card.setAttribute('tabindex', '0');
-    card.setAttribute('aria-label', `${item.title} (${item.type === 'video' ? 'ভিডিও' : 'ছবি'})`);
+    card.setAttribute('aria-label', `${item.title || 'ছবি'}`);
 
-    const isVideo = item.type === 'video';
-    const thumbUrl = item.thumbnail || item.url;
+    const thumbUrl = item.thumbnail || item.url || '';
 
     card.innerHTML = `
       <div class="gallery-item-inner" style="position: relative; width: 100%; height: 100%;">
         <img 
           src="${escapeHtml(thumbUrl)}" 
-          alt="EVER GAIN Indoor Ground" 
+          alt="${escapeHtml(item.title || 'EVER GAIN Turf')}" 
           class="gallery-img"
           loading="lazy"
+          onerror="if (!this.dataset.fallbackTried && this.getAttribute('src') && this.getAttribute('src').indexOf('assets/images/') !== -1) { this.dataset.fallbackTried = '1'; this.src = 'https://raw.githubusercontent.com/srpshouro/Ever-gain-/main/' + this.getAttribute('src'); }"
         >
-        ${isVideo ? `
-          <div class="gallery-play-btn" aria-hidden="true">
-            <i class="fas fa-play"></i>
-          </div>
-        ` : `
-          <div class="gallery-hover-indicator" aria-hidden="true">
-            <i class="fas fa-expand"></i>
-          </div>
-        `}
+        <div class="gallery-hover-indicator" aria-hidden="true">
+          <i class="fas fa-expand"></i>
+        </div>
       </div>
     `;
 
@@ -307,9 +301,6 @@ function openLightbox(index) {
   const item = currentFilteredItems[validIndex];
   const lightbox = document.getElementById('lightbox');
   const lightboxImg = document.getElementById('lightboxImg');
-  const lightboxVideoContainer = document.getElementById('lightboxVideoContainer');
-  const lightboxVideo = document.getElementById('lightboxVideo');
-  const lightboxIframe = document.getElementById('lightboxIframe');
   const lightboxTitle = document.getElementById('lightboxTitle');
   const lightboxCaption = document.getElementById('lightboxCaption');
   const lightboxCounter = document.getElementById('lightboxCounter');
@@ -317,65 +308,25 @@ function openLightbox(index) {
   if (!lightbox) return;
 
   // Set titles & captions (clean view, no text on photos)
-  if (lightboxTitle) lightboxTitle.textContent = '';
-  if (lightboxCaption) lightboxCaption.textContent = '';
+  if (lightboxTitle) lightboxTitle.textContent = item.title || '';
+  if (lightboxCaption) lightboxCaption.textContent = item.description || '';
   if (lightboxCounter) {
     const curNum = toBengaliNumber(validIndex + 1);
     const totalNum = toBengaliNumber(currentFilteredItems.length);
     lightboxCounter.textContent = `${curNum}/${totalNum}`;
   }
 
-  // Handle Video vs Image display
-  if (item.type === 'video') {
-    if (lightboxImg) {
-      lightboxImg.classList.add('hidden');
-      lightboxImg.src = '';
-    }
-    if (lightboxVideoContainer) lightboxVideoContainer.classList.remove('hidden');
-
-    const ytId = extractYouTubeId(item.url);
-    if (ytId) {
-      // YouTube Embed Video
-      if (lightboxVideo) {
-        lightboxVideo.pause();
-        lightboxVideo.classList.add('hidden');
-        lightboxVideo.src = '';
+  // Display Image
+  if (lightboxImg) {
+    lightboxImg.classList.remove('hidden');
+    lightboxImg.src = item.url || item.thumbnail || '';
+    lightboxImg.alt = item.title || 'গ্যালারি ছবি';
+    lightboxImg.onerror = function () {
+      if (!this.dataset.fallbackTried && this.getAttribute('src') && this.getAttribute('src').indexOf('assets/images/') !== -1) {
+        this.dataset.fallbackTried = '1';
+        this.src = 'https://raw.githubusercontent.com/srpshouro/Ever-gain-/main/' + this.getAttribute('src');
       }
-      if (lightboxIframe) {
-        lightboxIframe.classList.remove('hidden');
-        lightboxIframe.src = `https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0`;
-      }
-    } else {
-      // HTML5 Direct Video (mp4, webm)
-      if (lightboxIframe) {
-        lightboxIframe.classList.add('hidden');
-        lightboxIframe.src = '';
-      }
-      if (lightboxVideo) {
-        lightboxVideo.classList.remove('hidden');
-        lightboxVideo.src = item.url;
-        lightboxVideo.load();
-        lightboxVideo.play().catch(e => console.log('Autoplay blocked:', e));
-      }
-    }
-  } else {
-    // Standard Image
-    if (lightboxVideo) {
-      lightboxVideo.pause();
-      lightboxVideo.classList.add('hidden');
-      lightboxVideo.src = '';
-    }
-    if (lightboxIframe) {
-      lightboxIframe.classList.add('hidden');
-      lightboxIframe.src = '';
-    }
-    if (lightboxVideoContainer) lightboxVideoContainer.classList.add('hidden');
-
-    if (lightboxImg) {
-      lightboxImg.classList.remove('hidden');
-      lightboxImg.src = item.url;
-      lightboxImg.alt = item.title || 'গ্যালারি ছবি';
-    }
+    };
   }
 
   // Show Lightbox and freeze body scrolling
@@ -385,22 +336,12 @@ function openLightbox(index) {
 }
 
 /**
- * Close Lightbox viewer and stop any media playback
+ * Close Lightbox viewer
  */
 function closeLightbox() {
   const lightbox = document.getElementById('lightbox');
-  const lightboxVideo = document.getElementById('lightboxVideo');
-  const lightboxIframe = document.getElementById('lightboxIframe');
   const lightboxImg = document.getElementById('lightboxImg');
 
-  if (lightboxVideo) {
-    lightboxVideo.pause();
-    lightboxVideo.currentTime = 0;
-    lightboxVideo.src = '';
-  }
-  if (lightboxIframe) {
-    lightboxIframe.src = '';
-  }
   if (lightboxImg) {
     lightboxImg.src = '';
   }

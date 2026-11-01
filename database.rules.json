@@ -1,0 +1,68 @@
+{
+  "rules": {
+    "admins": {
+      ".read": "auth != null && (root.child('admins').child(auth.uid).exists() || !root.child('admins').exists())",
+      "$uid": {
+        ".write": "auth != null && (root.child('admins').child(auth.uid).exists() || (!root.child('admins').exists() && auth.uid === $uid))"
+      }
+    },
+    "settings": {
+      ".read": true,
+      ".write": "auth != null && root.child('admins').child(auth.uid).exists()"
+    },
+    "pricing": {
+      ".read": true,
+      ".write": "auth != null && root.child('admins').child(auth.uid).exists()"
+    },
+    "slots": {
+      ".read": true,
+      ".write": "auth != null && root.child('admins').child(auth.uid).exists()"
+    },
+    "availability": {
+      ".read": true,
+      ".write": "auth != null && root.child('admins').child(auth.uid).exists()"
+    },
+    "blockedDates": {
+      ".read": true,
+      ".write": "auth != null && root.child('admins').child(auth.uid).exists()"
+    },
+    "workingDays": {
+      ".read": true,
+      ".write": "auth != null && root.child('admins').child(auth.uid).exists()"
+    },
+    "gallery": {
+      ".read": true,
+      ".write": "auth != null && root.child('admins').child(auth.uid).exists()",
+      ".indexOn": ["order", "createdAt"]
+    },
+    "rules": {
+      ".read": true,
+      ".write": "auth != null && root.child('admins').child(auth.uid).exists()",
+      ".indexOn": ["order"]
+    },
+    "bookings": {
+      ".read": true,
+      ".indexOn": ["date", "customerPhone", "status"],
+      "$bookingId": {
+        ".write": "(auth != null && root.child('admins').child(auth.uid).exists()) || (!data.exists() && newData.exists() && newData.child('status').val() === 'pending')",
+        ".validate": "newData.hasChildren(['customerName', 'customerPhone', 'session', 'slotId', 'status', 'createdAt'])"
+      }
+    },
+    "permanentBookings": {
+      ".read": true,
+      ".indexOn": ["weekday", "customerPhone", "status"],
+      "$bookingId": {
+        ".write": "(auth != null && root.child('admins').child(auth.uid).exists()) || (!data.exists() && newData.exists() && newData.child('status').val() === 'pending')",
+        ".validate": "newData.hasChildren(['customerName', 'customerPhone', 'session', 'slotId', 'weekday', 'status', 'createdAt'])"
+      }
+    },
+    "contactMessages": {
+      ".read": "auth != null && root.child('admins').child(auth.uid).exists()",
+      ".indexOn": ["createdAt"],
+      "$messageId": {
+        ".write": "(auth != null && root.child('admins').child(auth.uid).exists()) || (!data.exists() && newData.exists())",
+        ".validate": "newData.hasChildren(['name', 'phone', 'message'])"
+      }
+    }
+  }
+}

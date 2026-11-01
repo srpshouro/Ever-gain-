@@ -1820,10 +1820,9 @@
           e.preventDefault();
           const title = document.getElementById('galleryTitleInput').value.trim();
           const desc = document.getElementById('galleryDescInput').value.trim();
-          const type = document.getElementById('galleryTypeSelect').value;
           const directUrl = document.getElementById('galleryUrlFallback').value.trim();
 
-          self.uploadMedia(self.selectedFileToUpload, title, desc, type, directUrl);
+          self.uploadMedia(self.selectedFileToUpload, title, desc, directUrl);
         });
       }
     },
@@ -1867,7 +1866,7 @@
       if (!grid) return;
 
       if (this.gallery.length === 0) {
-        grid.innerHTML = '<p class="form-hint text-center py-4">গ্যালারিতে এখনও কোন ছবি বা ভিডিও যুক্ত করা হয়নি</p>';
+        grid.innerHTML = '<p class="form-hint text-center py-4">গ্যালারিতে এখনও কোন ছবি যুক্ত করা হয়নি</p>';
         return;
       }
 
@@ -1875,19 +1874,19 @@
       const self = this;
 
       this.gallery.forEach(function (item, index) {
-        const title = self.escapeHtml(item.title || 'শিরোনামহীন');
+        const title = self.escapeHtml(item.title || 'ছবি');
         const desc = self.escapeHtml(item.description || '');
-        const isVideo = item.type === 'video';
-        const mediaPreview = isVideo
-          ? `<div style="height: 140px; background: #000; display:flex; align-items:center; justify-content:center; border-radius: var(--radius-sm);"><i class="fas fa-video fa-2x text-primary"></i></div>`
-          : `<img src="${item.url || 'assets/images/placeholder.jpg'}" alt="${title}" style="width: 100%; height: 140px; object-fit: cover; border-radius: var(--radius-sm);">`;
+        const imgSrc = item.url || item.thumbnail || 'assets/images/Evergain2.jpg';
+        const rawFallback = item.rawUrl || ('https://raw.githubusercontent.com/srpshouro/Ever-gain-/main/' + imgSrc);
+
+        const mediaPreview = `<img src="${imgSrc}" alt="${title}" onerror="if (!this.dataset.fallbackTried && this.getAttribute('src') && this.getAttribute('src').indexOf('assets/images/') !== -1) { this.dataset.fallbackTried = '1'; this.src = '${rawFallback}'; }" style="width: 100%; height: 140px; object-fit: cover; border-radius: var(--radius-sm);">`;
 
         html += `
           <div class="card card-premium media-item-card" style="padding: 0.75rem;">
             ${mediaPreview}
             <div class="mt-2">
               <strong style="font-size: 0.95rem; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${title}</strong>
-              <small class="text-muted">${isVideo ? 'ভিডিও' : 'ছবি'} • ক্রম: ${self.bengaliNum(index + 1)}</small>
+              <small class="text-muted">ছবি • ক্রম: ${self.bengaliNum(index + 1)}</small>
             </div>
             <div class="action-buttons mt-3 d-flex justify-between">
               <div>
@@ -1902,7 +1901,7 @@
                 <button type="button" class="btn btn-sm btn-secondary" onclick="AdminApp.editMediaModal('${item.id}')" title="সম্পাদনা">
                   <i class="fas fa-edit"></i>
                 </button>
-                <button type="button" class="btn btn-sm btn-danger" onclick="AdminApp.deleteMedia('${item.id}', '${item.storagePath || ''}')" title="মুছে ফেলুন">
+                <button type="button" class="btn btn-sm btn-danger" onclick="AdminApp.deleteMedia('${item.id}', '${item.githubPath || item.storagePath || ''}')" title="মুছে ফেলুন">
                   <i class="fas fa-trash"></i>
                 </button>
               </div>
@@ -1915,47 +1914,95 @@
       grid.innerHTML = html;
     },
 
-    uploadMedia(file, title, desc, type, directUrl) {
+    uploadMedia(file, title, desc, directUrl) {
       const self = this;
       const uploadBtn = document.getElementById('galleryUploadBtn');
 
       if (!file && !directUrl) {
-        this.toast('একটি ফাইল নির্বাচন করুন অথবা সরাসরি লিঙ্ক প্রদান করুন', 'warning');
+        this.toast('একটি ছবি ফাইল নির্বাচন করুন অথবা সরাসরি লিঙ্ক প্রদান করুন', 'warning');
         return;
       }
 
-      self.setButtonLoading(uploadBtn, true, 'আপলোড হচ্ছে...');
+      self.setButtonLoading(uploadBtn, true, 'GitHub-এ আপলোড হচ্ছে...');
 
-      const db = window.db || (typeof firebase !== 'undefined' && firebase.database ? firebase.database() : null);
-      const storage = window.storage || (typeof firebase !== 'undefined' && firebase.storage ? firebase.storage() : null);
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          try {
+            const resultStr = e.target.result;
+            const base64Data = resultStr.split(',')[1];
+            const cleanName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+            const targetFileName = Date.now() + '_' + cleanName;
+            let token = localStorage.getItem('eg_github_token');
+            if (!token) {
+              token = prompt('GitHub assets/images ফোল্ডারে ছবি আপলোড করতে আপনার GitHub Personal Access Token দিন:');
+              if (token && token.trim()) {
+                token = token.trim();
+                localStorage.setItem('eg_github_token', token);
+              } else {
+                self.setButtonLoading(uploadBtn, false, 'গ্যালারিতে যোগ করুন');
+                self.toast('GitHub Token ছাড়া সরাসরি রিপোজিটরিতে ছবি সেভ করা যাবে না', 'warning');
+                return;
+              }
+            }
 
-      if (file && storage) {
-        const storagePath = `gallery/${Date.now()}_${file.name.replace(/[^\w.-]/g, '_')}`;
-        const storageRef = storage.ref(storagePath);
+            const owner = 'srpshouro';
+            const repo = 'Ever-gain-demo';
+            const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${targetPath}`;
 
-        storageRef.put(file).then(function (snapshot) {
-          return snapshot.ref.getDownloadURL();
-        }).then(function (downloadUrl) {
-          self.saveMediaToDatabase(downloadUrl, title, desc, type, storagePath);
-        }).catch(function (error) {
-          console.error('[Admin] Storage upload error:', error);
-          // If storage bucket isn't configured, fallback gracefully if directUrl is present
-          if (directUrl) {
-            self.saveMediaToDatabase(directUrl, title, desc, type, '');
-          } else {
+            fetch(apiUrl, {
+              method: 'PUT',
+              headers: {
+                'Authorization': 'token ' + token,
+                'Content-Type': 'application/json',
+                'Accept': 'application/vnd.github.v3+json'
+              },
+              body: JSON.stringify({
+                message: 'Upload gallery image: ' + targetFileName,
+                content: base64Data,
+                branch: 'main'
+              })
+            })
+            .then(function (res) {
+              if (!res.ok) {
+                return res.json().then(function (errData) {
+                  throw new Error(errData.message || ('GitHub Status ' + res.status));
+                });
+              }
+              return res.json();
+            })
+            .then(function (data) {
+              const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/main/${targetPath}`;
+              self.saveMediaToDatabase(targetPath, rawUrl, title, desc, targetPath);
+            })
+            .catch(function (error) {
+              console.error('[Admin] GitHub Upload Error:', error);
+              if (directUrl) {
+                self.saveMediaToDatabase(directUrl, directUrl, title, desc, '');
+              } else {
+                self.setButtonLoading(uploadBtn, false, 'গ্যালারিতে যোগ করুন');
+                self.toast('GitHub-এ ছবি আপলোড ব্যর্থ: ' + error.message, 'error');
+              }
+            });
+          } catch (err) {
             self.setButtonLoading(uploadBtn, false, 'গ্যালারিতে যোগ করুন');
-            self.toast('ফাইল আপলোড ব্যর্থ হয়েছে। সরাসরি ইমেজ লিঙ্ক প্রদান করুন।', 'error');
+            console.error('[Admin] Processing error:', err);
+            self.toast('ফাইল প্রক্রিয়াকরণে সমস্যা হয়েছে', 'error');
           }
-        });
+        };
+
+        reader.onerror = function () {
+          self.setButtonLoading(uploadBtn, false, 'গ্যালারিতে যোগ করুন');
+          self.toast('ফাইল পড়তে সমস্যা হয়েছে', 'error');
+        };
+
+        reader.readAsDataURL(file);
       } else if (directUrl) {
-        self.saveMediaToDatabase(directUrl, title, desc, type, '');
-      } else {
-        self.setButtonLoading(uploadBtn, false, 'গ্যালারিতে যোগ করুন');
-        self.toast('ডাটাবেজ বা স্টোরেজ অনুপলব্ধ', 'error');
+        self.saveMediaToDatabase(directUrl, directUrl, title, desc, '');
       }
     },
 
-    saveMediaToDatabase(url, title, desc, type, storagePath) {
+    saveMediaToDatabase(url, rawUrl, title, desc, githubPath) {
       const self = this;
       const db = window.db || (typeof firebase !== 'undefined' && firebase.database ? firebase.database() : null);
       const uploadBtn = document.getElementById('galleryUploadBtn');
@@ -1969,10 +2016,11 @@
       const mediaItem = {
         id: newRef.key,
         url: url,
+        rawUrl: rawUrl || url,
         title: title,
         description: desc || '',
-        type: type || 'image',
-        storagePath: storagePath || '',
+        type: 'image',
+        githubPath: githubPath || '',
         order: this.gallery.length + 1,
         createdAt: Date.now()
       };
@@ -1984,32 +2032,60 @@
         if (form) form.reset();
         const fileDisplay = document.getElementById('fileSelectedDisplay');
         if (fileDisplay) fileDisplay.classList.add('hidden');
-        self.toast('গ্যালারি আইটেম সফলভাবে যোগ হয়েছে!', 'success');
+        self.toast('ছবি সফলভাবে GitHub assets/images ফোল্ডার ও গ্যালারিতে যোগ হয়েছে!', 'success');
       }).catch(function (err) {
         self.setButtonLoading(uploadBtn, false, 'গ্যালারিতে যোগ করুন');
         console.error('[Admin] Error saving media record:', err);
-        self.toast('রেকর্ড সংরক্ষণে ত্রুটি হয়েছে', 'error');
+        self.toast('ডাটাবেজে রেকর্ড সংরক্ষণে ত্রুটি হয়েছে', 'error');
       });
     },
 
-    deleteMedia(id, storagePath) {
+    deleteMedia(id, githubPath) {
       const self = this;
       this.showConfirm(
-        'মিডিয়া মুছে ফেলা',
-        'আপনি কি নিশ্চিত যে এই ছবিটি বা ভিডিওটি গ্যালারি থেকে স্থায়ীভাবে মুছে ফেলতে চান?',
+        'ছবি মুছে ফেলা',
+        'আপনি কি নিশ্চিত যে এই ছবিটি গ্যালারি থেকে মুছে ফেলতে চান?',
         function () {
           const db = window.db || (typeof firebase !== 'undefined' && firebase.database ? firebase.database() : null);
-          const storage = window.storage || (typeof firebase !== 'undefined' && firebase.storage ? firebase.storage() : null);
 
           if (db) {
             db.ref(`gallery/${id}`).remove().then(function () {
-              self.toast('মিডিয়া মুছে ফেলা হয়েছে', 'info');
+              self.toast('ছবি গ্যালারি থেকে মুছে ফেলা হয়েছে', 'info');
             });
           }
 
-          if (storage && storagePath) {
-            storage.ref(storagePath).delete().catch(function (e) {
-              console.warn('[Admin] Could not delete from storage:', e);
+          if (githubPath && githubPath.startsWith('assets/images/')) {
+            const token = localStorage.getItem('eg_github_token');
+            const owner = 'srpshouro';
+            const repo = 'Ever-gain-demo';
+            const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${githubPath}`;
+
+            fetch(apiUrl, {
+              headers: {
+                'Authorization': 'token ' + token,
+                'Accept': 'application/vnd.github.v3+json'
+              }
+            })
+            .then(res => res.ok ? res.json() : null)
+            .then(fileInfo => {
+              if (fileInfo && fileInfo.sha) {
+                return fetch(apiUrl, {
+                  method: 'DELETE',
+                  headers: {
+                    'Authorization': 'token ' + token,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/vnd.github.v3+json'
+                  },
+                  body: JSON.stringify({
+                    message: 'Delete gallery image: ' + githubPath,
+                    sha: fileInfo.sha,
+                    branch: 'main'
+                  })
+                });
+              }
+            })
+            .catch(err => {
+              console.warn('[Admin] GitHub delete error:', err);
             });
           }
         }

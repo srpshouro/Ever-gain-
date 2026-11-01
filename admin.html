@@ -752,14 +752,14 @@
           <div class="admin-section-header">
             <div>
               <h2 class="admin-title">গ্যালারি ম্যানেজমেন্ট</h2>
-              <p class="section-subtitle">টার্ফের ছবি ও ভিডিও আপলোড এবং গ্যালারি সাজানো</p>
+              <p class="section-subtitle">টার্ফের ছবি আপলোড এবং গ্যালারি সাজানো (সরাসরি GitHub-এর assets/images ফোল্ডারে যুক্ত হবে)</p>
             </div>
           </div>
 
           <!-- Upload Form Card -->
           <div class="card card-premium mb-4">
             <h3 class="card-title mb-3">
-              <i class="fas fa-cloud-arrow-up text-primary"></i> নতুন ছবি / ভিডিও যুক্ত করুন
+              <i class="fas fa-image text-primary"></i> নতুন ছবি যুক্ত করুন
             </h3>
 
             <form id="galleryUploadForm" class="admin-form">
@@ -767,28 +767,20 @@
               <div class="upload-zone" id="galleryUploadZone">
                 <i class="fas fa-cloud-arrow-up" style="font-size: 2.5rem; color: var(--color-primary); margin-bottom: 0.5rem;"></i>
                 <p>ছবি নির্বাচন করতে ক্লিক করুন অথবা ফাইল এখানে টেনে আনুন</p>
-                <span class="form-hint">সাপোর্টেড ফরম্যাট: JPG, PNG, WebP, MP4 (সর্বোচ্চ 10MB)</span>
-                <input type="file" id="galleryFileInput" class="hidden" accept="image/*,video/*">
+                <span class="form-hint">সাপোর্টেড ফরম্যাট: JPG, PNG, WebP (সরাসরি assets/images/ ফোল্ডারে সেভ হবে)</span>
+                <input type="file" id="galleryFileInput" class="hidden" accept="image/*">
               </div>
               <div id="fileSelectedDisplay" class="form-hint text-center hidden mt-2"></div>
 
-              <div class="grid-3 mt-3">
+              <div class="grid-2 mt-3">
                 <div class="form-group mb-2">
                   <label class="form-label" for="galleryTitleInput">শিরোনাম</label>
                   <input type="text" id="galleryTitleInput" class="form-input" placeholder="যেমন: নাইট ম্যাচ একশন" required>
                 </div>
 
                 <div class="form-group mb-2">
-                  <label class="form-label" for="galleryTypeSelect">মিডিয়া টাইপ</label>
-                  <select id="galleryTypeSelect" class="form-select">
-                    <option value="image">ছবি (Image)</option>
-                    <option value="video">ভিডিও (Video)</option>
-                  </select>
-                </div>
-
-                <div class="form-group mb-2">
-                  <label class="form-label" for="galleryUrlFallback">সরাসরি লিঙ্ক (ঐচ্ছিক)</label>
-                  <input type="url" id="galleryUrlFallback" class="form-input" placeholder="https://...">
+                  <label class="form-label" for="galleryUrlFallback">সরাসরি লিঙ্ক (ঐচ্ছিক / যেমন: assets/images/Evergain2.jpg)</label>
+                  <input type="text" id="galleryUrlFallback" class="form-input" placeholder="assets/images/... অথবা https://...">
                 </div>
               </div>
 
