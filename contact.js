@@ -202,9 +202,75 @@
   }
 
   /**
+   * Helper to normalize phone number for rate limiting
+   */
+  function normalizePhone(p) {
+    if (!p) return '';
+    return String(p).trim().replace(/[\s\-\+\(\)]/g, '');
+  }
+
+  /**
+   * Check daily message limit (Max 3 messages per day per user/device)
+   */
+  function checkMessageDailyLimit(userPhone) {
+    try {
+      const today = new Date().toISOString().slice(0, 10);
+      const raw = localStorage.getItem('evergain_contact_rate_limit');
+      let data = raw ? JSON.parse(raw) : null;
+
+      if (!data || data.date !== today) {
+        data = { date: today, count: 0, phones: {} };
+      }
+
+      const pKey = normalizePhone(userPhone);
+      const phoneCount = (data.phones && data.phones[pKey]) ? data.phones[pKey] : 0;
+      const deviceCount = data.count || 0;
+
+      if (deviceCount >= 3 || phoneCount >= 3) {
+        return false;
+      }
+      return true;
+    } catch (e) {
+      return true;
+    }
+  }
+
+  /**
+   * Record a sent message for today's rate limit
+   */
+  function incrementMessageDailyCount(userPhone) {
+    try {
+      const today = new Date().toISOString().slice(0, 10);
+      const raw = localStorage.getItem('evergain_contact_rate_limit');
+      let data = raw ? JSON.parse(raw) : null;
+
+      if (!data || data.date !== today) {
+        data = { date: today, count: 0, phones: {} };
+      }
+
+      data.count = (data.count || 0) + 1;
+      if (!data.phones) data.phones = {};
+      const pKey = normalizePhone(userPhone);
+      if (pKey) {
+        data.phones[pKey] = (data.phones[pKey] || 0) + 1;
+      }
+
+      localStorage.setItem('evergain_contact_rate_limit', JSON.stringify(data));
+    } catch (e) {
+      // LocalStorage access might be restricted
+    }
+  }
+
+  /**
    * Submits the contact message to Firebase Realtime Database (/contactMessages)
    */
   function submitContactForm(data) {
+    // Enforce 3 messages per day limit
+    if (!checkMessageDailyLimit(data.phone)) {
+      displayToast('আপনি আজকের জন্য সর্বোচ্চ ৩টি বার্তা পাঠানোর সীমা পূর্ণ করেছেন। জরুরি তথ্যের জন্য দয়া করে আমাদের সরাসরি কল বা হোয়াটসঅ্যাপ করুন।', 'warning');
+      return;
+    }
+
     const submitBtn = document.getElementById('contactSubmitBtn');
     const originalBtnHtml = submitBtn ? submitBtn.innerHTML : '';
 
@@ -248,6 +314,9 @@
 
     newMessageRef.set(messageRecord)
       .then(function () {
+        // Increment rate limit counter
+        incrementMessageDailyCount(data.phone);
+
         if (submitBtn) {
           submitBtn.disabled = false;
           submitBtn.classList.remove('btn-loading');

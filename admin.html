@@ -218,6 +218,12 @@
             <span class="badge badge-pending hidden" id="pendingReviewsBadge">0</span>
           </button>
 
+          <button class="admin-sidebar-link" data-tab="messages" role="tab" aria-selected="false">
+            <i class="fas fa-envelope"></i>
+            <span>Messages</span>
+            <span class="badge badge-pending hidden" id="unreadMessagesBadge">0</span>
+          </button>
+
           <button class="admin-sidebar-link" data-tab="settings" role="tab" aria-selected="false">
             <i class="fas fa-sliders"></i>
             <span>Settings</span>
@@ -409,16 +415,19 @@
             </div>
           </div>
 
-          <!-- Bookings Data Table -->
+          <!-- Bookings Data Table & Mobile Cards -->
           <div class="card card-premium">
             <div class="d-flex justify-between align-center mb-2">
               <span class="form-hint" id="bookingsCountDisplay">Total Bookings: 0</span>
             </div>
-            <div class="mobile-table-hint show-mobile">
-              <i class="fas fa-hand-pointer text-accent"></i>
-              <span>Tap [Confirm] or [Cancel] on any booking or tap the row to view details</span>
+            
+            <!-- Mobile Cards View (< 768px) -->
+            <div id="allBookingsMobileCards" class="admin-mobile-cards show-mobile-only">
+              <div class="text-center py-4 text-muted">Loading bookings...</div>
             </div>
-            <div class="table-responsive">
+
+            <!-- Desktop Data Table (>= 768px) -->
+            <div class="table-responsive hide-mobile-only">
               <table class="data-table" id="allBookingsTable">
                 <thead>
                   <tr>
@@ -485,14 +494,24 @@
             </div>
           </div>
 
-          <!-- Permanent Bookings Table -->
+          <!-- Permanent Bookings Table & Mobile Cards -->
           <div class="card card-premium">
-            <div class="table-responsive">
+            <div class="d-flex justify-between align-center mb-2">
+              <span class="form-hint" id="permanentBookingsCountDisplay">Total Permanent Bookings: 0</span>
+            </div>
+
+            <!-- Mobile Cards View (< 768px) -->
+            <div id="permanentBookingsMobileCards" class="admin-mobile-cards show-mobile-only">
+              <div class="text-center py-4 text-muted">Loading permanent bookings...</div>
+            </div>
+
+            <!-- Desktop Data Table (>= 768px) -->
+            <div class="table-responsive hide-mobile-only">
               <table class="data-table" id="permanentBookingsTable">
                 <thead>
                   <tr>
                     <th>ID</th>
-                    <th>Customer</th>
+                    <th>Team / Captain</th>
                     <th>Phone</th>
                     <th>Weekday</th>
                     <th>Session</th>
@@ -886,6 +905,57 @@
         </section>
 
         <!-- =================================================================== -->
+        <!-- TAB: CUSTOMER DIRECT MESSAGES (INBOX)                               -->
+        <!-- =================================================================== -->
+        <section class="admin-section hidden" id="tab-messages" role="tabpanel">
+          <div class="admin-section-header">
+            <div>
+              <h2 class="admin-title">Customer Direct Messages</h2>
+              <p class="section-subtitle">View, respond to, and manage messages sent from the Contact Us page</p>
+            </div>
+            <div class="d-flex gap-2 align-items-center">
+              <span class="badge badge-pending" id="adminUnreadMessagesCount">Unread: 0</span>
+              <span class="badge badge-info" id="adminTotalMessagesCount">Total: 0</span>
+            </div>
+          </div>
+
+          <!-- Message Filters -->
+          <div class="card card-premium mb-3">
+            <div class="filter-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+              <div class="form-group mb-0">
+                <label class="form-label" for="messageSearchInput">
+                  <i class="fas fa-search"></i> Search Messages
+                </label>
+                <input
+                  type="text"
+                  id="messageSearchInput"
+                  class="form-input"
+                  placeholder="Sender name, phone, or message text..."
+                >
+              </div>
+
+              <div class="form-group mb-0">
+                <label class="form-label" for="messageStatusFilter">
+                  <i class="fas fa-filter"></i> Status Filter
+                </label>
+                <select id="messageStatusFilter" class="form-select">
+                  <option value="">All Messages</option>
+                  <option value="unread">Unread Only</option>
+                  <option value="read">Read Only</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Messages Container -->
+          <div class="card card-premium">
+            <div id="adminMessagesList" class="admin-messages-container">
+              <div class="text-center py-4 text-muted">Loading direct messages...</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- =================================================================== -->
         <!-- TAB 8: WEBSITE SETTINGS                                             -->
         <!-- =================================================================== -->
         <section class="admin-section hidden" id="tab-settings" role="tabpanel">
@@ -1036,6 +1106,28 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" id="cancelEditModalBtn">Cancel</button>
         <button type="button" class="btn btn-primary" id="saveEditModalBtn">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Message Details Modal -->
+  <div class="modal-overlay hidden" id="messageDetailModalOverlay">
+    <div class="modal" id="messageDetailModal" style="max-width: 580px;">
+      <div class="modal-header">
+        <h3 class="modal-title">
+          <i class="fas fa-envelope-open-text text-primary"></i> Direct Message Details
+        </h3>
+        <button type="button" class="modal-close" id="closeMessageDetailModalBtn" aria-label="Close">
+          <i class="fas fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modal-body" id="messageDetailModalBody">
+        <!-- Dynamically injected message details -->
+      </div>
+
+      <div class="modal-footer" id="messageDetailModalFooter">
+        <button type="button" class="btn btn-secondary" id="dismissMessageDetailBtn">Close</button>
       </div>
     </div>
   </div>

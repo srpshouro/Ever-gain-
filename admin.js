@@ -33,6 +33,7 @@
     gallery: [],
     rules: [],
     reviews: [],
+    messages: [],
     settings: {},
     pricing: {},
     listeners: [], // Tracks Firebase references to detach on logout
@@ -82,6 +83,12 @@
       this.editModalTitle = document.getElementById('editModalTitle');
       this.editModalBody = document.getElementById('editModalBody');
       this.saveEditModalBtn = document.getElementById('saveEditModalBtn');
+
+      // Message modal
+      this.messageDetailOverlay = document.getElementById('messageDetailModalOverlay');
+      this.messageDetailBody = document.getElementById('messageDetailModalBody');
+      this.closeMessageDetailBtn = document.getElementById('closeMessageDetailModalBtn');
+      this.dismissMessageDetailBtn = document.getElementById('dismissMessageDetailBtn');
     },
 
     bindEvents() {
@@ -367,8 +374,36 @@
         });
       }
 
+      // Close Message Detail Modal
+      const closeMessageDetailModalBtn = document.getElementById('closeMessageDetailModalBtn');
+      const dismissMessageDetailBtn = document.getElementById('dismissMessageDetailBtn');
+      if (closeMessageDetailModalBtn) {
+        closeMessageDetailModalBtn.addEventListener('click', function () {
+          self.closeMessageModal();
+        });
+      }
+      if (dismissMessageDetailBtn) {
+        dismissMessageDetailBtn.addEventListener('click', function () {
+          self.closeMessageModal();
+        });
+      }
+
+      // Message Search & Filter
+      const messageSearchInput = document.getElementById('messageSearchInput');
+      const messageStatusFilter = document.getElementById('messageStatusFilter');
+      if (messageSearchInput) {
+        messageSearchInput.addEventListener('input', function () {
+          self.filterMessages();
+        });
+      }
+      if (messageStatusFilter) {
+        messageStatusFilter.addEventListener('change', function () {
+          self.filterMessages();
+        });
+      }
+
       // Backdrop click listeners to dismiss modals
-      [this.confirmOverlay, this.bookingDetailOverlay, this.editOverlay].forEach(function (overlay) {
+      [this.confirmOverlay, this.bookingDetailOverlay, this.editOverlay, this.messageDetailOverlay].forEach(function (overlay) {
         if (overlay) {
           overlay.addEventListener('click', function (e) {
             if (e.target === overlay) {
@@ -623,6 +658,8 @@
         this.renderRulesList();
       } else if (tabName === 'reviews') {
         this.renderReviewsList();
+      } else if (tabName === 'messages') {
+        this.filterMessages();
       } else if (tabName === 'settings') {
         this.renderSettingsInputs();
       }
@@ -677,6 +714,7 @@
       this.loadGalleryAdmin();
       this.loadRulesAdmin();
       this.loadReviewsAdmin();
+      this.loadMessages();
       this.loadSettings();
     },
 
@@ -987,6 +1025,88 @@
       });
 
       tbody.innerHTML = html;
+
+      // Also render responsive mobile cards
+      const mobileCardsContainer = document.getElementById('allBookingsMobileCards');
+      if (mobileCardsContainer) {
+        if (list.length === 0) {
+          mobileCardsContainer.innerHTML = '<p class="form-hint text-center py-4">No bookings match the filter criteria</p>';
+        } else {
+          let cardHtml = '';
+          list.forEach(function (b) {
+            const nameDisplay = self.escapeHtml(b.customerName || b.name || 'Anonymous');
+            const rawPhone = b.customerPhone || b.phone || '';
+            const phoneDisplay = rawPhone ? self.escapeHtml(rawPhone) : '-';
+            const dateDisplay = self.formatDate(b.date);
+            const sessionDisplay = (b.session === 'night') ? 'Night' : 'Day';
+            const slotDisplay = self.escapeHtml(b.slotTime || b.slot || b.time || '-');
+            const priceDisplay = self.formatPrice(b.price || b.totalAmount || 0);
+            const st = (b.status || 'pending').toLowerCase();
+            const statusBadge = self.getStatusBadge(b.status);
+            const isPending = (st === 'pending');
+            const isConfirmed = (st === 'confirmed');
+
+            cardHtml += `
+              <div class="admin-mobile-card" onclick="AdminApp.viewBookingDetail('${b.id}')">
+                <div class="admin-mobile-card-header">
+                  <div>
+                    <span class="admin-mobile-card-id">${b.id || '-'}</span>
+                    <h4 class="admin-mobile-card-name">${nameDisplay}</h4>
+                  </div>
+                  <div>${statusBadge}</div>
+                </div>
+
+                <div class="admin-mobile-card-body">
+                  ${rawPhone ? `
+                    <div class="admin-card-row">
+                      <i class="fas fa-phone"></i>
+                      <a href="tel:${rawPhone}" onclick="event.stopPropagation()" style="color: var(--color-primary-light); font-weight: 600; text-decoration: none;">${phoneDisplay}</a>
+                      <a href="https://wa.me/${rawPhone.replace(/\D/g, '')}" target="_blank" onclick="event.stopPropagation()" class="btn btn-sm btn-secondary ml-1" style="padding: 2px 8px; font-size: 0.75rem;">
+                        <i class="fab fa-whatsapp text-primary"></i> WhatsApp
+                      </a>
+                    </div>
+                  ` : ''}
+                  <div class="admin-card-row">
+                    <i class="fas fa-calendar"></i>
+                    <span><strong>${dateDisplay}</strong> (${sessionDisplay})</span>
+                  </div>
+                  <div class="admin-card-row">
+                    <i class="fas fa-clock"></i>
+                    <span>${slotDisplay}</span>
+                  </div>
+                  <div class="admin-card-row">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <span>Fee: <strong class="text-accent">${priceDisplay}</strong></span>
+                  </div>
+                </div>
+
+                <div class="admin-mobile-card-actions" onclick="event.stopPropagation()">
+                  ${isPending ? `
+                    <button type="button" class="btn btn-sm btn-approve-direct" onclick="AdminApp.approveBooking('${b.id}')">
+                      <i class="fas fa-circle-check"></i> Confirm
+                    </button>
+                    <button type="button" class="btn btn-sm btn-danger" onclick="AdminApp.rejectBooking('${b.id}')">
+                      <i class="fas fa-xmark"></i> Reject
+                    </button>
+                  ` : ''}
+                  ${isConfirmed ? `
+                    <button type="button" class="btn btn-sm btn-danger" onclick="AdminApp.cancelBooking('${b.id}')">
+                      <i class="fas fa-ban"></i> Cancel
+                    </button>
+                  ` : ''}
+                  <button type="button" class="btn btn-sm btn-secondary" onclick="AdminApp.viewBookingDetail('${b.id}')">
+                    <i class="fas fa-eye"></i> Details
+                  </button>
+                  <button type="button" class="btn btn-sm btn-danger" onclick="AdminApp.deleteBooking('${b.id}')">
+                    <i class="fas fa-trash"></i> Delete
+                  </button>
+                </div>
+              </div>
+            `;
+          });
+          mobileCardsContainer.innerHTML = cardHtml;
+        }
+      }
     },
 
     approveBooking(id) {
@@ -1240,9 +1360,10 @@
       this.bookingDetailBody.innerHTML = `
         <div class="booking-detail-grid">
           <div class="card mb-3" style="background: var(--color-surface); padding: 1rem;">
-            <h4 style="color: var(--color-primary); margin-bottom: 0.5rem;"><i class="fas fa-user"></i> Customer Info</h4>
-            <p><strong>Name:</strong> ${nameDisplay}</p>
-            <p><strong>Phone:</strong> ${rawPhone ? `<a href="tel:${rawPhone}">${phoneDisplay}</a>` : '-'}</p>
+            <h4 style="color: var(--color-primary); margin-bottom: 0.5rem;"><i class="fas fa-user"></i> Customer / Team Info</h4>
+            ${b.teamName ? `<p><strong>Team Name:</strong> <span class="badge badge-info" style="font-size: 0.9rem;"><i class="fas fa-users"></i> ${this.escapeHtml(b.teamName)}</span></p>` : ''}
+            <p><strong>${b.teamName ? 'Captain Name' : 'Name'}:</strong> ${this.escapeHtml(b.captainName || nameDisplay)}</p>
+            <p><strong>Phone:</strong> ${rawPhone ? `<a href="tel:${rawPhone}">${phoneDisplay}</a> <a href="https://wa.me/${rawPhone.replace(/\D/g, '')}" target="_blank" class="btn btn-sm btn-secondary ml-2"><i class="fab fa-whatsapp text-primary"></i> WhatsApp</a>` : '-'}</p>
             <p><strong>Email:</strong> ${emailDisplay}</p>
             <p><strong>Players:</strong> ${playersCount}</p>
           </div>
@@ -1380,6 +1501,9 @@
       list.forEach(function (pb) {
         const idDisplay = pb.id ? (pb.id.length > 12 ? pb.id.substring(0, 10) + '...' : pb.id) : '-';
         const nameDisplay = self.escapeHtml(pb.customerName || pb.name || 'Customer');
+        const teamBadge = pb.teamName ? `<div style="font-weight: 700; color: var(--color-primary-light); font-size: 0.95rem;"><i class="fas fa-users"></i> ${self.escapeHtml(pb.teamName)}</div>` : '';
+        const captText = pb.captainName ? `<div style="font-size: 0.82rem; color: var(--color-text-secondary);"><i class="fas fa-user-shield"></i> Capt: ${self.escapeHtml(pb.captainName)}</div>` : '';
+        const nameCell = teamBadge ? `${teamBadge}${captText || nameDisplay}` : `<strong>${nameDisplay}</strong>`;
         const rawPhone = pb.customerPhone || pb.phone || '';
         const phoneDisplay = rawPhone ? self.escapeHtml(rawPhone) : '-';
         const weekdayName = self.getWeekdayName(pb.weekday !== undefined ? pb.weekday : pb.dayOfWeek);
@@ -1392,7 +1516,7 @@
         html += `
           <tr>
             <td><code>${idDisplay}</code></td>
-            <td><strong>${nameDisplay}</strong></td>
+            <td>${nameCell}</td>
             <td>${rawPhone ? `<a href="tel:${rawPhone}" style="color: inherit; text-decoration: none;">${phoneDisplay}</a>` : '-'}</td>
             <td><span class="badge badge-available">${weekdayName}</span></td>
             <td>${sessionDisplay}</td>
@@ -1435,6 +1559,101 @@
       });
 
       tbody.innerHTML = html;
+
+      // Also render mobile cards for permanent bookings
+      const mobileCardsContainer = document.getElementById('permanentBookingsMobileCards');
+      if (mobileCardsContainer) {
+        if (list.length === 0) {
+          mobileCardsContainer.innerHTML = '<p class="form-hint text-center py-4">No permanent booking records found</p>';
+        } else {
+          let cardHtml = '';
+          list.forEach(function (pb) {
+            const idDisplay = pb.id ? (pb.id.length > 12 ? pb.id.substring(0, 10) + '...' : pb.id) : '-';
+            const nameDisplay = self.escapeHtml(pb.customerName || pb.name || 'Customer');
+            const teamName = pb.teamName ? self.escapeHtml(pb.teamName) : '';
+            const captainName = pb.captainName ? self.escapeHtml(pb.captainName) : '';
+            const rawPhone = pb.customerPhone || pb.phone || '';
+            const phoneDisplay = rawPhone ? self.escapeHtml(rawPhone) : '-';
+            const weekdayName = self.getWeekdayName(pb.weekday !== undefined ? pb.weekday : pb.dayOfWeek);
+            const sessionDisplay = pb.session === 'night' ? 'Night' : 'Day';
+            const slotDisplay = self.escapeHtml(pb.slotTime || pb.slot || pb.time || '-');
+            const feeDisplay = self.formatPrice(pb.monthlyFee || pb.price || 0);
+            const st = (pb.status || 'pending').toLowerCase();
+            const statusBadge = self.getStatusBadge(pb.status);
+
+            cardHtml += `
+              <div class="admin-mobile-card" onclick="AdminApp.viewBookingDetail('${pb.id}')">
+                <div class="admin-mobile-card-header">
+                  <div>
+                    <span class="admin-mobile-card-id">${idDisplay}</span>
+                    <h4 class="admin-mobile-card-name">${teamName ? `<i class="fas fa-users text-primary"></i> ${teamName}` : nameDisplay}</h4>
+                    ${captainName ? `<div class="admin-mobile-card-sub"><i class="fas fa-user-shield text-info"></i> Captain: <strong>${captainName}</strong></div>` : ''}
+                  </div>
+                  <div>${statusBadge}</div>
+                </div>
+
+                <div class="admin-mobile-card-body">
+                  ${rawPhone ? `
+                    <div class="admin-card-row">
+                      <i class="fas fa-phone"></i>
+                      <a href="tel:${rawPhone}" onclick="event.stopPropagation()" style="color: var(--color-primary-light); font-weight: 600; text-decoration: none;">${phoneDisplay}</a>
+                      <a href="https://wa.me/${rawPhone.replace(/\D/g, '')}" target="_blank" onclick="event.stopPropagation()" class="btn btn-sm btn-secondary ml-1" style="padding: 2px 8px; font-size: 0.75rem;">
+                        <i class="fab fa-whatsapp text-primary"></i> WhatsApp
+                      </a>
+                    </div>
+                  ` : ''}
+                  <div class="admin-card-row">
+                    <i class="fas fa-repeat"></i>
+                    <span><strong>Every ${weekdayName}</strong> (${sessionDisplay} Session)</span>
+                  </div>
+                  <div class="admin-card-row">
+                    <i class="fas fa-clock"></i>
+                    <span>${slotDisplay}</span>
+                  </div>
+                  <div class="admin-card-row">
+                    <i class="fas fa-money-bill-wave"></i>
+                    <span>Fee: <strong class="text-accent">${feeDisplay} / week</strong></span>
+                  </div>
+                </div>
+
+                <div class="admin-mobile-card-actions" onclick="event.stopPropagation()">
+                  ${(st === 'pending') ? `
+                    <button type="button" class="btn btn-sm btn-approve-direct" onclick="AdminApp.approvePermanent('${pb.id}')">
+                      <i class="fas fa-circle-check"></i> Activate
+                    </button>
+                    <button type="button" class="btn btn-sm btn-danger" onclick="AdminApp.rejectPermanent('${pb.id}')">
+                      <i class="fas fa-xmark"></i> Reject
+                    </button>
+                  ` : ''}
+                  ${(st === 'active') ? `
+                    <button type="button" class="btn btn-sm btn-secondary" onclick="AdminApp.pausePermanent('${pb.id}')">
+                      <i class="fas fa-pause"></i> Pause
+                    </button>
+                    <button type="button" class="btn btn-sm btn-danger" onclick="AdminApp.terminatePermanent('${pb.id}')">
+                      <i class="fas fa-stop"></i> Terminate
+                    </button>
+                  ` : ''}
+                  ${(st === 'paused') ? `
+                    <button type="button" class="btn btn-sm btn-primary" onclick="AdminApp.approvePermanent('${pb.id}')">
+                      <i class="fas fa-play"></i> Activate
+                    </button>
+                    <button type="button" class="btn btn-sm btn-danger" onclick="AdminApp.terminatePermanent('${pb.id}')">
+                      <i class="fas fa-stop"></i> Terminate
+                    </button>
+                  ` : ''}
+                  <button type="button" class="btn btn-sm btn-secondary" onclick="AdminApp.viewBookingDetail('${pb.id}')">
+                    <i class="fas fa-eye"></i> Details
+                  </button>
+                  <button type="button" class="btn btn-sm btn-danger" onclick="AdminApp.deletePermanent('${pb.id}')">
+                    <i class="fas fa-trash"></i> Delete
+                  </button>
+                </div>
+              </div>
+            `;
+          });
+          mobileCardsContainer.innerHTML = cardHtml;
+        }
+      }
     },
 
     approvePermanent(id) {
@@ -2388,7 +2607,7 @@
         return;
       }
 
-      let html = '<div class="rules-stack" style="display: flex; flex-direction: column; gap: 0.75rem;">';
+      let html = '<div class="rules-stack" style="display: flex; flex-direction: column; gap: 0.85rem;">';
       const self = this;
 
       this.rules.forEach(function (rule, index) {
@@ -2397,29 +2616,33 @@
         const icon = rule.icon || 'fas fa-futbol';
 
         html += `
-          <div class="card card-premium rule-item-card" style="padding: 0.9rem;">
-            <div style="display: flex; align-items: flex-start; justify-content: space-between;">
-              <div style="display: flex; gap: 0.75rem; align-items: center;">
+          <div class="card card-premium rule-item-card">
+            <div class="rule-card-header">
+              <div class="rule-card-title-wrap">
                 <div class="card-icon" style="width: 38px; height: 38px; font-size: 1rem; flex-shrink: 0;">
                   <i class="${icon}"></i>
                 </div>
-                <div>
-                  <h4 style="margin: 0; font-size: 1rem; color: var(--color-text-primary);">${index + 1}. ${title}</h4>
-                  <p class="card-text mt-1" style="font-size: 0.9rem; margin-bottom: 0;">${desc}</p>
-                </div>
+                <h4 class="rule-card-title">${index + 1}. ${title}</h4>
               </div>
-              <div class="action-buttons ml-2">
+            </div>
+
+            <div class="rule-card-body">
+              <p class="rule-card-text">${desc}</p>
+            </div>
+
+            <div class="rule-card-footer">
+              <div class="action-buttons">
                 <button type="button" class="btn btn-sm btn-secondary" onclick="AdminApp.moveRuleOrder('${rule.id}', -1)" ${index === 0 ? 'disabled' : ''} title="Move Up">
                   <i class="fas fa-arrow-up"></i>
                 </button>
                 <button type="button" class="btn btn-sm btn-secondary" onclick="AdminApp.moveRuleOrder('${rule.id}', 1)" ${index === self.rules.length - 1 ? 'disabled' : ''} title="Move Down">
                   <i class="fas fa-arrow-down"></i>
                 </button>
-                <button type="button" class="btn btn-sm btn-secondary" onclick="AdminApp.editRuleModal('${rule.id}')" title="Edit">
-                  <i class="fas fa-edit"></i>
+                <button type="button" class="btn btn-sm btn-secondary" onclick="AdminApp.editRuleModal('${rule.id}')" title="Edit Rule">
+                  <i class="fas fa-edit"></i> Edit
                 </button>
-                <button type="button" class="btn btn-sm btn-danger" onclick="AdminApp.deleteRule('${rule.id}')" title="Delete">
-                  <i class="fas fa-trash"></i>
+                <button type="button" class="btn btn-sm btn-danger" onclick="AdminApp.deleteRule('${rule.id}')" title="Delete Rule">
+                  <i class="fas fa-trash"></i> Delete
                 </button>
               </div>
             </div>
@@ -2680,6 +2903,249 @@
             self.toast('Review deleted successfully.', 'info');
           }).catch(function (err) {
             self.toast('Failed to delete review: ' + err.message, 'error');
+          });
+        }
+      );
+    },
+
+    // =======================================================================
+    // Direct Messages (Contact Page Inbox) Management
+    // =======================================================================
+    loadMessages() {
+      const self = this;
+      const db = window.db || (typeof firebase !== 'undefined' && firebase.database ? firebase.database() : null);
+      if (!db) return;
+
+      const msgRef = db.ref('contactMessages');
+      this.listeners.push({ ref: msgRef, event: 'value' });
+
+      msgRef.on('value', function (snapshot) {
+        const data = snapshot.val();
+        self.messages = [];
+
+        if (data) {
+          Object.keys(data).forEach(function (key) {
+            const item = data[key];
+            if (typeof item === 'object' && item !== null) {
+              item.id = item.id || key;
+              self.messages.push(item);
+            }
+          });
+        }
+
+        // Sort newest first
+        self.messages.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+        // Update unread count badges
+        const unreadCount = self.messages.filter(m => !m.read).length;
+        const badge = document.getElementById('unreadMessagesBadge');
+        const unreadDisplay = document.getElementById('adminUnreadMessagesCount');
+        const totalDisplay = document.getElementById('adminTotalMessagesCount');
+
+        if (badge) {
+          badge.textContent = unreadCount;
+          if (unreadCount > 0) {
+            badge.classList.remove('hidden');
+          } else {
+            badge.classList.add('hidden');
+          }
+        }
+
+        if (unreadDisplay) {
+          unreadDisplay.textContent = 'Unread: ' + unreadCount;
+        }
+        if (totalDisplay) {
+          totalDisplay.textContent = 'Total: ' + self.messages.length;
+        }
+
+        self.filterMessages();
+      }, function (err) {
+        console.error('[Admin] Error loading contact messages:', err);
+      });
+    },
+
+    filterMessages() {
+      const searchInput = document.getElementById('messageSearchInput');
+      const statusFilter = document.getElementById('messageStatusFilter');
+
+      const query = searchInput ? searchInput.value.trim().toLowerCase() : '';
+      const filterStatus = statusFilter ? statusFilter.value : '';
+
+      const filtered = this.messages.filter(function (m) {
+        if (query) {
+          const name = (m.name || '').toLowerCase();
+          const phone = (m.phone || '').toLowerCase();
+          const text = (m.message || '').toLowerCase();
+          const subject = (m.subject || '').toLowerCase();
+          if (!name.includes(query) && !phone.includes(query) && !text.includes(query) && !subject.includes(query)) {
+            return false;
+          }
+        }
+
+        if (filterStatus === 'unread' && m.read) return false;
+        if (filterStatus === 'read' && !m.read) return false;
+
+        return true;
+      });
+
+      this.renderMessages(filtered);
+    },
+
+    renderMessages(list) {
+      const container = document.getElementById('adminMessagesList');
+      if (!container) return;
+
+      if (list.length === 0) {
+        container.innerHTML = '<p class="form-hint text-center py-4">No direct messages found matching your criteria.</p>';
+        return;
+      }
+
+      let html = '';
+      const self = this;
+
+      list.forEach(function (m) {
+        const name = self.escapeHtml(m.name || 'Anonymous');
+        const rawPhone = m.phone || '';
+        const phone = rawPhone ? self.escapeHtml(rawPhone) : '-';
+        const subject = self.escapeHtml(m.subject || 'General Inquiry');
+        const text = self.escapeHtml(m.message || '');
+        const isUnread = !m.read;
+        const timeStr = m.createdAt ? new Date(m.createdAt).toLocaleString('en-US') : '-';
+
+        html += `
+          <div class="message-item-card ${isUnread ? 'unread' : ''}">
+            <div class="message-card-header">
+              <div>
+                <span class="message-sender-name">
+                  <i class="fas fa-user-circle text-primary"></i> ${name}
+                  ${isUnread ? '<span class="badge badge-pending">New Message</span>' : '<span class="badge badge-confirmed">Read</span>'}
+                </span>
+                <div class="message-meta mt-1">
+                  <i class="fas fa-tag text-info"></i> ${subject} &nbsp;|&nbsp;
+                  <i class="fas fa-clock"></i> ${timeStr}
+                </div>
+              </div>
+
+              ${rawPhone ? `
+                <div class="d-flex gap-2">
+                  <a href="tel:${rawPhone}" class="btn btn-sm btn-secondary" style="padding: 4px 10px; font-size: 0.8rem;">
+                    <i class="fas fa-phone text-primary"></i> Call
+                  </a>
+                  <a href="https://wa.me/${rawPhone.replace(/\D/g, '')}" target="_blank" class="btn btn-sm btn-secondary" style="padding: 4px 10px; font-size: 0.8rem;">
+                    <i class="fab fa-whatsapp text-primary"></i> WhatsApp
+                  </a>
+                </div>
+              ` : ''}
+            </div>
+
+            <div class="message-snippet">
+              ${text}
+            </div>
+
+            <div class="message-card-footer">
+              <span class="text-muted" style="font-size: 0.82rem;">
+                <i class="fas fa-mobile-screen"></i> ${phone}
+              </span>
+              <div class="action-buttons">
+                <button type="button" class="btn btn-sm btn-secondary" onclick="AdminApp.viewMessageDetail('${m.id}')">
+                  <i class="fas fa-eye"></i> View Full Details
+                </button>
+                <button type="button" class="btn btn-sm btn-danger" onclick="AdminApp.deleteMessage('${m.id}')">
+                  <i class="fas fa-trash"></i> Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    },
+
+    viewMessageDetail(id) {
+      const msg = this.messages.find(m => m.id === id);
+      if (!msg) return;
+
+      const body = document.getElementById('messageDetailModalBody');
+      if (!body) return;
+
+      const name = this.escapeHtml(msg.name || 'Anonymous');
+      const rawPhone = msg.phone || '';
+      const phone = rawPhone ? this.escapeHtml(rawPhone) : '-';
+      const subject = this.escapeHtml(msg.subject || 'General Inquiry');
+      const text = this.escapeHtml(msg.message || '');
+      const timeStr = msg.createdAt ? new Date(msg.createdAt).toLocaleString('en-US') : '-';
+
+      body.innerHTML = `
+        <div class="card mb-3" style="background: var(--color-surface); padding: 1rem;">
+          <h4 style="color: var(--color-primary); margin-bottom: 0.5rem;"><i class="fas fa-user"></i> Sender Details</h4>
+          <p><strong>Name:</strong> ${name}</p>
+          <p><strong>Phone:</strong> ${rawPhone ? `<a href="tel:${rawPhone}" style="color: var(--color-primary-light); font-weight: 700;">${phone}</a>` : '-'}</p>
+          <p><strong>Subject:</strong> <span class="badge badge-info">${subject}</span></p>
+          <p><strong>Date & Time:</strong> <small class="text-muted">${timeStr}</small></p>
+          ${rawPhone ? `
+            <div class="d-flex gap-2 mt-3">
+              <a href="tel:${rawPhone}" class="btn btn-sm btn-primary">
+                <i class="fas fa-phone"></i> Call Sender
+              </a>
+              <a href="https://wa.me/${rawPhone.replace(/\D/g, '')}" target="_blank" class="btn btn-sm btn-secondary">
+                <i class="fab fa-whatsapp text-primary"></i> Chat on WhatsApp
+              </a>
+            </div>
+          ` : ''}
+        </div>
+
+        <div class="card" style="background: var(--color-surface); padding: 1rem;">
+          <h4 style="color: var(--color-primary); margin-bottom: 0.5rem;"><i class="fas fa-message"></i> Message Content</h4>
+          <div style="background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 8px; font-size: 0.95rem; line-height: 1.6; white-space: pre-wrap; word-break: break-word;">${text}</div>
+        </div>
+      `;
+
+      const footer = document.getElementById('messageDetailModalFooter');
+      if (footer) {
+        footer.innerHTML = `
+          <button type="button" class="btn btn-secondary" onclick="AdminApp.closeMessageModal()">Close</button>
+          <button type="button" class="btn btn-danger" onclick="AdminApp.deleteMessage('${msg.id}'); AdminApp.closeMessageModal();"><i class="fas fa-trash"></i> Delete Message</button>
+        `;
+      }
+
+      // Mark as read in Firebase
+      if (!msg.read) {
+        const db = window.db || (typeof firebase !== 'undefined' && firebase.database ? firebase.database() : null);
+        if (db) {
+          db.ref(`contactMessages/${msg.id}`).update({ read: true }).catch(e => console.warn(e));
+        }
+      }
+
+      const overlay = document.getElementById('messageDetailModalOverlay');
+      if (overlay) {
+        overlay.classList.remove('hidden');
+        overlay.classList.add('active');
+      }
+    },
+
+    closeMessageModal() {
+      const overlay = document.getElementById('messageDetailModalOverlay');
+      if (overlay) {
+        overlay.classList.add('hidden');
+        overlay.classList.remove('active');
+      }
+    },
+
+    deleteMessage(id) {
+      const self = this;
+      this.showConfirm(
+        'Delete Customer Message',
+        'Are you sure you want to permanently delete this message? This action cannot be undone.',
+        function () {
+          const db = window.db || (typeof firebase !== 'undefined' && firebase.database ? firebase.database() : null);
+          if (!db) return;
+
+          db.ref(`contactMessages/${id}`).remove().then(function () {
+            self.toast('Message deleted successfully', 'success');
+          }).catch(function (err) {
+            console.error('[Admin] Error deleting message:', err);
+            self.toast('Error deleting message: ' + err.message, 'error');
           });
         }
       );

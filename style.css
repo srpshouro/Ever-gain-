@@ -4008,6 +4008,248 @@ header.section.section-header,
   font-weight: 500;
 }
 
+/* ==========================================================================
+   Admin Mobile Responsive Cards & Ground Rules Layout
+   ========================================================================== */
+.show-mobile-only {
+  display: none !important;
+}
+
+.hide-mobile-only {
+  display: block !important;
+}
+
+@media (max-width: 768px) {
+  .show-mobile-only {
+    display: flex !important;
+  }
+  .hide-mobile-only {
+    display: none !important;
+  }
+}
+
+.admin-mobile-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  width: 100%;
+}
+
+.admin-mobile-card {
+  background: rgba(14, 26, 17, 0.95);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 1rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  position: relative;
+  transition: all var(--transition-fast);
+}
+
+.admin-mobile-card:hover {
+  border-color: rgba(16, 185, 129, 0.4);
+}
+
+.admin-mobile-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.admin-mobile-card-id {
+  font-family: monospace;
+  font-size: 0.82rem;
+  color: var(--color-primary-light);
+  display: block;
+  margin-bottom: 2px;
+}
+
+.admin-mobile-card-name {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.admin-mobile-card-sub {
+  font-size: 0.86rem;
+  color: var(--color-text-secondary);
+  margin-top: 2px;
+}
+
+.admin-mobile-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 0.88rem;
+}
+
+.admin-card-row {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: var(--color-text-secondary);
+  word-break: break-word;
+}
+
+.admin-card-row i {
+  width: 18px;
+  text-align: center;
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.admin-card-row strong {
+  color: var(--color-text-primary);
+}
+
+.admin-mobile-card-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding-top: 0.65rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.admin-mobile-card-actions .btn {
+  flex: 1 1 auto;
+  justify-content: center;
+  padding: 0.55rem 0.85rem;
+  font-size: 0.85rem;
+  min-width: 90px;
+}
+
+/* Ground Rules Modern Card Layout (Fixes Mobile Squeeze) */
+.rule-item-card {
+  padding: 1rem !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.75rem !important;
+  background: rgba(14, 26, 17, 0.95) !important;
+  border: 1px solid var(--color-border) !important;
+}
+
+.rule-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.rule-card-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1 1 auto;
+}
+
+.rule-card-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.rule-card-body {
+  width: 100%;
+}
+
+.rule-card-text {
+  margin: 0;
+  font-size: 0.93rem;
+  line-height: 1.55;
+  color: var(--color-text-secondary);
+  word-break: break-word;
+}
+
+.rule-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  flex-wrap: wrap;
+}
+
+.rule-card-footer .action-buttons {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+/* Direct Messages Container & Cards */
+.admin-messages-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.message-item-card {
+  background: rgba(14, 26, 17, 0.95);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  transition: all var(--transition-fast);
+}
+
+.message-item-card.unread {
+  border-color: rgba(16, 185, 129, 0.6);
+  background: rgba(16, 185, 129, 0.06);
+}
+
+.message-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.message-sender-name {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--color-text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.message-meta {
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+}
+
+.message-snippet {
+  font-size: 0.92rem;
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 0.75rem 0.9rem;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  word-break: break-word;
+}
+
+.message-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
 /* Upload Zone */
 .upload-zone {
   border: 2px dashed var(--color-border);
@@ -4773,18 +5015,15 @@ header.section.section-header,
     font-size: 0.85rem;
   }
 
-  /* Sticky Action Column on Mobile - Always Pinned to Right Edge */
+  /* Reset action column on mobile to prevent blocking content */
   .data-table th:last-child,
   .data-table td:last-child {
-    position: sticky !important;
-    right: 0 !important;
-    background: rgba(10, 20, 12, 0.98) !important;
-    backdrop-filter: blur(12px) !important;
-    -webkit-backdrop-filter: blur(12px) !important;
-    z-index: 5 !important;
-    box-shadow: -5px 0 12px rgba(0, 0, 0, 0.6) !important;
-    border-left: 1px solid rgba(16, 185, 129, 0.3) !important;
-    text-align: center !important;
+    position: static !important;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    box-shadow: none !important;
+    border-left: none !important;
   }
 
   .btn-approve-direct {

@@ -358,10 +358,22 @@
 
         <div class="card booking-form max-w-700 mx-auto">
           <form id="bookingCustomerForm" onsubmit="event.preventDefault(); goToStep(4);">
-            <!-- Name Field -->
+            <!-- Team Name Field (Required for Permanent Booking) -->
+            <div class="form-group mb-3 hidden" id="permanentTeamFields">
+              <label for="teamName" class="form-label">
+                <span id="teamNameLabelText">দলের নাম (Team Name) *</span>
+              </label>
+              <div class="input-icon-wrapper">
+                <i class="fas fa-users"></i>
+                <input type="text" id="teamName" class="form-input" placeholder="আপনার দলের নাম লিখুন (যেমন: Evergain Tigers)">
+              </div>
+              <div class="form-error hidden" id="teamNameError">স্থায়ী বুকিংয়ের জন্য দলের নাম দেওয়া বাধ্যতামূলক</div>
+            </div>
+
+            <!-- Name / Captain Name Field -->
             <div class="form-group mb-3">
               <label for="customerName" class="form-label">
-                <span data-i18n="nameLabel">আপনার নাম *</span>
+                <span id="customerNameLabelText" data-i18n="nameLabel">আপনার নাম *</span>
               </label>
               <div class="input-icon-wrapper">
                 <i class="fas fa-user"></i>
@@ -451,8 +463,12 @@
               <span class="summary-label" data-i18n="summarySlotLabel">সময় স্লট:</span>
               <span class="summary-value" id="sumSlot">-</span>
             </div>
+            <div class="summary-row hidden" id="sumTeamRow">
+              <span class="summary-label" id="sumTeamLabel">দলের নাম:</span>
+              <span class="summary-value font-bold text-primary" id="sumTeamName">-</span>
+            </div>
             <div class="summary-row">
-              <span class="summary-label" data-i18n="summaryNameLabel">গ্রাহকের নাম:</span>
+              <span class="summary-label" id="sumNameLabel" data-i18n="summaryNameLabel">গ্রাহকের নাম:</span>
               <span class="summary-value" id="sumCustomerName">-</span>
             </div>
             <div class="summary-row">

@@ -15,6 +15,8 @@ let bookingState = {
   weekday: null, // for permanent booking (0-6)
   slotId: '',
   slotTime: '',
+  teamName: '',
+  captainName: '',
   customerName: '',
   customerPhone: '',
   message: '',
@@ -1025,12 +1027,21 @@ function selectSlot(slotId, slotTime) {
 function setupStep3() {
   const permBox = document.getElementById('permanentConditionBox');
   const condCheckbox = document.getElementById('conditionAccept');
+  const permTeamFields = document.getElementById('permanentTeamFields');
+  const nameLabelText = document.getElementById('customerNameLabelText');
+  const teamNameInput = document.getElementById('teamName');
+  const isEn = isEnglishLang();
 
   if (bookingState.type === 'permanent') {
     if (permBox) permBox.classList.remove('hidden');
     if (condCheckbox) condCheckbox.checked = bookingState.conditionAccepted;
+    if (permTeamFields) permTeamFields.classList.remove('hidden');
+    if (nameLabelText) nameLabelText.textContent = isEn ? 'Captain Name *' : 'অধিনায়কের নাম *';
+    if (teamNameInput && bookingState.teamName) teamNameInput.value = bookingState.teamName;
   } else {
     if (permBox) permBox.classList.add('hidden');
+    if (permTeamFields) permTeamFields.classList.add('hidden');
+    if (nameLabelText) nameLabelText.textContent = isEn ? 'Your Name *' : 'আপনার নাম *';
   }
 
   // Pre-populate fields from state
@@ -1038,7 +1049,9 @@ function setupStep3() {
   const phoneInput = document.getElementById('customerPhone');
   const messageInput = document.getElementById('bookingMessage');
 
-  if (nameInput && bookingState.customerName) nameInput.value = bookingState.customerName;
+  if (nameInput && (bookingState.captainName || bookingState.customerName)) {
+    nameInput.value = bookingState.captainName || bookingState.customerName;
+  }
   if (phoneInput && bookingState.customerPhone) phoneInput.value = bookingState.customerPhone;
   if (messageInput && bookingState.message) messageInput.value = bookingState.message;
 }
@@ -1051,19 +1064,32 @@ function validateForm() {
   const phoneInput = document.getElementById('customerPhone');
   const messageInput = document.getElementById('bookingMessage');
   const condCheckbox = document.getElementById('conditionAccept');
+  const teamNameInput = document.getElementById('teamName');
 
   const nameError = document.getElementById('customerNameError');
   const phoneError = document.getElementById('customerPhoneError');
   const condError = document.getElementById('conditionAcceptError');
+  const teamError = document.getElementById('teamNameError');
 
   // Reset errors
   if (nameError) nameError.classList.add('hidden');
   if (phoneError) phoneError.classList.add('hidden');
   if (condError) condError.classList.add('hidden');
+  if (teamError) teamError.classList.add('hidden');
 
   let isValid = true;
 
-  // Name validation
+  // Permanent booking validation: Team Name
+  let teamName = '';
+  if (bookingState.type === 'permanent') {
+    teamName = teamNameInput ? teamNameInput.value.trim() : '';
+    if (!teamName || teamName.length < 2) {
+      if (teamError) teamError.classList.remove('hidden');
+      isValid = false;
+    }
+  }
+
+  // Name (Captain Name for permanent) validation
   const name = nameInput ? nameInput.value.trim() : '';
   if (!name || name.length < 2) {
     if (nameError) nameError.classList.remove('hidden');
@@ -1090,6 +1116,8 @@ function validateForm() {
 
   if (isValid) {
     bookingState.customerName = name;
+    bookingState.captainName = name;
+    bookingState.teamName = teamName;
     bookingState.customerPhone = cleanPhoneNumber(phone);
     bookingState.message = messageInput ? messageInput.value.trim() : '';
     bookingState.conditionAccepted = conditionAccepted;
@@ -1098,6 +1126,7 @@ function validateForm() {
     try {
       localStorage.setItem('evergain_user_phone', bookingState.customerPhone);
       localStorage.setItem('evergain_user_name', bookingState.customerName);
+      if (teamName) localStorage.setItem('evergain_user_team', teamName);
     } catch (e) {
       // LocalStorage access might be restricted in some webviews
     }
@@ -1152,20 +1181,31 @@ function renderSummary() {
     }
   }
 
+  const sumTeamRow = document.getElementById('sumTeamRow');
+  const sumTeamName = document.getElementById('sumTeamName');
+  const sumNameLabel = document.getElementById('sumNameLabel');
+
   if (bookingState.type === 'normal') {
     if (sumDateLabel) sumDateLabel.textContent = isEn ? 'Match Date:' : 'খেলার তারিখ:';
     if (sumDateValue) sumDateValue.textContent = isEn ? bookingState.date : formatDateBengali(bookingState.date);
     if (sumConditionRow) sumConditionRow.classList.add('hidden');
+    if (sumTeamRow) sumTeamRow.classList.add('hidden');
+    if (sumNameLabel) sumNameLabel.textContent = isEn ? 'Your Name:' : 'গ্রাহকের নাম:';
   } else {
     if (sumDateLabel) sumDateLabel.textContent = isEn ? 'Recurring Day:' : 'স্থায়ী দিন:';
     const dayNamesEn = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const dayName = isEn ? `Every ${dayNamesEn[bookingState.weekday]}` : `প্রতি ${getWeekdayName(bookingState.weekday)}`;
     if (sumDateValue) sumDateValue.textContent = dayName;
     if (sumConditionRow) sumConditionRow.classList.remove('hidden');
+    if (sumTeamRow) {
+      sumTeamRow.classList.remove('hidden');
+      if (sumTeamName) sumTeamName.textContent = bookingState.teamName || '-';
+    }
+    if (sumNameLabel) sumNameLabel.textContent = isEn ? 'Captain Name:' : 'অধিনায়কের নাম:';
   }
 
   if (sumSlot) sumSlot.textContent = bookingState.slotTime;
-  if (sumCustomerName) sumCustomerName.textContent = bookingState.customerName;
+  if (sumCustomerName) sumCustomerName.textContent = bookingState.captainName || bookingState.customerName;
   if (sumCustomerPhone) sumCustomerPhone.textContent = bookingState.customerPhone;
 
   if (sumCustomerMessage && sumMessageRow) {
@@ -1209,6 +1249,8 @@ function submitBooking() {
   const bookingData = {
     id: bookingId,
     customerName: bookingState.customerName,
+    captainName: bookingState.captainName || bookingState.customerName,
+    teamName: bookingState.teamName || '',
     customerPhone: bookingState.customerPhone,
     type: bookingState.type,
     session: bookingState.session,
@@ -1388,6 +1430,8 @@ function resetBookingWizard() {
     weekday: null,
     slotId: '',
     slotTime: '',
+    teamName: '',
+    captainName: '',
     customerName: '',
     customerPhone: localStorage.getItem('evergain_user_phone') || '',
     message: '',
@@ -1396,10 +1440,12 @@ function resetBookingWizard() {
   };
 
   const nameInput = document.getElementById('customerName');
+  const teamInput = document.getElementById('teamName');
   const msgInput = document.getElementById('bookingMessage');
   const condCheckbox = document.getElementById('conditionAccept');
 
   if (nameInput) nameInput.value = '';
+  if (teamInput) teamInput.value = '';
   if (msgInput) msgInput.value = '';
   if (condCheckbox) condCheckbox.checked = false;
 
@@ -1507,13 +1553,23 @@ function checkBookingStatus() {
         });
       }
 
-      // Merge with any local bookings not yet synced
-      const localMatches = getLocalBookingsByPhone(phone);
-      localMatches.forEach(localItem => {
-        if (!combinedBookings.some(b => b.id === localItem.id)) {
-          combinedBookings.push(localItem);
+      // Synchronize and prune local storage: If a booking for this phone number is NOT in combinedBookings, it was deleted in Firebase
+      try {
+        const raw = localStorage.getItem('evergain_local_bookings');
+        if (raw) {
+          const list = JSON.parse(raw);
+          const firebaseIds = new Set(combinedBookings.map(b => b.id));
+          const updatedList = list.filter(b => {
+            if (cleanPhoneNumber(b.customerPhone) === phone) {
+              return firebaseIds.has(b.id);
+            }
+            return true;
+          });
+          localStorage.setItem('evergain_local_bookings', JSON.stringify(updatedList));
         }
-      });
+      } catch (e) {
+        console.warn('Pruning local bookings error:', e);
+      }
 
       // Sort by newest first
       combinedBookings.sort((a, b) => {
@@ -1606,6 +1662,13 @@ function renderBookingHistory(bookings) {
           <div>${statusBadge}</div>
         </div>
 
+        ${b.teamName ? `
+          <div class="mb-2" style="font-size: 0.92rem; background: rgba(16, 185, 129, 0.08); padding: 0.4rem 0.6rem; border-radius: 6px;">
+            <span class="text-muted"><i class="fas fa-users text-primary"></i> দল:</span> <strong class="text-white">${b.teamName}</strong>
+            ${b.captainName ? `<span class="text-muted ml-2">(ক্যাপ্টেন: <strong class="text-white">${b.captainName}</strong>)</span>` : ''}
+          </div>
+        ` : ''}
+
         <div class="grid-2 mb-2" style="font-size: 0.92rem; gap: 0.5rem;">
           <div><span class="text-muted">সময় ও সেশন:</span> <strong class="text-white">${timeDisplay}</strong> (${sessionBadge})</div>
           <div><span class="text-muted">বুকিং ফি:</span> <strong class="text-accent">৳${getBengaliDigits(b.price)}</strong></div>
@@ -1619,7 +1682,7 @@ function renderBookingHistory(bookings) {
         ` : ''}
 
         <div class="text-muted mt-2" style="font-size: 0.8rem; border-top: 1px dashed rgba(255,255,255,0.08); padding-top: 0.5rem;">
-          <i class="fas fa-user"></i> ${b.customerName} &nbsp;|&nbsp; <i class="fas fa-phone"></i> ${b.customerPhone}
+          <i class="fas fa-user"></i> ${b.captainName || b.customerName} &nbsp;|&nbsp; <i class="fas fa-phone"></i> ${b.customerPhone}
         </div>
       </div>
     `;
