@@ -185,11 +185,15 @@ function formatDateEnglish(dateStr) {
 }
 
 /**
- * Helper to clean and normalize Bangladeshi phone number to 11 digits
+ * Helper to clean and normalize Bangladeshi phone number to 11 digits.
+ * Automatically converts Bengali numerals (০-৯) to English digits (0-9).
  */
 function cleanPhoneNumber(phone) {
   if (!phone) return '';
-  let cleaned = String(phone).replace(/\s+/g, '').replace(/[-+]/g, '');
+  const bnDigits = '০১২৩৪৫৬৭৮৯';
+  let cleaned = String(phone).trim()
+    .replace(/[০-৯]/g, d => '0123456789'[bnDigits.indexOf(d)])
+    .replace(/[\s\-\+\(\)]/g, '');
   if (cleaned.startsWith('880')) {
     cleaned = cleaned.substring(2);
   }

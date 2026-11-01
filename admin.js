@@ -4,14 +4,15 @@
  * 
  * Complete implementation for:
  * - Admin Authentication & Role Authorization
- * - Real-time Dashboard Statistics & Recent Activity
- * - Comprehensive Booking Management (Approve, Reject, Cancel, Details)
+ * - Real-time Dashboard Statistics & Revenue Tracking
+ * - Comprehensive Booking Management (Approve/Confirm, Reject, Cancel, Details)
  * - Permanent Booking Management (Weekly/Monthly Slots, Status Handling)
  * - Dynamic Slot & Schedule Management (Day/Night, Block Dates, Working Days)
  * - Pricing Configuration System (Day/Night, Normal & Permanent)
- * - Gallery Media Management (Upload, Order, Edit, Delete)
+ * - Gallery Media Management (Upload to assets/images via GitHub, Order, Edit, Delete)
  * - Rules & Guidelines Management (Add, Edit, Reorder, Delete)
  * - Global Website & Contact Settings Configuration
+ * - One-Click Firebase Realtime Database Setup & Seeder
  */
 
 (function (window, document) {
@@ -95,7 +96,7 @@
         });
       }
 
-      // 2. Login Form Submit (Email / Password)
+      // 2. Email & Password Login
       if (this.loginForm) {
         this.loginForm.addEventListener('submit', function (e) {
           e.preventDefault();
@@ -116,8 +117,8 @@
       if (this.adminLogoutBtn) {
         this.adminLogoutBtn.addEventListener('click', function () {
           self.showConfirm(
-            'লগআউট নিশ্চিতকরণ',
-            'আপনি কি নিশ্চিত যে আপনি এডমিন প্যানেল থেকে লগআউট করতে চান?',
+            'Confirm Logout',
+            'Are you sure you want to log out from the Admin Panel?',
             function () {
               self.logout();
             }
@@ -160,7 +161,7 @@
       if (refreshDashboardBtn) {
         refreshDashboardBtn.addEventListener('click', function () {
           self.loadDashboardStats();
-          self.toast('পরিসংখ্যান আপডেট করা হয়েছে', 'info');
+          self.toast('Dashboard statistics refreshed', 'info');
         });
       }
 
@@ -352,6 +353,18 @@
           self.closeEditModal();
         });
       }
+
+      // Backdrop click listeners to dismiss modals
+      [this.confirmOverlay, this.bookingDetailOverlay, this.editOverlay].forEach(function (overlay) {
+        if (overlay) {
+          overlay.addEventListener('click', function (e) {
+            if (e.target === overlay) {
+              overlay.classList.add('hidden');
+              overlay.classList.remove('active');
+            }
+          });
+        }
+      });
     },
 
     // =======================================================================
@@ -375,14 +388,14 @@
               self.showDashboardScreen(user);
               self.initializeDashboardData();
             } else {
-              const errMsg = `অননুমোদিত অ্যাক্সেস! আপনার অ্যাকাউন্টে (${user.email || 'ব্যবহারকারী'}, UID: ${user.uid}) এডমিন অধিকার নেই। এটি Firebase Realtime Database এর /admins/${user.uid} নোডে রেজিস্টার্ড থাকতে হবে।`;
+              const errMsg = `Unauthorized Access! Your account (${user.email || 'User'}, UID: ${user.uid}) does not have admin privileges. It must be registered in the Firebase Realtime Database at /admins/${user.uid}.`;
               self.showLoginError(errMsg);
-              self.toast('অ্যাকাউন্টে এডমিন অধিকার নেই।', 'error');
+              self.toast('Account does not have admin privileges.', 'error');
               auth.signOut();
             }
           }).catch(function (error) {
             console.error('[Admin] Error checking admin status:', error);
-            self.showLoginError('এডমিন অধিকার যাচাইয়ে সমস্যা হয়েছে: ' + (error.message || 'Firebase এ অনুমতি নেই'));
+            self.showLoginError('Error verifying admin role: ' + (error.message || 'Permission denied in Firebase'));
             auth.signOut();
           });
         } else {
@@ -395,7 +408,7 @@
 
     checkAdmin(uid) {
       const db = window.db || (typeof firebase !== 'undefined' && firebase.database ? firebase.database() : null);
-      if (!db) return Promise.reject(new Error('Firebase Database সংযোগ পাওয়া যায়নি'));
+      if (!db) return Promise.reject(new Error('Firebase Database connection not found.'));
 
       const self = this;
       const SUPERADMIN_EMAILS = ['srpshourovdev1@gmail.com'];
@@ -403,7 +416,6 @@
       const isSuperAdmin = SUPERADMIN_EMAILS.includes(userEmail);
 
       if (isSuperAdmin) {
-        // Auto-register superadmin in Realtime Database /admins/${uid} node
         return db.ref('admins/' + uid).update({
           email: userEmail,
           role: 'admin',
@@ -414,7 +426,7 @@
           return true;
         }).catch(function (err) {
           console.warn('[Admin] Superadmin DB sync note:', err.message);
-          return true; // Always allow superadmin access
+          return true;
         });
       }
 
@@ -442,33 +454,33 @@
     login(email, password) {
       const self = this;
       if (!email || !password) {
-        self.showLoginError('অনুগ্রহ করে সঠিক ইমেইল ও পাসওয়ার্ড প্রদান করুন।');
+        self.showLoginError('Please enter a valid email and password.');
         return;
       }
 
       const auth = window.auth || (typeof firebase !== 'undefined' && firebase.auth ? firebase.auth() : null);
       if (!auth) {
-        self.showLoginError('Firebase Auth সংযোগ পাওয়া যায়নি।');
+        self.showLoginError('Firebase Auth connection not found.');
         return;
       }
 
-      self.setButtonLoading(self.loginSubmitBtn, true, 'লগইন করা হচ্ছে...');
+      self.setButtonLoading(self.loginSubmitBtn, true, 'Signing in...');
       self.hideLoginError();
 
       auth.signInWithEmailAndPassword(email, password)
-        .then(function (userCredential) {
-          self.setButtonLoading(self.loginSubmitBtn, false, 'ইমেইল দিয়ে লগইন করুন');
-          self.toast('সফলভাবে লগইন হয়েছে!', 'success');
+        .then(function () {
+          self.setButtonLoading(self.loginSubmitBtn, false, 'Sign In with Email');
+          self.toast('Signed in successfully!', 'success');
         })
         .catch(function (error) {
-          self.setButtonLoading(self.loginSubmitBtn, false, 'ইমেইল দিয়ে লগইন করুন');
-          let msg = 'লগইন ব্যর্থ হয়েছে। পুনরায় চেষ্টা করুন।';
+          self.setButtonLoading(self.loginSubmitBtn, false, 'Sign In with Email');
+          let msg = 'Sign in failed. Please try again.';
           if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
-            msg = 'ইমেইল অথবা পাসওয়ার্ড সঠিক নয়।';
+            msg = 'Invalid email or password.';
           } else if (error.code === 'auth/invalid-email') {
-            msg = 'ইমেইল ঠিকানাটি সঠিক ফরম্যাটে লিখুন।';
+            msg = 'Please enter a valid email address.';
           } else if (error.code === 'auth/too-many-requests') {
-            msg = 'অতিরিক্ত ভুল চেষ্টার কারণে সাময়িক লক করা হয়েছে। কিছুক্ষণ পর চেষ্টা করুন।';
+            msg = 'Too many failed attempts. Account temporarily locked, please try again later.';
           } else if (error.message) {
             msg = error.message;
           }
@@ -480,26 +492,26 @@
       const self = this;
       const auth = window.auth || (typeof firebase !== 'undefined' && firebase.auth ? firebase.auth() : null);
       if (!auth) {
-        self.showLoginError('Firebase Auth সংযোগ পাওয়া যায়নি।');
+        self.showLoginError('Firebase Auth connection not found.');
         return;
       }
 
-      self.setButtonLoading(self.googleLoginBtn, true, 'Google সংযোগ হচ্ছে...');
+      self.setButtonLoading(self.googleLoginBtn, true, 'Connecting Google...');
       self.hideLoginError();
 
       const provider = new firebase.auth.GoogleAuthProvider();
       auth.signInWithPopup(provider)
-        .then(function (result) {
-          self.setButtonLoading(self.googleLoginBtn, false, 'Google অ্যাকাউন্ট দিয়ে লগইন করুন');
-          self.toast('Google অথেনটিকেশন সফল!', 'success');
+        .then(function () {
+          self.setButtonLoading(self.googleLoginBtn, false, 'Sign in with Google');
+          self.toast('Google authentication successful!', 'success');
         })
         .catch(function (error) {
-          self.setButtonLoading(self.googleLoginBtn, false, 'Google অ্যাকাউন্ট দিয়ে লগইন করুন');
-          let msg = 'Google দিয়ে লগইন ব্যর্থ হয়েছে।';
+          self.setButtonLoading(self.googleLoginBtn, false, 'Sign in with Google');
+          let msg = 'Google sign in failed.';
           if (error.code === 'auth/popup-closed-by-user') {
-            msg = 'লগইন উইন্ডোটি বন্ধ করা হয়েছে।';
+            msg = 'Sign in popup was closed.';
           } else if (error.code === 'auth/popup-blocked') {
-            msg = 'ব্রাউজারের পপ-আপ ব্লক করা আছে। দয়া করে পপ-আপ অনুমতি দিন।';
+            msg = 'Popup was blocked by your browser. Please allow popups.';
           } else if (error.message) {
             msg = error.message;
           }
@@ -512,7 +524,7 @@
       this.detachListeners();
       if (auth) {
         auth.signOut().then(() => {
-          this.toast('সফলভাবে লগআউট হয়েছে', 'info');
+          this.toast('Logged out successfully.', 'info');
         });
       } else {
         this.showLoginScreen();
@@ -555,7 +567,7 @@
       this.currentTab = tabName;
 
       // 1. Update Sidebar Links Active State
-      const links = document.querySelectorAll('.admin-sidebar-link');
+      const links = document.querySelectorAll('.admin-sidebar-link[data-tab]');
       links.forEach(function (link) {
         if (link.getAttribute('data-tab') === tabName) {
           link.classList.add('active');
@@ -566,24 +578,23 @@
         }
       });
 
-      // 2. Hide all tab sections, show target
+      // 2. Hide all tab sections, show selected
       const sections = document.querySelectorAll('.admin-section');
       sections.forEach(function (sec) {
         sec.classList.add('hidden');
       });
 
-      const activeSection = document.getElementById('tab-' + tabName);
+      const activeSection = document.getElementById(`tab-${tabName}`);
       if (activeSection) {
         activeSection.classList.remove('hidden');
       }
 
-      // Close mobile sidebar after navigation
+      // 3. Close mobile sidebar
       this.closeSidebar();
 
-      // Trigger custom render if needed
+      // 4. Trigger section-specific renders
       if (tabName === 'dashboard') {
         this.loadDashboardStats();
-        this.loadRecentBookings();
       } else if (tabName === 'bookings') {
         this.filterBookings();
       } else if (tabName === 'permanent') {
@@ -600,28 +611,32 @@
       } else if (tabName === 'settings') {
         this.renderSettingsInputs();
       }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     },
 
     toggleSidebar() {
-      if (this.adminSidebar) {
-        this.adminSidebar.classList.toggle('active');
-        this.adminSidebar.classList.toggle('open');
+      if (!this.adminSidebar) return;
+      const isOpen = this.adminSidebar.classList.contains('mobile-open');
+      if (isOpen) {
+        this.closeSidebar();
+      } else {
+        this.adminSidebar.classList.add('mobile-open');
+        if (this.sidebarBackdrop) {
+          this.sidebarBackdrop.classList.add('active');
+          this.sidebarBackdrop.classList.remove('hidden');
+        }
       }
-      if (this.sidebarBackdrop) {
-        this.sidebarBackdrop.classList.toggle('active');
-      }
-      document.body.classList.toggle('sidebar-open');
     },
 
     closeSidebar() {
       if (this.adminSidebar) {
-        this.adminSidebar.classList.remove('active');
-        this.adminSidebar.classList.remove('open');
+        this.adminSidebar.classList.remove('mobile-open');
       }
       if (this.sidebarBackdrop) {
         this.sidebarBackdrop.classList.remove('active');
+        this.sidebarBackdrop.classList.add('hidden');
       }
-      document.body.classList.remove('sidebar-open');
     },
 
     // =======================================================================
@@ -640,10 +655,10 @@
     },
 
     detachListeners() {
-      this.listeners.forEach(function (listener) {
+      this.listeners.forEach(function (l) {
         try {
-          if (listener.ref && typeof listener.ref.off === 'function') {
-            listener.ref.off(listener.event || 'value');
+          if (l.ref && typeof l.ref.off === 'function') {
+            l.ref.off(l.event);
           }
         } catch (e) {
           console.warn('[Admin] Error detaching listener:', e);
@@ -662,7 +677,8 @@
         confirmed: 0,
         cancelled: 0,
         permanent: 0,
-        today: 0
+        today: 0,
+        revenue: 0
       };
 
       const todayStr = this.getTodayDateString();
@@ -670,15 +686,18 @@
       this.bookings.forEach(function (b) {
         const st = (b.status || 'pending').toLowerCase();
         if (st === 'pending') stats.pending++;
-        else if (st === 'confirmed') stats.confirmed++;
-        else if (st === 'cancelled' || st === 'rejected') stats.cancelled++;
+        else if (st === 'confirmed') {
+          stats.confirmed++;
+          stats.revenue += Number(b.price || b.totalAmount || 0);
+        } else if (st === 'cancelled' || st === 'rejected') {
+          stats.cancelled++;
+        }
 
         if (b.date === todayStr) {
           stats.today++;
         }
       });
 
-      // Count active permanent bookings
       this.permanentBookings.forEach(function (pb) {
         if ((pb.status || 'active').toLowerCase() === 'active') {
           stats.permanent++;
@@ -694,21 +713,23 @@
       const elPending = document.getElementById('statPendingBookings');
       const elConfirmed = document.getElementById('statConfirmedBookings');
       const elCancelled = document.getElementById('statCancelledBookings');
-      const elPermanent = document.getElementById('statPermanentBookings');
+      const elPermanent = document.getElementById('statPermanentSlots') || document.getElementById('statPermanentBookings');
       const elToday = document.getElementById('statTodayBookings');
+      const elRevenue = document.getElementById('statRevenue');
 
-      if (elTotal) elTotal.textContent = this.bengaliNum(stats.total);
-      if (elPending) elPending.textContent = this.bengaliNum(stats.pending);
-      if (elConfirmed) elConfirmed.textContent = this.bengaliNum(stats.confirmed);
-      if (elCancelled) elCancelled.textContent = this.bengaliNum(stats.cancelled);
-      if (elPermanent) elPermanent.textContent = this.bengaliNum(stats.permanent);
-      if (elToday) elToday.textContent = this.bengaliNum(stats.today);
+      if (elTotal) elTotal.textContent = stats.total;
+      if (elPending) elPending.textContent = stats.pending;
+      if (elConfirmed) elConfirmed.textContent = stats.confirmed;
+      if (elCancelled) elCancelled.textContent = stats.cancelled;
+      if (elPermanent) elPermanent.textContent = stats.permanent;
+      if (elToday) elToday.textContent = stats.today;
+      if (elRevenue) elRevenue.textContent = this.formatPrice(stats.revenue);
 
       // Sidebar badges
       const pendingBadge = document.getElementById('pendingBookingsBadge');
       if (pendingBadge) {
         if (stats.pending > 0) {
-          pendingBadge.textContent = this.bengaliNum(stats.pending);
+          pendingBadge.textContent = stats.pending;
           pendingBadge.classList.remove('hidden');
         } else {
           pendingBadge.classList.add('hidden');
@@ -718,7 +739,7 @@
       const permanentBadge = document.getElementById('permanentBadge');
       if (permanentBadge) {
         if (stats.permanent > 0) {
-          permanentBadge.textContent = this.bengaliNum(stats.permanent);
+          permanentBadge.textContent = stats.permanent;
           permanentBadge.classList.remove('hidden');
         } else {
           permanentBadge.classList.add('hidden');
@@ -730,7 +751,6 @@
       const tbody = document.getElementById('recentBookingsTbody');
       if (!tbody) return;
 
-      // Sort bookings by createdAt desc, take top 8
       const sorted = this.bookings.slice().sort(function (a, b) {
         const timeA = a.createdAt || 0;
         const timeB = b.createdAt || 0;
@@ -738,7 +758,7 @@
       }).slice(0, 8);
 
       if (sorted.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="8" class="text-center py-4 text-muted">কোন বুকিং রেকর্ড নেই</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="9" class="text-center py-4 text-muted">No booking records found</td></tr>';
         return;
       }
 
@@ -747,13 +767,13 @@
 
       sorted.forEach(function (b) {
         const idDisplay = b.id ? (b.id.length > 12 ? b.id.substring(0, 10) + '...' : b.id) : '-';
-        const nameDisplay = self.escapeHtml(b.customerName || b.name || 'বেনামী');
+        const nameDisplay = self.escapeHtml(b.customerName || b.name || 'Anonymous');
         const rawPhone = b.customerPhone || b.phone || '';
         const phoneDisplay = rawPhone ? self.escapeHtml(rawPhone) : '-';
         const dateDisplay = self.formatDate(b.date);
         const sessionBadge = b.session === 'night'
-          ? '<span class="badge" style="background: rgba(59,130,246,0.15); color: #60a5fa;"><i class="fas fa-moon"></i> নাইট</span>'
-          : '<span class="badge" style="background: rgba(245,158,11,0.15); color: #fbbf24;"><i class="fas fa-sun"></i> ডে</span>';
+          ? '<span class="badge" style="background: rgba(59,130,246,0.15); color: #60a5fa;"><i class="fas fa-moon"></i> Night</span>'
+          : '<span class="badge" style="background: rgba(245,158,11,0.15); color: #fbbf24;"><i class="fas fa-sun"></i> Day</span>';
         const slotDisplay = self.escapeHtml(b.slotTime || b.slot || b.time || '-');
         const priceDisplay = self.formatPrice(b.price || b.totalAmount || 0);
         const st = (b.status || 'pending').toLowerCase();
@@ -766,20 +786,21 @@
             <td><strong>${nameDisplay}</strong></td>
             <td>${rawPhone ? `<a href="tel:${rawPhone}" onclick="event.stopPropagation()" style="color: inherit; text-decoration: none;">${phoneDisplay}</a>` : '-'}</td>
             <td>${dateDisplay}</td>
-            <td>${sessionBadge} <br><small>${slotDisplay}</small></td>
+            <td>${sessionBadge}</td>
+            <td><small>${slotDisplay}</small></td>
             <td>${priceDisplay}</td>
             <td>${statusBadge}</td>
             <td>
               <div class="action-buttons">
                 ${isPending ? `
-                  <button type="button" class="btn btn-sm btn-approve-direct" onclick="event.stopPropagation(); AdminApp.approveBooking('${b.id}')" title="অনুমোদন করুন">
-                    <i class="fas fa-circle-check"></i> <span>কনফার্ম</span>
+                  <button type="button" class="btn btn-sm btn-approve-direct" onclick="event.stopPropagation(); AdminApp.approveBooking('${b.id}')" title="Confirm Booking">
+                    <i class="fas fa-circle-check"></i> <span>Confirm</span>
                   </button>
-                  <button type="button" class="btn btn-sm btn-danger" onclick="event.stopPropagation(); AdminApp.rejectBooking('${b.id}')" title="প্রত্যাখ্যান করুন">
+                  <button type="button" class="btn btn-sm btn-danger" onclick="event.stopPropagation(); AdminApp.rejectBooking('${b.id}')" title="Reject Booking">
                     <i class="fas fa-xmark"></i>
                   </button>
                 ` : ''}
-                <button type="button" class="btn btn-sm btn-secondary" onclick="event.stopPropagation(); AdminApp.viewBookingDetail('${b.id}')" title="বিস্তারিত দেখুন">
+                <button type="button" class="btn btn-sm btn-secondary" onclick="event.stopPropagation(); AdminApp.viewBookingDetail('${b.id}')" title="View Details">
                   <i class="fas fa-eye"></i>
                 </button>
               </div>
@@ -835,27 +856,23 @@
       const filterStatus = statusFilter ? statusFilter.value : '';
 
       const filtered = this.bookings.filter(function (b) {
-        // Search matches name, phone, or id
         if (query) {
           const name = (b.name || b.customerName || '').toLowerCase();
-          const phone = (b.phone || '').toLowerCase();
+          const phone = (b.phone || b.customerPhone || '').toLowerCase();
           const id = (b.id || '').toLowerCase();
           if (!name.includes(query) && !phone.includes(query) && !id.includes(query)) {
             return false;
           }
         }
 
-        // Date filter
         if (filterDate && b.date !== filterDate) {
           return false;
         }
 
-        // Session filter
         if (filterSession && (b.session || '').toLowerCase() !== filterSession) {
           return false;
         }
 
-        // Status filter
         if (filterStatus && (b.status || 'pending').toLowerCase() !== filterStatus) {
           return false;
         }
@@ -863,7 +880,6 @@
         return true;
       });
 
-      // Sort by createdAt desc
       filtered.sort(function (a, b) {
         return (b.createdAt || 0) - (a.createdAt || 0);
       });
@@ -876,13 +892,13 @@
       const countDisplay = document.getElementById('bookingsCountDisplay');
 
       if (countDisplay) {
-        countDisplay.textContent = `মোট বুকিং: ${this.bengaliNum(list.length)} টি`;
+        countDisplay.textContent = 'Total: ' + list.length;
       }
 
       if (!tbody) return;
 
       if (list.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="9" class="text-center py-4 text-muted">কোন বুকিং খুঁজে পাওয়া যায়নি</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="9" class="text-center py-4 text-muted">No bookings match the filter criteria</td></tr>';
         return;
       }
 
@@ -891,11 +907,11 @@
 
       list.forEach(function (b) {
         const idShort = b.id ? (b.id.length > 14 ? b.id.substring(0, 12) + '...' : b.id) : '-';
-        const nameDisplay = self.escapeHtml(b.customerName || b.name || 'বেনামী');
+        const nameDisplay = self.escapeHtml(b.customerName || b.name || 'Anonymous');
         const rawPhone = b.customerPhone || b.phone || '';
         const phoneDisplay = rawPhone ? self.escapeHtml(rawPhone) : '-';
         const dateDisplay = self.formatDate(b.date);
-        const sessionDisplay = (b.session === 'night') ? 'নাইট (Night)' : 'ডে (Day)';
+        const sessionDisplay = (b.session === 'night') ? 'Night' : 'Day';
         const slotDisplay = self.escapeHtml(b.slotTime || b.slot || b.time || '-');
         const priceDisplay = self.formatPrice(b.price || b.totalAmount || 0);
         const st = (b.status || 'pending').toLowerCase();
@@ -916,19 +932,19 @@
             <td>
               <div class="action-buttons">
                 ${isPending ? `
-                  <button type="button" class="btn btn-sm btn-approve-direct" onclick="event.stopPropagation(); AdminApp.approveBooking('${b.id}')" title="অনুমোদন করুন">
-                    <i class="fas fa-circle-check"></i> <span>কনফার্ম</span>
+                  <button type="button" class="btn btn-sm btn-approve-direct" onclick="event.stopPropagation(); AdminApp.approveBooking('${b.id}')" title="Confirm Booking">
+                    <i class="fas fa-circle-check"></i> <span>Confirm</span>
                   </button>
-                  <button type="button" class="btn btn-sm btn-danger" onclick="event.stopPropagation(); AdminApp.rejectBooking('${b.id}')" title="প্রত্যাখ্যান করুন">
+                  <button type="button" class="btn btn-sm btn-danger" onclick="event.stopPropagation(); AdminApp.rejectBooking('${b.id}')" title="Reject Booking">
                     <i class="fas fa-xmark"></i>
                   </button>
                 ` : ''}
                 ${isConfirmed ? `
-                  <button type="button" class="btn btn-sm btn-danger" onclick="event.stopPropagation(); AdminApp.cancelBooking('${b.id}')" title="বুকিং বাতিল করুন">
-                    <i class="fas fa-ban"></i> <span>বাতিল</span>
+                  <button type="button" class="btn btn-sm btn-danger" onclick="event.stopPropagation(); AdminApp.cancelBooking('${b.id}')" title="Cancel Booking">
+                    <i class="fas fa-ban"></i> <span>Cancel</span>
                   </button>
                 ` : ''}
-                <button type="button" class="btn btn-sm btn-secondary" onclick="event.stopPropagation(); AdminApp.viewBookingDetail('${b.id}')" title="বিস্তারিত দেখুন">
+                <button type="button" class="btn btn-sm btn-secondary" onclick="event.stopPropagation(); AdminApp.viewBookingDetail('${b.id}')" title="View Details">
                   <i class="fas fa-eye"></i>
                 </button>
               </div>
@@ -945,15 +961,15 @@
       let b = this.bookings.find(item => item.id === id);
 
       const executeApproval = function (bookingData) {
-        const custName = bookingData.customerName || bookingData.name || 'এই গ্রাহকের';
-        const dateStr = bookingData.date ? self.formatDate(bookingData.date) : 'নির্ধারিত';
+        const custName = bookingData.customerName || bookingData.name || 'this customer';
+        const dateStr = bookingData.date ? self.formatDate(bookingData.date) : 'scheduled date';
         self.showConfirm(
-          'বুকিং অনুমোদন নিশ্চিতকরণ',
-          `আপনি কি ${custName}-এর জন্য ${dateStr} তারিখের বুকিং অনুমোদন করতে চান?`,
+          'Confirm Booking Approval',
+          `Are you sure you want to approve the booking for ${custName} on ${dateStr}?`,
           function () {
             const db = window.db || (typeof firebase !== 'undefined' && firebase.database ? firebase.database() : null);
             if (!db) {
-              self.toast('ডাটাবেজ সংযোগ পাওয়া যায়নি', 'error');
+              self.toast('Database connection not found.', 'error');
               return;
             }
 
@@ -974,12 +990,12 @@
             }
 
             db.ref().update(updates).then(function () {
-              self.toast('বুকিং সফলভাবে অনুমোদন করা হয়েছে!', 'success');
+              self.toast('Booking approved successfully!', 'success');
               self.closeBookingDetailModal();
               self.closeConfirmModal();
             }).catch(function (err) {
               console.error('[Admin] Error approving booking:', err);
-              self.toast('অনুমোদনে সমস্যা হয়েছে।', 'error');
+              self.toast('Error approving booking: ' + err.message, 'error');
             });
           }
         );
@@ -996,10 +1012,10 @@
               val.id = id;
               executeApproval(val);
             } else {
-              self.toast('বুকিং তথ্য পাওয়া যায়নি', 'error');
+              self.toast('Booking record not found.', 'error');
             }
           }).catch(function () {
-            self.toast('বুকিং তথ্য লোড করা যায়নি', 'error');
+            self.toast('Failed to load booking details.', 'error');
           });
         }
       }
@@ -1011,8 +1027,8 @@
       if (!b) return;
 
       this.showConfirm(
-        'বুকিং প্রত্যাখ্যান নিশ্চিতকরণ',
-        `আপনি কি নিশ্চিত যে ${b.name || 'এই গ্রাহকের'} বুকিং প্রত্যাখ্যান করতে চান?`,
+        'Confirm Booking Rejection',
+        `Are you sure you want to reject the booking for ${b.name || b.customerName || 'this customer'}?`,
         function () {
           const db = window.db || (typeof firebase !== 'undefined' && firebase.database ? firebase.database() : null);
           if (!db) return;
@@ -1029,11 +1045,11 @@
           }
 
           db.ref().update(updates).then(function () {
-            self.toast('বুকিং প্রত্যাখ্যান করা হয়েছে', 'warning');
+            self.toast('Booking has been rejected.', 'warning');
             self.closeBookingDetailModal();
           }).catch(function (err) {
             console.error('[Admin] Error rejecting booking:', err);
-            self.toast('প্রত্যাখ্যানে সমস্যা হয়েছে।', 'error');
+            self.toast('Error rejecting booking: ' + err.message, 'error');
           });
         }
       );
@@ -1045,8 +1061,8 @@
       if (!b) return;
 
       this.showConfirm(
-        'বুকিং বাতিল নিশ্চিতকরণ',
-        `সতর্কতা: এটি একটি নিশ্চিত বুকিং। আপনি কি নিশ্চিত যে এটি বাতিল করতে চান?`,
+        'Confirm Booking Cancellation',
+        'Warning: This is a confirmed booking. Are you sure you want to cancel it?',
         function () {
           const db = window.db || (typeof firebase !== 'undefined' && firebase.database ? firebase.database() : null);
           if (!db) return;
@@ -1062,11 +1078,11 @@
           }
 
           db.ref().update(updates).then(function () {
-            self.toast('বুকিং বাতিল করা হয়েছে', 'info');
+            self.toast('Booking has been cancelled.', 'warning');
             self.closeBookingDetailModal();
           }).catch(function (err) {
             console.error('[Admin] Error cancelling booking:', err);
-            self.toast('বাতিল করতে ত্রুটি হয়েছে।', 'error');
+            self.toast('Error cancelling booking: ' + err.message, 'error');
           });
         }
       );
@@ -1079,64 +1095,63 @@
       }
       if (!b || !this.bookingDetailBody) return;
 
-      const nameDisplay = this.escapeHtml(b.customerName || b.name || 'বেনামী');
+      const nameDisplay = this.escapeHtml(b.customerName || b.name || 'Anonymous');
       const rawPhone = b.customerPhone || b.phone || '';
       const phoneDisplay = rawPhone ? this.escapeHtml(rawPhone) : '-';
-      const emailDisplay = this.escapeHtml(b.customerEmail || b.email || 'তথ্য নেই');
+      const emailDisplay = this.escapeHtml(b.customerEmail || b.email || 'Not provided');
       const dateDisplay = b.date ? this.formatDate(b.date) : (b.weekday !== undefined ? this.getWeekdayName(b.weekday) : '-');
-      const sessionDisplay = (b.session === 'night') ? 'নাইট (Night)' : 'ডে (Day)';
+      const sessionDisplay = (b.session === 'night') ? 'Night' : 'Day';
       const slotDisplay = this.escapeHtml(b.slotTime || b.slot || b.time || '-');
       const priceDisplay = this.formatPrice(b.price || b.monthlyFee || b.totalAmount || 0);
-      const categoryDisplay = this.escapeHtml(b.category || (b.type === 'permanent' ? 'স্থায়ী বুকিং' : 'সাধারণ বুকিং'));
-      const playersCount = b.players ? this.bengaliNum(b.players) + ' জন' : 'তথ্য নেই';
-      const notesDisplay = this.escapeHtml(b.message || b.notes || 'কোন বিশেষ বার্তা নেই');
-      const createdAtDisplay = b.createdAt ? new Date(b.createdAt).toLocaleString('bn-BD') : '-';
+      const categoryDisplay = this.escapeHtml(b.category || (b.type === 'permanent' ? 'Permanent Booking' : 'Normal Booking'));
+      const playersCount = b.players ? (b.players + ' players') : 'Not specified';
+      const notesDisplay = this.escapeHtml(b.message || b.notes || 'No special instructions');
+      const createdAtDisplay = b.createdAt ? new Date(b.createdAt).toLocaleString('en-US') : '-';
       const st = (b.status || 'pending').toLowerCase();
       const statusBadge = this.getStatusBadge(b.status);
 
       this.bookingDetailBody.innerHTML = `
         <div class="booking-detail-grid">
           <div class="card mb-3" style="background: var(--color-surface); padding: 1rem;">
-            <h4 style="color: var(--color-primary); margin-bottom: 0.5rem;"><i class="fas fa-user"></i> গ্রাহকের তথ্য</h4>
-            <p><strong>নাম:</strong> ${nameDisplay}</p>
-            <p><strong>মোবাইল:</strong> ${rawPhone ? `<a href="tel:${rawPhone}">${phoneDisplay}</a>` : '-'}</p>
-            <p><strong>ইমেইল:</strong> ${emailDisplay}</p>
-            <p><strong>খেলোয়াড় সংখ্যা:</strong> ${playersCount}</p>
+            <h4 style="color: var(--color-primary); margin-bottom: 0.5rem;"><i class="fas fa-user"></i> Customer Info</h4>
+            <p><strong>Name:</strong> ${nameDisplay}</p>
+            <p><strong>Phone:</strong> ${rawPhone ? `<a href="tel:${rawPhone}">${phoneDisplay}</a>` : '-'}</p>
+            <p><strong>Email:</strong> ${emailDisplay}</p>
+            <p><strong>Players:</strong> ${playersCount}</p>
           </div>
 
           <div class="card mb-3" style="background: var(--color-surface); padding: 1rem;">
-            <h4 style="color: var(--color-primary); margin-bottom: 0.5rem;"><i class="fas fa-calendar-check"></i> স্লটের তথ্য</h4>
-            <p><strong>বুকিং আইডি:</strong> <code>${b.id}</code></p>
-            <p><strong>তারিখ / বার:</strong> ${dateDisplay}</p>
-            <p><strong>সেশন:</strong> ${sessionDisplay}</p>
-            <p><strong>সময়সূচি (স্লট):</strong> ${slotDisplay}</p>
-            <p><strong>ক্যাটেগরি:</strong> ${categoryDisplay}</p>
-            <p><strong>মোট মূল্য:</strong> <strong style="color: var(--color-primary);">${priceDisplay}</strong></p>
-            <p><strong>বর্তমান অবস্থা:</strong> ${statusBadge}</p>
-            <p><strong>আবেদনের সময়:</strong> <small>${createdAtDisplay}</small></p>
+            <h4 style="color: var(--color-primary); margin-bottom: 0.5rem;"><i class="fas fa-calendar-check"></i> Slot Details</h4>
+            <p><strong>Booking ID:</strong> <code>${b.id}</code></p>
+            <p><strong>Date / Day:</strong> ${dateDisplay}</p>
+            <p><strong>Session:</strong> ${sessionDisplay}</p>
+            <p><strong>Time Slot:</strong> ${slotDisplay}</p>
+            <p><strong>Category:</strong> ${categoryDisplay}</p>
+            <p><strong>Total Price:</strong> <strong style="color: var(--color-primary);">${priceDisplay}</strong></p>
+            <p><strong>Status:</strong> ${statusBadge}</p>
+            <p><strong>Booked At:</strong> <small>${createdAtDisplay}</small></p>
           </div>
         </div>
 
         <div class="card" style="background: var(--color-surface); padding: 1rem;">
-          <h4 style="color: var(--color-primary); margin-bottom: 0.5rem;"><i class="fas fa-comment-dots"></i> অতিরিক্ত বার্তা / নির্দেশনা</h4>
+          <h4 style="color: var(--color-primary); margin-bottom: 0.5rem;"><i class="fas fa-comment-dots"></i> Special Notes / Instructions</h4>
           <p class="card-text">${notesDisplay}</p>
         </div>
       `;
 
-      // Update action buttons in modal footer
       if (this.bookingDetailFooter) {
         let footerHtml = `
-          <button type="button" class="btn btn-secondary" onclick="AdminApp.closeBookingDetailModal()">বন্ধ করুন</button>
+          <button type="button" class="btn btn-secondary" onclick="AdminApp.closeBookingDetailModal()">Close</button>
         `;
 
         if (st === 'pending') {
           footerHtml += `
-            <button type="button" class="btn btn-danger" onclick="AdminApp.rejectBooking('${b.id}')"><i class="fas fa-xmark"></i> প্রত্যাখ্যান</button>
-            <button type="button" class="btn btn-primary btn-lg" onclick="AdminApp.approveBooking('${b.id}')" style="box-shadow: 0 0 15px rgba(16,185,129,0.5); font-weight: 700;"><i class="fas fa-circle-check"></i> বুকিং কনফার্ম করুন (অনুমোদন)</button>
+            <button type="button" class="btn btn-danger" onclick="AdminApp.rejectBooking('${b.id}')"><i class="fas fa-xmark"></i> Reject</button>
+            <button type="button" class="btn btn-primary btn-lg" onclick="AdminApp.approveBooking('${b.id}')" style="box-shadow: 0 0 15px rgba(16,185,129,0.5); font-weight: 700;"><i class="fas fa-circle-check"></i> Confirm Booking</button>
           `;
         } else if (st === 'confirmed') {
           footerHtml += `
-            <button type="button" class="btn btn-danger" onclick="AdminApp.cancelBooking('${b.id}')"><i class="fas fa-ban"></i> বুকিং বাতিল করুন</button>
+            <button type="button" class="btn btn-danger" onclick="AdminApp.cancelBooking('${b.id}')"><i class="fas fa-ban"></i> Cancel Booking</button>
           `;
         }
 
@@ -1147,11 +1162,17 @@
     },
 
     openBookingDetailModal() {
-      if (this.bookingDetailOverlay) this.bookingDetailOverlay.classList.remove('hidden');
+      if (this.bookingDetailOverlay) {
+        this.bookingDetailOverlay.classList.remove('hidden');
+        this.bookingDetailOverlay.classList.add('active');
+      }
     },
 
     closeBookingDetailModal() {
-      if (this.bookingDetailOverlay) this.bookingDetailOverlay.classList.add('hidden');
+      if (this.bookingDetailOverlay) {
+        this.bookingDetailOverlay.classList.add('hidden');
+        this.bookingDetailOverlay.classList.remove('active');
+      }
     },
 
     // =======================================================================
@@ -1181,8 +1202,6 @@
 
         self.loadDashboardStats();
         self.filterPermanentBookings();
-      }, function (err) {
-        console.error('[Admin] Error loading permanent bookings:', err);
       });
     },
 
@@ -1196,8 +1215,10 @@
       const filtered = this.permanentBookings.filter(function (pb) {
         if (query) {
           const name = (pb.name || pb.customerName || '').toLowerCase();
-          const phone = (pb.phone || '').toLowerCase();
-          if (!name.includes(query) && !phone.includes(query)) return false;
+          const phone = (pb.phone || pb.customerPhone || '').toLowerCase();
+          if (!name.includes(query) && !phone.includes(query)) {
+            return false;
+          }
         }
 
         if (filterStatus && (pb.status || 'pending').toLowerCase() !== filterStatus) {
@@ -1211,11 +1232,17 @@
     },
 
     renderPermanentBookings(list) {
-      const tbody = document.getElementById('permanentTableBody');
+      const tbody = document.getElementById('allPermanentBookingsTbody') || document.getElementById('permanentTableBody');
+      const countDisplay = document.getElementById('permanentBookingsCountDisplay');
+
+      if (countDisplay) {
+        countDisplay.textContent = 'Total Permanent Bookings: ' + list.length;
+      }
+
       if (!tbody) return;
 
       if (list.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="9" class="text-center py-4 text-muted">কোন স্থায়ী বুকিং রেকর্ড নেই</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="9" class="text-center py-4 text-muted">No permanent booking records found</td></tr>';
         return;
       }
 
@@ -1224,11 +1251,11 @@
 
       list.forEach(function (pb) {
         const idDisplay = pb.id ? (pb.id.length > 12 ? pb.id.substring(0, 10) + '...' : pb.id) : '-';
-        const nameDisplay = self.escapeHtml(pb.customerName || pb.name || 'গ্রাহক');
+        const nameDisplay = self.escapeHtml(pb.customerName || pb.name || 'Customer');
         const rawPhone = pb.customerPhone || pb.phone || '';
         const phoneDisplay = rawPhone ? self.escapeHtml(rawPhone) : '-';
         const weekdayName = self.getWeekdayName(pb.weekday !== undefined ? pb.weekday : pb.dayOfWeek);
-        const sessionDisplay = pb.session === 'night' ? 'নাইট (Night)' : 'ডে (Day)';
+        const sessionDisplay = pb.session === 'night' ? 'Night' : 'Day';
         const slotDisplay = self.escapeHtml(pb.slotTime || pb.slot || pb.time || '-');
         const feeDisplay = self.formatPrice(pb.monthlyFee || pb.price || 0);
         const st = (pb.status || 'pending').toLowerCase();
@@ -1247,27 +1274,27 @@
             <td>
               <div class="action-buttons">
                 ${(st === 'pending') ? `
-                  <button type="button" class="btn btn-sm btn-approve-direct" onclick="AdminApp.approvePermanent('${pb.id}')" title="অনুমোদন ও সক্রিয় করুন">
-                    <i class="fas fa-circle-check"></i> <span>সক্রিয় করুন</span>
+                  <button type="button" class="btn btn-sm btn-approve-direct" onclick="AdminApp.approvePermanent('${pb.id}')" title="Approve & Activate">
+                    <i class="fas fa-circle-check"></i> <span>Activate</span>
                   </button>
-                  <button type="button" class="btn btn-sm btn-danger" onclick="AdminApp.rejectPermanent('${pb.id}')" title="প্রত্যাখ্যান করুন">
+                  <button type="button" class="btn btn-sm btn-danger" onclick="AdminApp.rejectPermanent('${pb.id}')" title="Reject">
                     <i class="fas fa-xmark"></i>
                   </button>
                 ` : ''}
                 ${(st === 'active') ? `
-                  <button type="button" class="btn btn-sm btn-secondary" onclick="AdminApp.pausePermanent('${pb.id}')" title="স্থগিত করুন">
-                    <i class="fas fa-pause"></i> স্থগিত
+                  <button type="button" class="btn btn-sm btn-secondary" onclick="AdminApp.pausePermanent('${pb.id}')" title="Pause">
+                    <i class="fas fa-pause"></i> Pause
                   </button>
-                  <button type="button" class="btn btn-sm btn-danger" onclick="AdminApp.terminatePermanent('${pb.id}')" title="সমাপ্ত করুন">
-                    <i class="fas fa-stop"></i> সমাপ্ত
+                  <button type="button" class="btn btn-sm btn-danger" onclick="AdminApp.terminatePermanent('${pb.id}')" title="Terminate">
+                    <i class="fas fa-stop"></i> Terminate
                   </button>
                 ` : ''}
                 ${(st === 'paused') ? `
-                  <button type="button" class="btn btn-sm btn-primary" onclick="AdminApp.approvePermanent('${pb.id}')" title="পুনরায় চালু করুন">
-                    <i class="fas fa-play"></i> সক্রিয়
+                  <button type="button" class="btn btn-sm btn-primary" onclick="AdminApp.approvePermanent('${pb.id}')" title="Resume">
+                    <i class="fas fa-play"></i> Activate
                   </button>
-                  <button type="button" class="btn btn-sm btn-danger" onclick="AdminApp.terminatePermanent('${pb.id}')" title="সমাপ্ত করুন">
-                    <i class="fas fa-stop"></i> সমাপ্ত
+                  <button type="button" class="btn btn-sm btn-danger" onclick="AdminApp.terminatePermanent('${pb.id}')" title="Terminate">
+                    <i class="fas fa-stop"></i> Terminate
                   </button>
                 ` : ''}
               </div>
@@ -1282,8 +1309,8 @@
     approvePermanent(id) {
       const self = this;
       this.showConfirm(
-        'স্থায়ী বুকিং সক্রিয়করণ',
-        'আপনি কি এই গ্রাহকের স্থায়ী বুকিং অনুমোদন ও সক্রিয় করতে চান?',
+        'Activate Permanent Booking',
+        'Are you sure you want to approve and activate this permanent booking?',
         function () {
           const db = window.db || (typeof firebase !== 'undefined' && firebase.database ? firebase.database() : null);
           if (!db) return;
@@ -1292,10 +1319,10 @@
             status: 'active',
             activatedAt: Date.now()
           }).then(function () {
-            self.toast('স্থায়ী বুকিং সক্রিয় করা হয়েছে!', 'success');
+            self.toast('Permanent booking activated!', 'success');
           }).catch(function (err) {
             console.error('[Admin] Error activating permanent booking:', err);
-            self.toast('সক্রিয়করণে সমস্যা হয়েছে', 'error');
+            self.toast('Error activating permanent booking: ' + err.message, 'error');
           });
         }
       );
@@ -1304,8 +1331,8 @@
     rejectPermanent(id) {
       const self = this;
       this.showConfirm(
-        'স্থায়ী বুকিং প্রত্যাখ্যান',
-        'আপনি কি নিশ্চিত যে এই স্থায়ী বুকিং আবেদন প্রত্যাখ্যান করতে চান?',
+        'Reject Permanent Booking',
+        'Are you sure you want to reject this permanent booking request?',
         function () {
           const db = window.db || (typeof firebase !== 'undefined' && firebase.database ? firebase.database() : null);
           if (!db) return;
@@ -1314,7 +1341,7 @@
             status: 'rejected',
             rejectedAt: Date.now()
           }).then(function () {
-            self.toast('স্থায়ী বুকিং আবেদন প্রত্যাখ্যাত হয়েছে', 'warning');
+            self.toast('Permanent booking request rejected.', 'warning');
           });
         }
       );
@@ -1323,8 +1350,8 @@
     pausePermanent(id) {
       const self = this;
       this.showConfirm(
-        'স্থায়ী বুকিং স্থগিতকরণ',
-        'গ্রাহকের অনুরোধে এই স্থায়ী বুকিং সাময়িক স্থগিত (Pause) করতে চান?',
+        'Pause Permanent Booking',
+        'Are you sure you want to temporarily pause this permanent booking?',
         function () {
           const db = window.db || (typeof firebase !== 'undefined' && firebase.database ? firebase.database() : null);
           if (!db) return;
@@ -1333,7 +1360,7 @@
             status: 'paused',
             pausedAt: Date.now()
           }).then(function () {
-            self.toast('স্থায়ী বুকিং স্থগিত করা হয়েছে', 'info');
+            self.toast('Permanent booking paused.', 'info');
           });
         }
       );
@@ -1342,8 +1369,8 @@
     terminatePermanent(id) {
       const self = this;
       this.showConfirm(
-        'স্থায়ী বুকিং সমাপ্তি',
-        'সতর্কতা: এই স্থায়ী স্লটটি স্থায়ীভাবে বাতিল ও বন্ধ হবে। আপনি কি নিশ্চিত?',
+        'Terminate Permanent Booking',
+        'Warning: This permanent booking slot will be terminated and freed. Are you sure?',
         function () {
           const db = window.db || (typeof firebase !== 'undefined' && firebase.database ? firebase.database() : null);
           if (!db) return;
@@ -1352,7 +1379,7 @@
             status: 'terminated',
             terminatedAt: Date.now()
           }).then(function () {
-            self.toast('স্থায়ী বুকিং সমাপ্ত করা হয়েছে', 'info');
+            self.toast('Permanent booking terminated.', 'info');
           });
         }
       );
@@ -1366,12 +1393,14 @@
       const dayBtn = document.getElementById('slotSessionDayBtn');
       const nightBtn = document.getElementById('slotSessionNightBtn');
 
-      if (session === 'day') {
-        if (dayBtn) dayBtn.classList.add('active');
-        if (nightBtn) nightBtn.classList.remove('active');
-      } else {
-        if (nightBtn) nightBtn.classList.add('active');
-        if (dayBtn) dayBtn.classList.remove('active');
+      if (dayBtn && nightBtn) {
+        if (session === 'day') {
+          dayBtn.classList.add('active');
+          nightBtn.classList.remove('active');
+        } else {
+          nightBtn.classList.add('active');
+          dayBtn.classList.remove('active');
+        }
       }
 
       this.renderSlots(session);
@@ -1386,61 +1415,25 @@
       this.listeners.push({ ref: slotsRef, event: 'value' });
 
       slotsRef.on('value', function (snapshot) {
-        const data = snapshot.val();
+        const val = snapshot.val();
         self.slots = { day: [], night: [] };
 
-        if (data) {
-          if (data.day) {
-            Object.keys(data.day).forEach(function (key) {
-              const item = data.day[key];
-              item.id = key;
-              self.slots.day.push(item);
-            });
-          }
-          if (data.night) {
-            Object.keys(data.night).forEach(function (key) {
-              const item = data.night[key];
-              item.id = key;
-              self.slots.night.push(item);
-            });
-          }
-        } else {
-          // Setup default slots if unconfigured
-          self.seedDefaultSlots();
+        if (val) {
+          ['day', 'night'].forEach(function (session) {
+            if (val[session]) {
+              Object.keys(val[session]).forEach(function (k) {
+                const s = val[session][k];
+                if (typeof s === 'object' && s !== null) {
+                  s.id = k;
+                  self.slots[session].push(s);
+                }
+              });
+            }
+          });
         }
 
         self.renderSlots(self.currentSlotSession);
       });
-    },
-
-    seedDefaultSlots() {
-      const defaultDay = [
-        { startTime: '08:00', endTime: '09:00', label: 'সকাল ৮:০০ - ৯:০০' },
-        { startTime: '09:00', endTime: '10:00', label: 'সকাল ৯:০০ - ১০:০০' },
-        { startTime: '10:00', endTime: '11:00', label: 'সকাল ১০:০০ - ১১:০০' },
-        { startTime: '11:00', endTime: '12:00', label: 'সকাল ১১:০০ - দুপুর ১২:০০' },
-        { startTime: '12:00', endTime: '13:00', label: 'দুপুর ১২:০০ - ১:০০' },
-        { startTime: '13:00', endTime: '14:00', label: 'দুপুর ১:০০ - ২:০০' },
-        { startTime: '14:00', endTime: '15:00', label: 'দুপুর ২:০০ - ৩:০০' },
-        { startTime: '15:00', endTime: '16:00', label: 'বিকাল ৩:০০ - ৪:০০' },
-        { startTime: '16:00', endTime: '17:00', label: 'বিকাল ৪:০০ - ৫:০০' }
-      ];
-
-      const defaultNight = [
-        { startTime: '17:00', endTime: '18:00', label: 'বিকাল ৫:০০ - সন্ধ্যা ৬:০০' },
-        { startTime: '18:00', endTime: '19:00', label: 'সন্ধ্যা ৬:০০ - ৭:০০' },
-        { startTime: '19:00', endTime: '20:00', label: 'সন্ধ্যা ৭:০০ - রাত ৮:০০' },
-        { startTime: '20:00', endTime: '21:00', label: 'রাত ৮:০০ - ৯:০০' },
-        { startTime: '21:00', endTime: '22:00', label: 'রাত ৯:০০ - ১০:০০' },
-        { startTime: '22:00', endTime: '23:00', label: 'রাত ১০:০০ - ১১:০০' },
-        { startTime: '23:00', endTime: '24:00', label: 'রাত ১১:০০ - ১২:০০' }
-      ];
-
-      const db = window.db || (typeof firebase !== 'undefined' && firebase.database ? firebase.database() : null);
-      if (!db) return;
-
-      defaultDay.forEach(slot => db.ref('slots/day').push(slot));
-      defaultNight.forEach(slot => db.ref('slots/night').push(slot));
     },
 
     renderSlots(session) {
@@ -1449,11 +1442,10 @@
 
       const list = this.slots[session] || [];
       if (list.length === 0) {
-        container.innerHTML = '<p class="form-hint text-center py-4">এই সেশনের জন্য কোন স্লট তৈরি করা হয়নি</p>';
+        container.innerHTML = '<p class="form-hint text-center py-4">No slots created for this session yet.</p>';
         return;
       }
 
-      // Sort chronologically by startTime
       list.sort((a, b) => (a.startTime || '').localeCompare(b.startTime || ''));
 
       let html = '<div class="slots-list-grid">';
@@ -1468,10 +1460,10 @@
               ${slot.label ? `<br><small class="text-muted">${self.escapeHtml(slot.label)}</small>` : ''}
             </div>
             <div class="action-buttons">
-              <button type="button" class="btn btn-sm btn-secondary" onclick="AdminApp.editSlotModal('${session}', '${slot.id}')" title="সম্পাদনা">
+              <button type="button" class="btn btn-sm btn-secondary" onclick="AdminApp.editSlotModal('${session}', '${slot.id}')" title="Edit">
                 <i class="fas fa-edit"></i>
               </button>
-              <button type="button" class="btn btn-sm btn-danger" onclick="AdminApp.deleteSlot('${session}', '${slot.id}')" title="মুছে ফেলুন">
+              <button type="button" class="btn btn-sm btn-danger" onclick="AdminApp.deleteSlot('${session}', '${slot.id}')" title="Delete">
                 <i class="fas fa-trash"></i>
               </button>
             </div>
@@ -1486,12 +1478,12 @@
     addSlot(session, startTime, endTime) {
       const self = this;
       if (!startTime || !endTime) {
-        this.toast('অনুগ্রহ করে শুরুর এবং শেষের সময় নির্বাচন করুন', 'warning');
+        this.toast('Please select both start and end times.', 'warning');
         return;
       }
 
       if (startTime >= endTime && endTime !== '00:00' && endTime !== '24:00') {
-        this.toast('শুরুর সময় অবশ্যই শেষের সময়ের পূর্বে হতে হবে', 'warning');
+        this.toast('Start time must be before end time.', 'warning');
         return;
       }
 
@@ -1503,14 +1495,12 @@
         startTime: startTime,
         endTime: endTime,
         label: label,
+        active: true,
         createdAt: Date.now()
       }).then(function () {
-        self.toast('নতুন স্লট সফলভাবে যোগ করা হয়েছে', 'success');
+        self.toast('Slot added successfully!', 'success');
         const form = document.getElementById('addSlotForm');
         if (form) form.reset();
-      }).catch(function (err) {
-        console.error('[Admin] Error adding slot:', err);
-        self.toast('স্লট যোগ করতে সমস্যা হয়েছে', 'error');
       });
     },
 
@@ -1520,18 +1510,18 @@
 
       const self = this;
       this.openEditModal(
-        'স্লট সময় সম্পাদনা',
+        'Edit Slot Time',
         `
           <div class="form-group mb-2">
-            <label class="form-label" for="editSlotStartTime">শুরুর সময়</label>
+            <label class="form-label" for="editSlotStartTime">Start Time</label>
             <input type="time" id="editSlotStartTime" class="form-input" value="${slot.startTime || ''}" required>
           </div>
           <div class="form-group mb-2">
-            <label class="form-label" for="editSlotEndTime">শেষ সময়</label>
+            <label class="form-label" for="editSlotEndTime">End Time</label>
             <input type="time" id="editSlotEndTime" class="form-input" value="${slot.endTime || ''}" required>
           </div>
           <div class="form-group mb-2">
-            <label class="form-label" for="editSlotLabel">লেবেল (ঐচ্ছিক)</label>
+            <label class="form-label" for="editSlotLabel">Label (Optional)</label>
             <input type="text" id="editSlotLabel" class="form-input" value="${self.escapeHtml(slot.label || '')}">
           </div>
         `,
@@ -1539,11 +1529,6 @@
           const st = document.getElementById('editSlotStartTime').value;
           const et = document.getElementById('editSlotEndTime').value;
           const lb = document.getElementById('editSlotLabel').value.trim();
-
-          if (!st || !et) {
-            self.toast('সময় ফিল্ড পূরণ করুন', 'warning');
-            return;
-          }
 
           const db = window.db || (typeof firebase !== 'undefined' && firebase.database ? firebase.database() : null);
           if (!db) return;
@@ -1554,7 +1539,7 @@
             label: lb || self.formatTimeRange(st, et),
             updatedAt: Date.now()
           }).then(function () {
-            self.toast('স্লট আপডেট হয়েছে', 'success');
+            self.toast('Slot updated successfully!', 'success');
             self.closeEditModal();
           });
         }
@@ -1564,14 +1549,14 @@
     deleteSlot(session, slotId) {
       const self = this;
       this.showConfirm(
-        'স্লট মুছে ফেলা',
-        'আপনি কি নিশ্চিত যে এই স্লটটি স্থায়ীভাবে মুছে ফেলতে চান?',
+        'Delete Slot',
+        'Are you sure you want to permanently delete this slot?',
         function () {
           const db = window.db || (typeof firebase !== 'undefined' && firebase.database ? firebase.database() : null);
           if (!db) return;
 
           db.ref(`slots/${session}/${slotId}`).remove().then(function () {
-            self.toast('স্লট মুছে ফেলা হয়েছে', 'info');
+            self.toast('Slot deleted.', 'info');
           });
         }
       );
@@ -1597,7 +1582,7 @@
 
       const keys = Object.keys(this.blockedDates);
       if (keys.length === 0) {
-        container.innerHTML = '<p class="form-hint text-center py-2">কোন তারিখ বন্ধ ঘোষণা করা নেই</p>';
+        container.innerHTML = '<p class="form-hint text-center py-2">No dates currently blocked.</p>';
         return;
       }
 
@@ -1607,7 +1592,7 @@
       keys.forEach(function (k) {
         const item = self.blockedDates[k];
         const dateStr = typeof item === 'object' && item.date ? item.date : k;
-        const reason = typeof item === 'object' && item.reason ? item.reason : 'টার্ফ বন্ধ';
+        const reason = typeof item === 'object' && item.reason ? item.reason : 'Turf Closed';
 
         html += `
           <div class="card" style="background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.3); padding: 0.6rem 0.9rem; display: flex; justify-content: space-between; align-items: center;">
@@ -1615,8 +1600,8 @@
               <strong style="color: var(--color-danger);"><i class="fas fa-calendar-xmark"></i> ${self.formatDate(dateStr)}</strong>
               <small class="text-muted ml-2">(${self.escapeHtml(reason)})</small>
             </div>
-            <button type="button" class="btn btn-sm btn-secondary" onclick="AdminApp.unblockDate('${k}')" title="বন্ধ বাতিল করুন">
-              <i class="fas fa-lock-open"></i> খুলুন
+            <button type="button" class="btn btn-sm btn-secondary" onclick="AdminApp.unblockDate('${k}')" title="Unblock this date">
+              <i class="fas fa-lock-open"></i> Unblock
             </button>
           </div>
         `;
@@ -1629,22 +1614,21 @@
     blockDate(date, reason) {
       const self = this;
       if (!date) {
-        this.toast('তারিখ নির্বাচন করুন', 'warning');
+        this.toast('Please select a date to block.', 'warning');
         return;
       }
 
       const db = window.db || (typeof firebase !== 'undefined' && firebase.database ? firebase.database() : null);
       if (!db) return;
 
-      // Clean key for RTDB
       const safeKey = date.replace(/[^\w-]/g, '_');
 
       db.ref(`blockedDates/${safeKey}`).set({
         date: date,
-        reason: reason || 'টার্ফ বন্ধ',
+        reason: reason || 'Turf Closed',
         blockedAt: Date.now()
       }).then(function () {
-        self.toast(`${self.formatDate(date)} তারিখের বুকিং বন্ধ করা হয়েছে`, 'success');
+        self.toast(`Bookings blocked for ${self.formatDate(date)}.`, 'success');
         const form = document.getElementById('blockDateForm');
         if (form) form.reset();
       });
@@ -1653,14 +1637,14 @@
     unblockDate(dateKey) {
       const self = this;
       this.showConfirm(
-        'দিন উন্মুক্তকরণ',
-        'আপনি কি এই তারিখের বুকিং পুনরায় উন্মুক্ত করতে চান?',
+        'Unblock Date',
+        'Are you sure you want to reopen bookings for this date?',
         function () {
           const db = window.db || (typeof firebase !== 'undefined' && firebase.database ? firebase.database() : null);
           if (!db) return;
 
           db.ref(`blockedDates/${dateKey}`).remove().then(function () {
-            self.toast('তারিখ উন্মুক্ত করা হয়েছে', 'info');
+            self.toast('Date unblocked and reopened.', 'info');
           });
         }
       );
@@ -1694,10 +1678,10 @@
       const self = this;
       db.ref('workingDays').set(selected).then(function () {
         self.workingDays = selected;
-        self.toast('কার্যদিবস সেটিংস সংরক্ষিত হয়েছে', 'success');
+        self.toast('Working days settings saved successfully!', 'success');
       }).catch(function (err) {
         console.error('[Admin] Error saving working days:', err);
-        self.toast('সংরক্ষণে সমস্যা হয়েছে', 'error');
+        self.toast('Error saving working days: ' + err.message, 'error');
       });
     },
 
@@ -1761,16 +1745,16 @@
 
       const self = this;
       const saveBtn = document.getElementById('savePricingBtn');
-      self.setButtonLoading(saveBtn, true, 'সংরক্ষণ হচ্ছে...');
+      self.setButtonLoading(saveBtn, true, 'Saving pricing...');
 
       db.ref('pricing').set(data).then(function () {
-        self.setButtonLoading(saveBtn, false, 'মূল্য সেটিংস সংরক্ষণ করুন');
+        self.setButtonLoading(saveBtn, false, 'Save Pricing Settings');
         self.pricing = data;
-        self.toast('মূল্য সেটিংস সফলভাবে আপডেট হয়েছে!', 'success');
+        self.toast('Pricing settings updated successfully!', 'success');
       }).catch(function (err) {
-        self.setButtonLoading(saveBtn, false, 'মূল্য সেটিংস সংরক্ষণ করুন');
+        self.setButtonLoading(saveBtn, false, 'Save Pricing Settings');
         console.error('[Admin] Error saving pricing:', err);
-        self.toast('মূল্য সংরক্ষণ করতে সমস্যা হয়েছে', 'error');
+        self.toast('Error saving pricing: ' + err.message, 'error');
       });
     },
 
@@ -1781,7 +1765,6 @@
       const self = this;
       const dropZone = document.getElementById('galleryUploadZone');
       const fileInput = document.getElementById('galleryFileInput');
-      const fileDisplay = document.getElementById('fileSelectedDisplay');
       const uploadForm = document.getElementById('galleryUploadForm');
 
       if (dropZone && fileInput) {
@@ -1818,9 +1801,13 @@
       if (uploadForm) {
         uploadForm.addEventListener('submit', function (e) {
           e.preventDefault();
-          const title = document.getElementById('galleryTitleInput').value.trim();
-          const desc = document.getElementById('galleryDescInput').value.trim();
-          const directUrl = document.getElementById('galleryUrlFallback').value.trim();
+          const titleInput = document.getElementById('galleryTitleInput');
+          const descInput = document.getElementById('galleryDescInput');
+          const directUrlInput = document.getElementById('galleryUrlFallback');
+
+          const title = titleInput ? titleInput.value.trim() : '';
+          const desc = descInput ? descInput.value.trim() : '';
+          const directUrl = directUrlInput ? directUrlInput.value.trim() : '';
 
           self.uploadMedia(self.selectedFileToUpload, title, desc, directUrl);
         });
@@ -1830,7 +1817,7 @@
     showSelectedFileName(fileName) {
       const fileDisplay = document.getElementById('fileSelectedDisplay');
       if (fileDisplay) {
-        fileDisplay.textContent = `নির্বাচিত ফাইল: ${fileName}`;
+        fileDisplay.textContent = 'Selected File: ' + fileName;
         fileDisplay.classList.remove('hidden');
       }
     },
@@ -1844,18 +1831,19 @@
       this.listeners.push({ ref: galleryRef, event: 'value' });
 
       galleryRef.on('value', function (snapshot) {
-        const data = snapshot.val();
+        const val = snapshot.val();
         self.gallery = [];
 
-        if (data) {
-          Object.keys(data).forEach(function (key) {
-            const item = data[key];
-            item.id = key;
-            self.gallery.push(item);
+        if (val) {
+          Object.keys(val).forEach(function (key) {
+            const item = val[key];
+            if (typeof item === 'object' && item !== null) {
+              item.id = item.id || key;
+              self.gallery.push(item);
+            }
           });
         }
 
-        // Sort by order asc
         self.gallery.sort((a, b) => (a.order || 0) - (b.order || 0));
         self.renderGalleryGrid();
       });
@@ -1866,18 +1854,17 @@
       if (!grid) return;
 
       if (this.gallery.length === 0) {
-        grid.innerHTML = '<p class="form-hint text-center py-4">গ্যালারিতে এখনও কোন ছবি যুক্ত করা হয়নি</p>';
+        grid.innerHTML = '<p class="form-hint text-center py-4">No images in gallery yet.</p>';
         return;
       }
 
-      let html = '<div class="admin-media-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem;">';
+      let html = '<div class="admin-gallery-items-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 1rem;">';
       const self = this;
 
       this.gallery.forEach(function (item, index) {
-        const title = self.escapeHtml(item.title || 'ছবি');
-        const desc = self.escapeHtml(item.description || '');
-        const imgSrc = item.url || item.thumbnail || 'assets/images/Evergain2.jpg';
-        const rawFallback = item.rawUrl || ('https://raw.githubusercontent.com/srpshouro/Ever-gain-/main/' + imgSrc);
+        const title = self.escapeHtml(item.title || 'Turf Photo');
+        const imgSrc = item.url || item.thumbnail || '';
+        const rawFallback = item.rawUrl || ('https://raw.githubusercontent.com/srpshouro/Ever-gain-demo/main/' + imgSrc);
 
         const mediaPreview = `<img src="${imgSrc}" alt="${title}" onerror="if (!this.dataset.fallbackTried && this.getAttribute('src') && this.getAttribute('src').indexOf('assets/images/') !== -1) { this.dataset.fallbackTried = '1'; this.src = '${rawFallback}'; }" style="width: 100%; height: 140px; object-fit: cover; border-radius: var(--radius-sm);">`;
 
@@ -1886,22 +1873,22 @@
             ${mediaPreview}
             <div class="mt-2">
               <strong style="font-size: 0.95rem; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${title}</strong>
-              <small class="text-muted">ছবি • ক্রম: ${self.bengaliNum(index + 1)}</small>
+              <small class="text-muted">Image • Order: ${index + 1}</small>
             </div>
             <div class="action-buttons mt-3 d-flex justify-between">
               <div>
-                <button type="button" class="btn btn-sm btn-secondary" onclick="AdminApp.moveMediaOrder('${item.id}', -1)" ${index === 0 ? 'disabled' : ''} title="উপরে নিন">
+                <button type="button" class="btn btn-sm btn-secondary" onclick="AdminApp.moveMediaOrder('${item.id}', -1)" ${index === 0 ? 'disabled' : ''} title="Move Up">
                   <i class="fas fa-arrow-up"></i>
                 </button>
-                <button type="button" class="btn btn-sm btn-secondary" onclick="AdminApp.moveMediaOrder('${item.id}', 1)" ${index === self.gallery.length - 1 ? 'disabled' : ''} title="নিচে নিন">
+                <button type="button" class="btn btn-sm btn-secondary" onclick="AdminApp.moveMediaOrder('${item.id}', 1)" ${index === self.gallery.length - 1 ? 'disabled' : ''} title="Move Down">
                   <i class="fas fa-arrow-down"></i>
                 </button>
               </div>
               <div>
-                <button type="button" class="btn btn-sm btn-secondary" onclick="AdminApp.editMediaModal('${item.id}')" title="সম্পাদনা">
+                <button type="button" class="btn btn-sm btn-secondary" onclick="AdminApp.editMediaModal('${item.id}')" title="Edit">
                   <i class="fas fa-edit"></i>
                 </button>
-                <button type="button" class="btn btn-sm btn-danger" onclick="AdminApp.deleteMedia('${item.id}', '${item.githubPath || item.storagePath || ''}')" title="মুছে ফেলুন">
+                <button type="button" class="btn btn-sm btn-danger" onclick="AdminApp.deleteMedia('${item.id}', '${item.githubPath || item.storagePath || ''}')" title="Delete">
                   <i class="fas fa-trash"></i>
                 </button>
               </div>
@@ -1919,11 +1906,11 @@
       const uploadBtn = document.getElementById('galleryUploadBtn');
 
       if (!file && !directUrl) {
-        this.toast('একটি ছবি ফাইল নির্বাচন করুন অথবা সরাসরি লিঙ্ক প্রদান করুন', 'warning');
+        this.toast('Please select an image file to upload.', 'warning');
         return;
       }
 
-      self.setButtonLoading(uploadBtn, true, 'GitHub-এ আপলোড হচ্ছে...');
+      self.setButtonLoading(uploadBtn, true, 'Uploading to GitHub...');
 
       if (file) {
         const reader = new FileReader();
@@ -1933,15 +1920,17 @@
             const base64Data = resultStr.split(',')[1];
             const cleanName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
             const targetFileName = Date.now() + '_' + cleanName;
+            const targetPath = 'assets/images/' + targetFileName;
+
             let token = localStorage.getItem('eg_github_token');
             if (!token) {
-              token = prompt('GitHub assets/images ফোল্ডারে ছবি আপলোড করতে আপনার GitHub Personal Access Token দিন:');
+              token = prompt('Enter your GitHub Personal Access Token to upload photos directly to assets/images/:');
               if (token && token.trim()) {
                 token = token.trim();
                 localStorage.setItem('eg_github_token', token);
               } else {
-                self.setButtonLoading(uploadBtn, false, 'গ্যালারিতে যোগ করুন');
-                self.toast('GitHub Token ছাড়া সরাসরি রিপোজিটরিতে ছবি সেভ করা যাবে না', 'warning');
+                self.setButtonLoading(uploadBtn, false, 'Upload to Gallery');
+                self.toast('GitHub Token is required to save photos directly to the repository.', 'warning');
                 return;
               }
             }
@@ -1966,39 +1955,39 @@
             .then(function (res) {
               if (!res.ok) {
                 return res.json().then(function (errData) {
+                  if (res.status === 401 || res.status === 403) {
+                    localStorage.removeItem('eg_github_token');
+                  }
                   throw new Error(errData.message || ('GitHub Status ' + res.status));
                 });
               }
               return res.json();
             })
-            .then(function (data) {
+            .then(function () {
               const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/main/${targetPath}`;
-              self.saveMediaToDatabase(targetPath, rawUrl, title, desc, targetPath);
+              const itemTitle = title || cleanName.replace(/_/g, ' ').replace(/\.[^/.]+$/, '');
+              self.saveMediaToDatabase(targetPath, rawUrl, itemTitle, desc, targetPath);
             })
             .catch(function (error) {
               console.error('[Admin] GitHub Upload Error:', error);
-              if (directUrl) {
-                self.saveMediaToDatabase(directUrl, directUrl, title, desc, '');
-              } else {
-                self.setButtonLoading(uploadBtn, false, 'গ্যালারিতে যোগ করুন');
-                self.toast('GitHub-এ ছবি আপলোড ব্যর্থ: ' + error.message, 'error');
-              }
+              self.setButtonLoading(uploadBtn, false, 'Upload to Gallery');
+              self.toast('GitHub image upload failed: ' + error.message, 'error');
             });
           } catch (err) {
-            self.setButtonLoading(uploadBtn, false, 'গ্যালারিতে যোগ করুন');
+            self.setButtonLoading(uploadBtn, false, 'Upload to Gallery');
             console.error('[Admin] Processing error:', err);
-            self.toast('ফাইল প্রক্রিয়াকরণে সমস্যা হয়েছে', 'error');
+            self.toast('Failed to process file: ' + err.message, 'error');
           }
         };
 
         reader.onerror = function () {
-          self.setButtonLoading(uploadBtn, false, 'গ্যালারিতে যোগ করুন');
-          self.toast('ফাইল পড়তে সমস্যা হয়েছে', 'error');
+          self.setButtonLoading(uploadBtn, false, 'Upload to Gallery');
+          self.toast('Failed to read the file.', 'error');
         };
 
         reader.readAsDataURL(file);
       } else if (directUrl) {
-        self.saveMediaToDatabase(directUrl, directUrl, title, desc, '');
+        self.saveMediaToDatabase(directUrl, directUrl, title || 'Turf Photo', desc, '');
       }
     },
 
@@ -2008,7 +1997,8 @@
       const uploadBtn = document.getElementById('galleryUploadBtn');
 
       if (!db) {
-        self.setButtonLoading(uploadBtn, false, 'গ্যালারিতে যোগ করুন');
+        self.setButtonLoading(uploadBtn, false, 'Upload to Gallery');
+        self.toast('Database connection not found.', 'error');
         return;
       }
 
@@ -2017,7 +2007,7 @@
         id: newRef.key,
         url: url,
         rawUrl: rawUrl || url,
-        title: title,
+        title: title || 'Turf Photo',
         description: desc || '',
         type: 'image',
         githubPath: githubPath || '',
@@ -2026,67 +2016,72 @@
       };
 
       newRef.set(mediaItem).then(function () {
-        self.setButtonLoading(uploadBtn, false, 'গ্যালারিতে যোগ করুন');
+        self.setButtonLoading(uploadBtn, false, 'Upload to Gallery');
         self.selectedFileToUpload = null;
         const form = document.getElementById('galleryUploadForm');
         if (form) form.reset();
         const fileDisplay = document.getElementById('fileSelectedDisplay');
-        if (fileDisplay) fileDisplay.classList.add('hidden');
-        self.toast('ছবি সফলভাবে GitHub assets/images ফোল্ডার ও গ্যালারিতে যোগ হয়েছে!', 'success');
+        if (fileDisplay) {
+          fileDisplay.textContent = '';
+          fileDisplay.classList.add('hidden');
+        }
+        self.toast('Image uploaded to GitHub assets/images and added to Gallery!', 'success');
       }).catch(function (err) {
-        self.setButtonLoading(uploadBtn, false, 'গ্যালারিতে যোগ করুন');
+        self.setButtonLoading(uploadBtn, false, 'Upload to Gallery');
         console.error('[Admin] Error saving media record:', err);
-        self.toast('ডাটাবেজে রেকর্ড সংরক্ষণে ত্রুটি হয়েছে', 'error');
+        self.toast('Error saving record to database: ' + err.message, 'error');
       });
     },
 
     deleteMedia(id, githubPath) {
       const self = this;
       this.showConfirm(
-        'ছবি মুছে ফেলা',
-        'আপনি কি নিশ্চিত যে এই ছবিটি গ্যালারি থেকে মুছে ফেলতে চান?',
+        'Delete Gallery Image',
+        'Are you sure you want to delete this image from the gallery?',
         function () {
           const db = window.db || (typeof firebase !== 'undefined' && firebase.database ? firebase.database() : null);
 
           if (db) {
             db.ref(`gallery/${id}`).remove().then(function () {
-              self.toast('ছবি গ্যালারি থেকে মুছে ফেলা হয়েছে', 'info');
+              self.toast('Image removed from gallery.', 'info');
             });
           }
 
           if (githubPath && githubPath.startsWith('assets/images/')) {
             const token = localStorage.getItem('eg_github_token');
-            const owner = 'srpshouro';
-            const repo = 'Ever-gain-demo';
-            const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${githubPath}`;
+            if (token) {
+              const owner = 'srpshouro';
+              const repo = 'Ever-gain-demo';
+              const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${githubPath}`;
 
-            fetch(apiUrl, {
-              headers: {
-                'Authorization': 'token ' + token,
-                'Accept': 'application/vnd.github.v3+json'
-              }
-            })
-            .then(res => res.ok ? res.json() : null)
-            .then(fileInfo => {
-              if (fileInfo && fileInfo.sha) {
-                return fetch(apiUrl, {
-                  method: 'DELETE',
-                  headers: {
-                    'Authorization': 'token ' + token,
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/vnd.github.v3+json'
-                  },
-                  body: JSON.stringify({
-                    message: 'Delete gallery image: ' + githubPath,
-                    sha: fileInfo.sha,
-                    branch: 'main'
-                  })
-                });
-              }
-            })
-            .catch(err => {
-              console.warn('[Admin] GitHub delete error:', err);
-            });
+              fetch(apiUrl, {
+                headers: {
+                  'Authorization': 'token ' + token,
+                  'Accept': 'application/vnd.github.v3+json'
+                }
+              })
+              .then(res => res.ok ? res.json() : null)
+              .then(fileInfo => {
+                if (fileInfo && fileInfo.sha) {
+                  return fetch(apiUrl, {
+                    method: 'DELETE',
+                    headers: {
+                      'Authorization': 'token ' + token,
+                      'Content-Type': 'application/json',
+                      'Accept': 'application/vnd.github.v3+json'
+                    },
+                    body: JSON.stringify({
+                      message: 'Delete gallery image: ' + githubPath,
+                      sha: fileInfo.sha,
+                      branch: 'main'
+                    })
+                  });
+                }
+              })
+              .catch(err => {
+                console.warn('[Admin] GitHub delete error:', err);
+              });
+            }
           }
         }
       );
@@ -2098,14 +2093,14 @@
 
       const self = this;
       this.openEditModal(
-        'মিডিয়া তথ্য সম্পাদনা',
+        'Edit Media Information',
         `
           <div class="form-group mb-2">
-            <label class="form-label" for="editMediaTitle">শিরোনাম</label>
+            <label class="form-label" for="editMediaTitle">Title</label>
             <input type="text" id="editMediaTitle" class="form-input" value="${self.escapeHtml(item.title || '')}" required>
           </div>
           <div class="form-group mb-2">
-            <label class="form-label" for="editMediaDesc">বিবরণ</label>
+            <label class="form-label" for="editMediaDesc">Description</label>
             <textarea id="editMediaDesc" class="form-textarea" rows="3">${self.escapeHtml(item.description || '')}</textarea>
           </div>
         `,
@@ -2121,7 +2116,7 @@
             description: newDesc,
             updatedAt: Date.now()
           }).then(function () {
-            self.toast('মিডিয়া আপডেট করা হয়েছে', 'success');
+            self.toast('Media updated successfully.', 'success');
             self.closeEditModal();
           });
         }
@@ -2134,7 +2129,6 @@
       const targetIndex = index + direction;
       if (targetIndex < 0 || targetIndex >= this.gallery.length) return;
 
-      // Swap orders
       const current = this.gallery[index];
       const target = this.gallery[targetIndex];
 
@@ -2182,26 +2176,26 @@
       const defaultRules = [
         {
           icon: 'fas fa-shoe-prints',
-          title: 'সঠিক জুতো পরিধান আবশ্যক',
-          description: 'টার্ফের ভেতর শুধুমাত্র টার্ফ বুট অথবা রাবার সোলের স্নিকার্স পরা যাবে। স্পাইক বা মেটাল বুট সম্পূর্ণ নিষিদ্ধ।',
+          title: 'Proper Footwear Required',
+          description: 'Only approved turf shoes or rubber-soled sneakers are permitted on the ground. Metal spikes are strictly prohibited.',
           order: 1
         },
         {
           icon: 'fas fa-clock',
-          title: 'সময়ানুবর্তিতা বজায় রাখুন',
-          description: 'নির্ধারিত স্লটের অন্তত ১০ মিনিট পূর্বে মাঠে উপস্থিত থাকতে হবে। অতিরিক্ত খেলা হলে বাড়তি সময়ের বিল দিতে হবে।',
+          title: 'Punctuality is Essential',
+          description: 'Please arrive at least 10 minutes prior to your allocated slot. Overstaying into the next slot will incur additional charges.',
           order: 2
         },
         {
           icon: 'fas fa-ban-smoking',
-          title: 'ধূমপান ও খাবার গ্রহণ নিষিদ্ধ',
-          description: 'টার্ফ এরিয়ায় কোনো প্রকার ধূমপান, পান-সুপারি বা অপচনশীল বর্জ্য ফেলা সম্পূর্ণভাবে নিষিদ্ধ।',
+          title: 'No Smoking or Food Allowed',
+          description: 'Smoking, chewing betel leaf, and littering food items inside the turf pitch area are strictly forbidden.',
           order: 3
         },
         {
           icon: 'fas fa-handshake-angle',
-          title: 'সুশৃঙ্খল ও সম্মানজনক আচরণ',
-          description: 'মাঠে ও ড্রেসিংরুমে যেকোনো ধরণের মারামারি, অশালীন আচরণ বা গালাগালি সম্পূর্ণভাবে নিষিদ্ধ।',
+          title: 'Respectful Behaviour & Fair Play',
+          description: 'Foul language, aggressive behaviour, or fighting will lead to immediate expulsion from the arena.',
           order: 4
         }
       ];
@@ -2217,7 +2211,7 @@
       if (!container) return;
 
       if (this.rules.length === 0) {
-        container.innerHTML = '<p class="form-hint text-center py-4">কোন নিয়ম যুক্ত করা হয়নি</p>';
+        container.innerHTML = '<p class="form-hint text-center py-4">No rules added yet.</p>';
         return;
       }
 
@@ -2237,21 +2231,21 @@
                   <i class="${icon}"></i>
                 </div>
                 <div>
-                  <h4 style="margin: 0; font-size: 1rem; color: var(--color-text-primary);">${self.bengaliNum(index + 1)}. ${title}</h4>
+                  <h4 style="margin: 0; font-size: 1rem; color: var(--color-text-primary);">${index + 1}. ${title}</h4>
                   <p class="card-text mt-1" style="font-size: 0.9rem; margin-bottom: 0;">${desc}</p>
                 </div>
               </div>
               <div class="action-buttons ml-2">
-                <button type="button" class="btn btn-sm btn-secondary" onclick="AdminApp.moveRuleOrder('${rule.id}', -1)" ${index === 0 ? 'disabled' : ''} title="উপরে নিন">
+                <button type="button" class="btn btn-sm btn-secondary" onclick="AdminApp.moveRuleOrder('${rule.id}', -1)" ${index === 0 ? 'disabled' : ''} title="Move Up">
                   <i class="fas fa-arrow-up"></i>
                 </button>
-                <button type="button" class="btn btn-sm btn-secondary" onclick="AdminApp.moveRuleOrder('${rule.id}', 1)" ${index === self.rules.length - 1 ? 'disabled' : ''} title="নিচে নিন">
+                <button type="button" class="btn btn-sm btn-secondary" onclick="AdminApp.moveRuleOrder('${rule.id}', 1)" ${index === self.rules.length - 1 ? 'disabled' : ''} title="Move Down">
                   <i class="fas fa-arrow-down"></i>
                 </button>
-                <button type="button" class="btn btn-sm btn-secondary" onclick="AdminApp.editRuleModal('${rule.id}')" title="সম্পাদনা">
+                <button type="button" class="btn btn-sm btn-secondary" onclick="AdminApp.editRuleModal('${rule.id}')" title="Edit">
                   <i class="fas fa-edit"></i>
                 </button>
-                <button type="button" class="btn btn-sm btn-danger" onclick="AdminApp.deleteRule('${rule.id}')" title="মুছে ফেলুন">
+                <button type="button" class="btn btn-sm btn-danger" onclick="AdminApp.deleteRule('${rule.id}')" title="Delete">
                   <i class="fas fa-trash"></i>
                 </button>
               </div>
@@ -2267,7 +2261,7 @@
     addRule(icon, title, desc) {
       const self = this;
       if (!title || !desc) {
-        this.toast('শিরোনাম ও বিবরণ আবশ্যক', 'warning');
+        this.toast('Rule title and description are required.', 'warning');
         return;
       }
 
@@ -2283,14 +2277,9 @@
       };
 
       db.ref('rules').push(newRule).then(function () {
-        self.toast('নতুন নিয়ম সফলভাবে যোগ হয়েছে', 'success');
+        self.toast('New rule added successfully!', 'success');
         const form = document.getElementById('addRuleForm');
         if (form) form.reset();
-        const iconInput = document.getElementById('ruleIconInput');
-        if (iconInput) iconInput.value = 'fas fa-futbol';
-      }).catch(function (err) {
-        console.error('[Admin] Error adding rule:', err);
-        self.toast('নিয়ম সংরক্ষণে সমস্যা হয়েছে', 'error');
       });
     },
 
@@ -2300,36 +2289,36 @@
 
       const self = this;
       this.openEditModal(
-        'নিয়মাবলী সম্পাদনা',
+        'Edit Ground Rule',
         `
           <div class="form-group mb-2">
-            <label class="form-label" for="editRuleIcon">FontAwesome আইকন ক্লাস</label>
-            <input type="text" id="editRuleIcon" class="form-input" value="${self.escapeHtml(rule.icon || 'fas fa-futbol')}" required>
+            <label class="form-label" for="editRuleIcon">Icon (FontAwesome Class)</label>
+            <input type="text" id="editRuleIcon" class="form-input" value="${self.escapeHtml(rule.icon || 'fas fa-futbol')}">
           </div>
           <div class="form-group mb-2">
-            <label class="form-label" for="editRuleTitle">নিয়মের শিরোনাম</label>
+            <label class="form-label" for="editRuleTitle">Title</label>
             <input type="text" id="editRuleTitle" class="form-input" value="${self.escapeHtml(rule.title || '')}" required>
           </div>
           <div class="form-group mb-2">
-            <label class="form-label" for="editRuleDesc">বিস্তারিত বিবরণ</label>
+            <label class="form-label" for="editRuleDesc">Description</label>
             <textarea id="editRuleDesc" class="form-textarea" rows="3" required>${self.escapeHtml(rule.description || '')}</textarea>
           </div>
         `,
         function () {
-          const icon = document.getElementById('editRuleIcon').value.trim();
-          const title = document.getElementById('editRuleTitle').value.trim();
-          const desc = document.getElementById('editRuleDesc').value.trim();
+          const newIcon = document.getElementById('editRuleIcon').value.trim();
+          const newTitle = document.getElementById('editRuleTitle').value.trim();
+          const newDesc = document.getElementById('editRuleDesc').value.trim();
 
           const db = window.db || (typeof firebase !== 'undefined' && firebase.database ? firebase.database() : null);
           if (!db) return;
 
           db.ref(`rules/${id}`).update({
-            icon: icon,
-            title: title,
-            description: desc,
+            icon: newIcon || 'fas fa-futbol',
+            title: newTitle,
+            description: newDesc,
             updatedAt: Date.now()
           }).then(function () {
-            self.toast('নিয়মাবলী আপডেট হয়েছে', 'success');
+            self.toast('Rule updated successfully!', 'success');
             self.closeEditModal();
           });
         }
@@ -2339,14 +2328,14 @@
     deleteRule(id) {
       const self = this;
       this.showConfirm(
-        'নিয়ম মুছে ফেলা',
-        'আপনি কি নিশ্চিত যে এই নিয়মটি মুছে ফেলতে চান?',
+        'Delete Rule',
+        'Are you sure you want to delete this rule?',
         function () {
           const db = window.db || (typeof firebase !== 'undefined' && firebase.database ? firebase.database() : null);
           if (!db) return;
 
           db.ref(`rules/${id}`).remove().then(function () {
-            self.toast('নিয়ম মুছে ফেলা হয়েছে', 'info');
+            self.toast('Rule deleted.', 'info');
           });
         }
       );
@@ -2393,24 +2382,24 @@
       const fPhone = document.getElementById('settingsPhone');
       const fWhatsapp = document.getElementById('settingsWhatsapp');
       const fAddress = document.getElementById('settingsAddress');
-      const fHours = document.getElementById('settingsHours');
       const fMapLink = document.getElementById('settingsMapLink');
+      const fHours = document.getElementById('settingsHours');
       const fHeroTitle = document.getElementById('settingsHeroTitle');
       const fHeroSubtitle = document.getElementById('settingsHeroSubtitle');
       const fAnnouncement = document.getElementById('settingsAnnouncement');
-      const fFacebook = document.getElementById('settingsSocialFacebook');
-      const fInstagram = document.getElementById('settingsSocialInstagram');
+      const fFb = document.getElementById('settingsSocialFacebook');
+      const fInsta = document.getElementById('settingsSocialInstagram');
 
-      if (fPhone && s.phone) fPhone.value = s.phone;
-      if (fWhatsapp && s.whatsapp) fWhatsapp.value = s.whatsapp;
-      if (fAddress && s.address) fAddress.value = s.address;
-      if (fHours && s.hours) fHours.value = s.hours;
-      if (fMapLink && s.mapLink) fMapLink.value = s.mapLink;
-      if (fHeroTitle && s.heroTitle) fHeroTitle.value = s.heroTitle;
-      if (fHeroSubtitle && s.heroSubtitle) fHeroSubtitle.value = s.heroSubtitle;
-      if (fAnnouncement && s.announcement) fAnnouncement.value = s.announcement;
-      if (fFacebook && s.socialFacebook) fFacebook.value = s.socialFacebook;
-      if (fInstagram && s.socialInstagram) fInstagram.value = s.socialInstagram;
+      if (fPhone && s.phone !== undefined) fPhone.value = s.phone;
+      if (fWhatsapp && s.whatsapp !== undefined) fWhatsapp.value = s.whatsapp;
+      if (fAddress && s.address !== undefined) fAddress.value = s.address;
+      if (fMapLink && s.mapLink !== undefined) fMapLink.value = s.mapLink;
+      if (fHours && s.hours !== undefined) fHours.value = s.hours;
+      if (fHeroTitle && s.heroTitle !== undefined) fHeroTitle.value = s.heroTitle;
+      if (fHeroSubtitle && s.heroSubtitle !== undefined) fHeroSubtitle.value = s.heroSubtitle;
+      if (fAnnouncement && s.announcement !== undefined) fAnnouncement.value = s.announcement;
+      if (fFb && s.socialFacebook !== undefined) fFb.value = s.socialFacebook;
+      if (fInsta && s.socialInstagram !== undefined) fInsta.value = s.socialInstagram;
     },
 
     saveSettings() {
@@ -2418,8 +2407,8 @@
         phone: document.getElementById('settingsPhone').value.trim(),
         whatsapp: document.getElementById('settingsWhatsapp').value.trim(),
         address: document.getElementById('settingsAddress').value.trim(),
-        hours: document.getElementById('settingsHours').value.trim(),
         mapLink: document.getElementById('settingsMapLink').value.trim(),
+        hours: document.getElementById('settingsHours').value.trim(),
         heroTitle: document.getElementById('settingsHeroTitle').value.trim(),
         heroSubtitle: document.getElementById('settingsHeroSubtitle').value.trim(),
         announcement: document.getElementById('settingsAnnouncement').value.trim(),
@@ -2433,16 +2422,16 @@
 
       const self = this;
       const saveBtn = document.getElementById('saveSettingsBtn');
-      self.setButtonLoading(saveBtn, true, 'সংরক্ষণ হচ্ছে...');
+      self.setButtonLoading(saveBtn, true, 'Saving settings...');
 
-      db.ref('settings').update(data).then(function () {
-        self.setButtonLoading(saveBtn, false, 'সেটিংস সংরক্ষণ করুন');
+      db.ref('settings').set(data).then(function () {
+        self.setButtonLoading(saveBtn, false, 'Save Settings');
         self.settings = data;
-        self.toast('ওয়েবসাইট সেটিংস সফলভাবে আপডেট হয়েছে!', 'success');
+        self.toast('Settings saved successfully!', 'success');
       }).catch(function (err) {
-        self.setButtonLoading(saveBtn, false, 'সেটিংস সংরক্ষণ করুন');
+        self.setButtonLoading(saveBtn, false, 'Save Settings');
         console.error('[Admin] Error saving settings:', err);
-        self.toast('সেটিংস সংরক্ষণ করতে সমস্যা হয়েছে', 'error');
+        self.toast('Error saving settings: ' + err.message, 'error');
       });
     },
 
@@ -2450,16 +2439,16 @@
       const self = this;
       const db = window.db || (typeof firebase !== 'undefined' && firebase.database ? firebase.database() : null);
       if (!db) {
-        self.toast('Firebase Database সংযোগ পাওয়া যায়নি', 'error');
+        self.toast('Firebase Database connection not found.', 'error');
         return;
       }
 
       self.showConfirm(
-        'ডাটাবেজ সেটআপ ও সিড',
-        'আপনি কি Realtime Database এ স্ট্যান্ডার্ড মূল্য, স্লট, নিয়মাবলী ও সেটিংস সংরক্ষণ করতে চান? পূর্বে থাকা ডাটা আপডেট হবে।',
+        'Initialize & Seed Database',
+        'Are you sure you want to populate the Realtime Database with default pricing, slots, rules, and turf settings? Existing settings will be updated.',
         function () {
           const seedBtn = document.getElementById('seedDatabaseBtn');
-          self.setButtonLoading(seedBtn, true, 'ডাটাবেজ সিড হচ্ছে...');
+          self.setButtonLoading(seedBtn, true, 'Seeding database...');
 
           const defaultPricing = {
             normalDay: 550,
@@ -2497,24 +2486,24 @@
           const defaultSettings = {
             phone: '+8801700000000',
             whatsapp: '+8801700000000',
-            address: 'EVER GAIN ইনডোর ফুটবল এরেনা, বাংলাদেশ',
+            address: 'EVER GAIN Indoor Football Arena, Bangladesh',
             mapLink: 'https://maps.google.com',
-            hours: '২৪ ঘণ্টা খোলা (24/7 Open)',
-            heroTitle: 'আপনার ইনডোর ফুটবলের সেরা গন্তব্য',
-            heroSubtitle: 'প্রিমিয়াম ইনডোর ফুটবল গ্রাউন্ড - সহজেই বুকিং দিন',
+            hours: '24/7 Open',
+            heroTitle: 'Your Ultimate Indoor Football Destination',
+            heroSubtitle: 'Premium indoor football turf - book your game easily',
             announcement: '',
             socialFacebook: '',
             socialInstagram: ''
           };
 
           const defaultRules = {
-            rule_1: { icon: 'fa-regular fa-clock', title: 'সময়মতো উপস্থিত থাকুন', description: 'বুকিং সময়ের অন্তত ১০-১৫ মিনিট পূর্বে গ্রাউন্ডে উপস্থিত হতে হবে। বিলম্ব হলে অতিরিক্ত সময় বরাদ্দ করা সম্ভব হবে না।', order: 1 },
-            rule_2: { icon: 'fa-solid fa-shoe-prints', title: 'অবশ্যই স্পোর্টস শু পরে খেলতে হবে', description: 'টার্ফের সুরক্ষার জন্য শুধুমাত্র অনুমোদিত টার্ফ শু বা ফ্ল্যাট ইনডোর স্পোর্টস শু পরিধান বাধ্যতামূলক। মেটাল স্পাইক বা শক্ত জুতো সম্পূর্ণ নিষিদ্ধ।', order: 2 },
-            rule_3: { icon: 'fa-solid fa-ban-smoking', title: 'গ্রাউন্ডে ধূমপান নিষেধ', description: 'গ্রাউন্ড, ডাগআউট ও সংলগ্ন প্রাঙ্গণে ধূমপান, পান বা যেকোনো প্রকার তামাকজাত ও নেশাজাতীয় দ্রব্য সেবন সম্পূর্ণ নিষিদ্ধ।', order: 3 },
-            rule_4: { icon: 'fa-solid fa-handshake', title: 'সকলের সাথে সৌজন্যমূলক আচরণ করুন', description: 'খেলার মাঠে স্পোর্টসম্যানশিপ ও শৃঙ্খলা বজায় রাখুন। রেফারি, মাঠকর্মী ও অন্য দলের খেলোয়াড়দের প্রতি পারস্পরিক সম্মান প্রদর্শন করুন।', order: 4 },
-            rule_5: { icon: 'fa-solid fa-futbol', title: 'গ্রাউন্ডের সরঞ্জাম যত্নে ব্যবহার করুন', description: 'গোলপোস্ট, জাল, ফ্লাডলাইট এবং সরবরাহকৃত বল সতর্কতার সাথে ব্যবহার করুন। কোনো সরঞ্জাম ইচ্ছাকৃত ক্ষতিগ্রস্ত হলে ক্ষতিপূরণ দিতে হবে।', order: 5 },
-            rule_6: { icon: 'fa-solid fa-trash-can', title: 'গ্রাউন্ড পরিষ্কার রাখুন', description: 'গ্রাউন্ডের পরিচ্ছন্নতা রক্ষা করা আমাদের সবার দায়িত্ব। পানির বোতল, খাবারের প্যাকেট বা ময়লা-আবর্জনা মাঠে না ফেলে নির্দিষ্ট ডাস্টবিনে ফেলুন।', order: 6 },
-            rule_7: { icon: 'fa-solid fa-phone-volume', title: 'বুকিং সংক্রান্ত সমস্যায় যোগাযোগ করুন', description: 'বুকিং সময়সূচি পরিবর্তন, জরুরি তথ্য বা যেকোনো অসঙ্গতির ক্ষেত্রে গ্রাউন্ড ম্যানেজার অথবা হেল্পলাইনে সরাসরি কল বা হোয়াটসঅ্যাপ করুন।', order: 7 }
+            rule_1: { icon: 'fa-regular fa-clock', title: 'Be On Time', description: 'Arrive at the turf 10-15 minutes prior to your booked slot. Extension into subsequent slots cannot be accommodated.', order: 1 },
+            rule_2: { icon: 'fa-solid fa-shoe-prints', title: 'Proper Footwear Required', description: 'Only approved turf shoes or flat indoor sneakers are permitted. Metal studs or cleats are strictly forbidden.', order: 2 },
+            rule_3: { icon: 'fa-solid fa-ban-smoking', title: 'No Smoking or Vaping', description: 'Smoking, vaping, chewing tobacco, or consuming intoxicating substances on the premises is strictly forbidden.', order: 3 },
+            rule_4: { icon: 'fa-solid fa-handshake', title: 'Respectful Behaviour & Fair Play', description: 'Maintain sportsmanship at all times. Show respect to referees, arena staff, and opposing players.', order: 4 },
+            rule_5: { icon: 'fa-solid fa-futbol', title: 'Handle Equipment with Care', description: 'Treat goal nets, perimeter padding, floodlights, and supplied balls responsibly. Willful damage will be charged.', order: 5 },
+            rule_6: { icon: 'fa-solid fa-trash-can', title: 'Keep the Turf Clean', description: 'Dispose of water bottles, tape, and wrappers in designated trash bins. Help us maintain clean surroundings.', order: 6 },
+            rule_7: { icon: 'fa-solid fa-phone-volume', title: 'Contact Us for Assistance', description: 'For schedule changes, urgent queries, or assistance, contact our ground manager or WhatsApp helpline.', order: 7 }
           };
 
           const defaultGallery = {
@@ -2546,13 +2535,13 @@
           }
 
           db.ref().update(updates).then(function () {
-            self.setButtonLoading(seedBtn, false, 'ডিফল্ট ডেটা সেটআপ সম্পন্ন হয়েছে');
-            self.toast('Realtime Database সফলভাবে সেটআপ ও সিড করা হয়েছে!', 'success');
+            self.setButtonLoading(seedBtn, false, 'Database Seeded Successfully');
+            self.toast('Realtime Database seeded successfully with default data!', 'success');
             self.initializeDashboardData();
           }).catch(function (err) {
-            self.setButtonLoading(seedBtn, false, 'পুনরায় চেষ্টা করুন');
+            self.setButtonLoading(seedBtn, false, 'Try Again');
             console.error('[Admin] Database seed error:', err);
-            self.toast('ডাটাবেজ সিড করতে সমস্যা হয়েছে: ' + err.message, 'error');
+            self.toast('Failed to seed database: ' + err.message, 'error');
           });
         }
       );
@@ -2565,11 +2554,17 @@
       if (this.confirmTitle) this.confirmTitle.innerHTML = `<i class="fas fa-triangle-exclamation text-warning"></i> ${title}`;
       if (this.confirmMessage) this.confirmMessage.textContent = message;
       this.pendingConfirmAction = callback;
-      if (this.confirmOverlay) this.confirmOverlay.classList.remove('hidden');
+      if (this.confirmOverlay) {
+        this.confirmOverlay.classList.remove('hidden');
+        this.confirmOverlay.classList.add('active');
+      }
     },
 
     closeConfirmModal() {
-      if (this.confirmOverlay) this.confirmOverlay.classList.add('hidden');
+      if (this.confirmOverlay) {
+        this.confirmOverlay.classList.add('hidden');
+        this.confirmOverlay.classList.remove('active');
+      }
       this.pendingConfirmAction = null;
     },
 
@@ -2577,9 +2572,7 @@
       if (this.editModalTitle) this.editModalTitle.textContent = title;
       if (this.editModalBody) this.editModalBody.innerHTML = bodyHtml;
 
-      // Rebind save button listener
       if (this.saveEditModalBtn) {
-        // Clone button to clear old event listeners safely
         const newBtn = this.saveEditModalBtn.cloneNode(true);
         this.saveEditModalBtn.parentNode.replaceChild(newBtn, this.saveEditModalBtn);
         this.saveEditModalBtn = newBtn;
@@ -2591,11 +2584,17 @@
         });
       }
 
-      if (this.editOverlay) this.editOverlay.classList.remove('hidden');
+      if (this.editOverlay) {
+        this.editOverlay.classList.remove('hidden');
+        this.editOverlay.classList.add('active');
+      }
     },
 
     closeEditModal() {
-      if (this.editOverlay) this.editOverlay.classList.add('hidden');
+      if (this.editOverlay) {
+        this.editOverlay.classList.add('hidden');
+        this.editOverlay.classList.remove('active');
+      }
     },
 
     toast(message, type) {
@@ -2613,7 +2612,7 @@
       btn.disabled = isLoading;
       if (isLoading) {
         btn.classList.add('btn-loading');
-        btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> <span>${text || 'অপেক্ষা করুন...'}</span>`;
+        btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> <span>${text || 'Please wait...'}</span>`;
       } else {
         btn.classList.remove('btn-loading');
         btn.innerHTML = `<span>${text}</span>`;
@@ -2624,57 +2623,53 @@
       const st = (status || 'pending').toLowerCase();
       switch (st) {
         case 'confirmed':
-          return '<span class="badge badge-confirmed"><i class="fas fa-check-circle"></i> নিশ্চিত</span>';
+          return '<span class="badge badge-confirmed"><i class="fas fa-check-circle"></i> Confirmed</span>';
         case 'rejected':
-          return '<span class="badge badge-rejected"><i class="fas fa-times-circle"></i> প্রত্যাখ্যাত</span>';
+          return '<span class="badge badge-rejected"><i class="fas fa-times-circle"></i> Rejected</span>';
         case 'cancelled':
-          return '<span class="badge badge-cancelled"><i class="fas fa-ban"></i> বাতিল</span>';
+          return '<span class="badge badge-cancelled"><i class="fas fa-ban"></i> Cancelled</span>';
         case 'active':
-          return '<span class="badge badge-active"><i class="fas fa-check"></i> সক্রিয়</span>';
+          return '<span class="badge badge-active"><i class="fas fa-check"></i> Active</span>';
         case 'paused':
-          return '<span class="badge badge-paused"><i class="fas fa-pause"></i> স্থগিত</span>';
+          return '<span class="badge badge-paused"><i class="fas fa-pause"></i> Paused</span>';
         case 'terminated':
-          return '<span class="badge badge-rejected"><i class="fas fa-stop"></i> সমাপ্ত</span>';
+          return '<span class="badge badge-rejected"><i class="fas fa-stop"></i> Terminated</span>';
         case 'pending':
         default:
-          return '<span class="badge badge-pending"><i class="fas fa-clock"></i> অপেক্ষমান</span>';
+          return '<span class="badge badge-pending"><i class="fas fa-clock"></i> Pending</span>';
       }
     },
 
     getWeekdayName(val) {
       const days = {
-        '0': 'রবিবার',
-        '1': 'সোমবার',
-        '2': 'মঙ্গলবার',
-        '3': 'বুধবার',
-        '4': 'বৃহস্পতিবার',
-        '5': 'শুক্রবার',
-        '6': 'শনিবার',
-        'sunday': 'রবিবার',
-        'monday': 'সোমবার',
-        'tuesday': 'মঙ্গলবার',
-        'wednesday': 'বুধবার',
-        'thursday': 'বৃহস্পতিবার',
-        'friday': 'শুক্রবার',
-        'saturday': 'শনিবার'
+        '0': 'Sunday',
+        '1': 'Monday',
+        '2': 'Tuesday',
+        '3': 'Wednesday',
+        '4': 'Thursday',
+        '5': 'Friday',
+        '6': 'Saturday',
+        'sunday': 'Sunday',
+        'monday': 'Monday',
+        'tuesday': 'Tuesday',
+        'wednesday': 'Wednesday',
+        'thursday': 'Thursday',
+        'friday': 'Friday',
+        'saturday': 'Saturday'
       };
       return days[String(val).toLowerCase()] || String(val);
     },
 
     bengaliNum(num) {
-      if (typeof window.toBengaliNum === 'function') {
-        return window.toBengaliNum(num);
-      }
       if (num === null || num === undefined) return '';
-      const digits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
-      return String(num).replace(/[0-9]/g, d => digits[Number(d)]);
+      return String(num);
     },
 
     formatPrice(amt) {
       if (typeof window.formatPrice === 'function') {
         return window.formatPrice(amt);
       }
-      return '৳' + Math.round(Number(amt) || 0);
+      return '৳' + Math.round(Number(amt) || 0).toLocaleString('en-US');
     },
 
     formatDate(dateStr) {
@@ -2686,7 +2681,7 @@
 
     formatTimeRange(st, et) {
       if (!st || !et) return '';
-      return `${this.bengaliNum(st)} - ${this.bengaliNum(et)}`;
+      return `${st} - ${et}`;
     },
 
     getTodayDateString() {
