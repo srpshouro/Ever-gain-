@@ -136,18 +136,18 @@
     cachedPricingData = data;
 
     // 1. Extract values with sensible defaults
-    const dayPrice = Number(data.dayPrice || data.day || 550);
-    const dayOriginalPrice = Number(data.dayOriginalPrice || data.dayOriginal || 600);
+    const dayPrice = Number(data.normalDay !== undefined ? data.normalDay : (data.dayPrice || data.day || 550));
+    const dayOriginalPrice = Number(data.dayOriginalPrice || data.dayOriginal || (dayPrice + 50));
 
-    const nightPrice = Number(data.nightPrice || data.night || 900);
-    const nightOriginalPrice = data.nightOriginalPrice || data.nightOriginal || null;
+    const nightPrice = Number(data.normalNight !== undefined ? data.normalNight : (data.nightPrice || data.night || 900));
+    const nightOriginalPrice = data.normalNightOriginal || data.nightOriginalPrice || data.nightOriginal || null;
 
     const discount = Number(data.discount || 50);
 
-    const permDayPrice = Number(data.permanentDayPrice || data.permDay || (dayPrice - discount));
+    const permDayPrice = Number(data.permanentDay !== undefined ? data.permanentDay : (data.permanentDayPrice || data.permDay || (dayPrice - discount)));
     const permDayOriginalPrice = Number(data.permanentDayOriginalPrice || data.permDayOriginal || dayPrice);
 
-    const permNightPrice = Number(data.permanentNightPrice || data.permNight || (nightPrice - discount));
+    const permNightPrice = Number(data.permanentNight !== undefined ? data.permanentNight : (data.permanentNightPrice || data.permNight || (nightPrice - discount)));
     const permNightOriginalPrice = Number(data.permanentNightOriginalPrice || data.permNightOriginal || nightPrice);
 
     // 2. Update Quick Booking Cards
@@ -181,6 +181,9 @@
 
     const overviewPermNightOrigEl = document.getElementById('overviewPermanentNightOriginal');
     if (overviewPermNightOrigEl) overviewPermNightOrigEl.textContent = formatPriceBengali(permNightOriginalPrice);
+
+    // Re-evaluate calculator if rendered
+    calculateTurfCost();
   }
 
   // ==========================================================================
@@ -197,7 +200,8 @@
     const phone = data.phone || data.contactPhone || data.phoneNumber;
     const whatsapp = data.whatsapp || data.whatsappNumber || phone;
     const address = data.address || data.location || data.groundAddress;
-    const facebook = data.facebook || data.fbUrl || data.facebookPage;
+    const mapLink = data.mapLink || data.googleMapLink || data.mapUrl;
+    const facebook = data.socialFacebook || data.facebook || data.fbUrl || data.facebookPage;
 
     // Use EverGain's formatted phone if available
     const formattedPhone = (window.EverGain && typeof EverGain.formatPhone === 'function' && phone)
@@ -225,7 +229,7 @@
       if (footerPhoneLink) footerPhoneLink.setAttribute('href', telHref);
     }
 
-    // Update WhatsApp
+    // Update WhatsApp (cards, footer, and bottom-right floating icon)
     if (whatsapp) {
       let cleanWa = String(whatsapp).replace(/\D/g, '');
       if (cleanWa.startsWith('01')) cleanWa = '880' + cleanWa.substring(1);
@@ -237,6 +241,9 @@
 
       const footerWaLink = document.getElementById('footerWaLink');
       if (footerWaLink) footerWaLink.setAttribute('href', waHref);
+
+      const floatingWaBtn = document.getElementById('floatingWaBtn');
+      if (floatingWaBtn) floatingWaBtn.setAttribute('href', waHref);
     }
 
     // Update Location / Address
@@ -248,6 +255,15 @@
 
       const footerAddress = document.getElementById('footerAddress');
       if (footerAddress) footerAddress.textContent = address;
+    }
+
+    // Update Google Maps Link
+    if (mapLink) {
+      const homeMapLink = document.getElementById('homeMapLink');
+      if (homeMapLink) homeMapLink.setAttribute('href', mapLink);
+
+      const contactMapLink = document.getElementById('contactMapLink');
+      if (contactMapLink) contactMapLink.setAttribute('href', mapLink);
     }
 
     // Update Facebook URL
@@ -504,14 +520,18 @@
 
     // Pricing base
     const pricing = cachedPricingData || {};
-    const dayRate = Number(pricing.dayPrice || pricing.day || 550);
-    const nightRate = Number(pricing.nightPrice || pricing.night || 900);
+    const dayRate = Number(pricing.normalDay !== undefined ? pricing.normalDay : (pricing.dayPrice || pricing.day || 550));
+    const nightRate = Number(pricing.normalNight !== undefined ? pricing.normalNight : (pricing.nightPrice || pricing.night || 900));
+    const permDayRate = Number(pricing.permanentDay !== undefined ? pricing.permanentDay : (pricing.permanentDayPrice || pricing.permDay || (dayRate - 50)));
+    const permNightRate = Number(pricing.permanentNight !== undefined ? pricing.permanentNight : (pricing.permanentNightPrice || pricing.permNight || (nightRate - 50)));
     const discount = Number(pricing.discount || 50);
 
     const baseRate = calcState.session === 'day' ? dayRate : nightRate;
-    const effectiveRate = calcState.type === 'permanent' ? Math.max(0, baseRate - discount) : baseRate;
+    const effectiveRate = calcState.type === 'permanent'
+      ? (calcState.session === 'day' ? permDayRate : permNightRate)
+      : baseRate;
     const totalCost = Math.round(effectiveRate * calcState.hours);
-    const totalSavings = Math.round(discount * calcState.hours);
+    const totalSavings = Math.round((baseRate - effectiveRate) > 0 ? (baseRate - effectiveRate) * calcState.hours : discount * calcState.hours);
 
     // Update Price Display
     const resultPriceEl = document.getElementById('calcResultPrice');
@@ -636,6 +656,247 @@
   }
 
   // ==========================================================================
+  // Reviews & Community Testimonials
+  // ==========================================================================
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  function loadHomepageReviews() {
+    const db = (window.EverGain && window.EverGain.db) || 
+               (typeof firebase !== 'undefined' && firebase.database ? firebase.database() : null);
+    if (!db) return;
+
+    try {
+      const revRef = db.ref('reviews');
+      revRef.on('value', function (snapshot) {
+        const val = snapshot.val();
+        const approvedList = [];
+        if (val) {
+          Object.keys(val).forEach(function (k) {
+            const item = val[k];
+            if (item && item.status === 'approved') {
+              item.id = item.id || k;
+              approvedList.push(item);
+            }
+          });
+        }
+        approvedList.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+        if (approvedList.length > 0) {
+          renderHomepageReviews(approvedList);
+        }
+      });
+    } catch (e) {
+      console.warn('[EVER GAIN] Reviews listener notice:', e);
+    }
+  }
+
+  function renderHomepageReviews(list) {
+    const track = document.getElementById('testimonialsTrack');
+    if (!track || !list || list.length === 0) return;
+
+    let html = '';
+    const gradients = [
+      'linear-gradient(135deg, #10b981 0%, #047857 100%)',
+      'linear-gradient(135deg, #3b82f6 0%, #1e3a8a 100%)',
+      'linear-gradient(135deg, #f59e0b 0%, #b45309 100%)',
+      'linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%)',
+      'linear-gradient(135deg, #ec4899 0%, #be185d 100%)'
+    ];
+
+    list.forEach(function (rev, index) {
+      const author = escapeHtml(rev.author || rev.name || 'Player');
+      const team = escapeHtml(rev.team || rev.location || '');
+      const comment = escapeHtml(rev.comment || rev.text || '');
+      const rating = Math.min(5, Math.max(1, parseInt(rev.rating, 10) || 5));
+      const avatarLetter = author.trim().charAt(0) || 'E';
+      const grad = gradients[index % gradients.length];
+
+      let stars = '';
+      for (let i = 1; i <= 5; i++) {
+        stars += `<i class="fas fa-star" style="color: ${i <= rating ? '#fbbf24' : '#4b5563'};"></i>`;
+      }
+
+      html += `
+        <div class="testimonial-card">
+          <div>
+            <div class="testimonial-stars">${stars}</div>
+            <p class="testimonial-quote">"${comment}"</p>
+          </div>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar" style="background: ${grad};">${avatarLetter}</div>
+            <div>
+              <div class="testimonial-name">${author}</div>
+              ${team ? `<div class="testimonial-team">${team}</div>` : ''}
+            </div>
+          </div>
+        </div>
+      `;
+    });
+
+    track.innerHTML = html;
+  }
+
+  function setupReviewModalAndSubmission() {
+    const openBtn = document.getElementById('openReviewModalBtn');
+    const modal = document.getElementById('reviewModalOverlay');
+    const closeBtn = document.getElementById('closeReviewModalBtn');
+    const cancelBtn = document.getElementById('cancelReviewModalBtn');
+    const form = document.getElementById('reviewSubmitForm');
+    const commentInput = document.getElementById('reviewCommentText');
+    const charCount = document.getElementById('reviewCharCount');
+    const ratingInput = document.getElementById('reviewRatingInput');
+    const starBtns = document.querySelectorAll('#starRatingSelector .star-btn');
+
+    if (commentInput && charCount) {
+      commentInput.addEventListener('input', function () {
+        charCount.textContent = this.value.length;
+      });
+    }
+
+    if (starBtns && ratingInput) {
+      starBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          const r = parseInt(this.getAttribute('data-rating'), 10) || 5;
+          ratingInput.value = r;
+          starBtns.forEach(function (b) {
+            const bRating = parseInt(b.getAttribute('data-rating'), 10);
+            if (bRating <= r) {
+              b.classList.add('active');
+            } else {
+              b.classList.remove('active');
+            }
+          });
+        });
+      });
+    }
+
+    function openModal() {
+      const hasReviewed = localStorage.getItem('evergain_user_reviewed');
+      if (hasReviewed) {
+        const isEn = window.EverGain && typeof window.EverGain.getLanguage === 'function' && window.EverGain.getLanguage() === 'en';
+        const msg = isEn 
+          ? 'You have already submitted a review. Thank you for your feedback!' 
+          : 'আপনি ইতিমধ্যে একটি রিভিউ জমা দিয়েছেন। আপনার মতামতের জন্য ধন্যবাদ!';
+        if (typeof window.showToast === 'function') {
+          window.showToast(msg, 'info');
+        } else {
+          alert(msg);
+        }
+        return;
+      }
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('active');
+      }
+    }
+
+    function closeModal() {
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('active');
+      }
+    }
+
+    if (openBtn) openBtn.addEventListener('click', openModal);
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
+
+    if (modal) {
+      modal.addEventListener('click', function (e) {
+        if (e.target === modal) closeModal();
+      });
+    }
+
+    const prevBtn = document.getElementById('reviewPrevBtn');
+    const nextBtn = document.getElementById('reviewNextBtn');
+    const track = document.getElementById('testimonialsTrack');
+
+    if (prevBtn && track) {
+      prevBtn.addEventListener('click', function () {
+        track.scrollBy({ left: -320, behavior: 'smooth' });
+      });
+    }
+
+    if (nextBtn && track) {
+      nextBtn.addEventListener('click', function () {
+        track.scrollBy({ left: 320, behavior: 'smooth' });
+      });
+    }
+
+    if (form) {
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        if (localStorage.getItem('evergain_user_reviewed')) {
+          closeModal();
+          return;
+        }
+
+        const authorName = document.getElementById('reviewAuthorName').value.trim();
+        const authorTeam = document.getElementById('reviewAuthorTeam').value.trim();
+        const rating = parseInt(ratingInput ? ratingInput.value : '5', 10) || 5;
+        const comment = document.getElementById('reviewCommentText').value.trim();
+
+        if (!authorName || !comment) return;
+
+        const submitBtn = document.getElementById('submitReviewBtn');
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> জমা হচ্ছে...';
+        }
+
+        const db = (window.EverGain && window.EverGain.db) || 
+                   (typeof firebase !== 'undefined' && firebase.database ? firebase.database() : null);
+
+        const reviewData = {
+          author: authorName,
+          team: authorTeam,
+          rating: rating,
+          comment: comment,
+          status: 'pending',
+          createdAt: Date.now()
+        };
+
+        const finish = function () {
+          localStorage.setItem('evergain_user_reviewed', 'true');
+          closeModal();
+          form.reset();
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> রিভিউ জমা দিন';
+          }
+          const isEn = window.EverGain && typeof window.EverGain.getLanguage === 'function' && window.EverGain.getLanguage() === 'en';
+          const toastMsg = isEn 
+            ? 'Review submitted! It will appear once approved by admin.' 
+            : 'আপনার রিভিউ জমা হয়েছে! অ্যাডমিন অনুমোদনের পর তা প্রদর্শিত হবে।';
+          if (typeof window.showToast === 'function') {
+            window.showToast(toastMsg, 'success');
+          } else {
+            alert(toastMsg);
+          }
+        };
+
+        if (db) {
+          db.ref('reviews').push(reviewData).then(finish).catch(function (err) {
+            console.warn('[Review] Submission fallback error:', err);
+            finish();
+          });
+        } else {
+          finish();
+        }
+      });
+    }
+  }
+
+  // ==========================================================================
   // Application Entry Point
   // ==========================================================================
 
@@ -665,10 +926,12 @@
     setupLiveClock();
     setupFloatingActions();
     setupCardHoverEffects();
+    setupReviewModalAndSubmission();
 
     // 3. Load dynamic database values
     loadHomepageData();
     loadGalleryPreview();
+    loadHomepageReviews();
 
     // 4. Listen for language changes
     window.addEventListener('evergain:languageChanged', function () {

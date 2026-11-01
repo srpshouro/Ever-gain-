@@ -32,6 +32,7 @@
     workingDays: [0, 1, 2, 3, 4, 5, 6],
     gallery: [],
     rules: [],
+    reviews: [],
     settings: {},
     pricing: {},
     listeners: [], // Tracks Firebase references to detach on logout
@@ -620,6 +621,8 @@
         this.renderGalleryGrid();
       } else if (tabName === 'rules') {
         this.renderRulesList();
+      } else if (tabName === 'reviews') {
+        this.renderReviewsList();
       } else if (tabName === 'settings') {
         this.renderSettingsInputs();
       }
@@ -673,6 +676,7 @@
       this.loadPricing();
       this.loadGalleryAdmin();
       this.loadRulesAdmin();
+      this.loadReviewsAdmin();
       this.loadSettings();
     },
 
@@ -825,6 +829,9 @@
                 <button type="button" class="btn btn-sm btn-secondary" onclick="event.stopPropagation(); AdminApp.viewBookingDetail('${b.id}')" title="View Details">
                   <i class="fas fa-eye"></i>
                 </button>
+                <button type="button" class="btn btn-sm btn-danger" onclick="event.stopPropagation(); AdminApp.deleteBooking('${b.id}')" title="Delete Booking Permanently">
+                  <i class="fas fa-trash"></i>
+                </button>
               </div>
             </td>
           </tr>
@@ -861,6 +868,7 @@
 
         self.loadDashboardStats();
         self.filterBookings();
+        self.checkAndCleanupExpiredBookings(self.bookings);
       }, function (err) {
         console.error('[Admin] Error loading bookings:', err);
       });
@@ -968,6 +976,9 @@
                 ` : ''}
                 <button type="button" class="btn btn-sm btn-secondary" onclick="event.stopPropagation(); AdminApp.viewBookingDetail('${b.id}')" title="View Details">
                   <i class="fas fa-eye"></i>
+                </button>
+                <button type="button" class="btn btn-sm btn-danger" onclick="event.stopPropagation(); AdminApp.deleteBooking('${b.id}')" title="Delete Booking Permanently">
+                  <i class="fas fa-trash"></i>
                 </button>
               </div>
             </td>
@@ -1110,6 +1121,100 @@
       );
     },
 
+    deleteBooking(id) {
+      const self = this;
+      let b = this.bookings.find(item => item.id === id);
+      this.showConfirm(
+        'Delete Booking Permanently',
+        'Are you sure you want to permanently delete this booking? This will remove the record and free the slot.',
+        function () {
+          const db = window.db || (typeof firebase !== 'undefined' && firebase.database ? firebase.database() : null);
+          if (!db) return;
+
+          const updates = {};
+          updates[`bookings/${id}`] = null;
+
+          if (b && b.date) {
+            const slotKey = b.slotId || (b.slotTime ? b.slotTime.replace(/[^a-zA-Z0-9]/g, '_') : null);
+            if (slotKey) {
+              updates[`availability/${b.date}/${slotKey}`] = null;
+              if (b.session) {
+                updates[`availability/${b.date}/${b.session}/${slotKey}`] = null;
+              }
+            }
+          }
+
+          db.ref().update(updates).then(function () {
+            self.toast('Booking deleted successfully.', 'success');
+            self.closeBookingDetailModal();
+          }).catch(function (err) {
+            console.error('[Admin] Error deleting booking:', err);
+            self.toast('Error deleting booking: ' + err.message, 'error');
+          });
+        }
+      );
+    },
+
+    checkAndCleanupExpiredBookings(list) {
+      const db = window.db || (typeof firebase !== 'undefined' && firebase.database ? firebase.database() : null);
+      if (!db || !Array.isArray(list) || list.length === 0) return;
+
+      const now = Date.now();
+      const twoHoursMs = 2 * 60 * 60 * 1000;
+
+      list.forEach(function (b) {
+        if (!b || !b.id || !b.date || b.type === 'permanent') return;
+
+        let matchEndTime = null;
+        try {
+          const parts = String(b.date).split('-');
+          if (parts.length === 3) {
+            const year = parseInt(parts[0], 10);
+            const month = parseInt(parts[1], 10) - 1;
+            const day = parseInt(parts[2], 10);
+
+            let endHour = 23;
+            let endMin = 59;
+            let dayOffset = 0;
+
+            if (b.slotId && /^slot_\d+_(\d+)$/.test(b.slotId)) {
+              const match = b.slotId.match(/^slot_\d+_(\d+)$/);
+              let h = parseInt(match[1], 10);
+              if (h >= 24) {
+                h = h - 24;
+                dayOffset = 1;
+              }
+              endHour = h;
+              endMin = 0;
+            }
+
+            const endDate = new Date(year, month, day + dayOffset, endHour, endMin, 0);
+            matchEndTime = endDate.getTime();
+          }
+        } catch (e) {
+          console.warn('[Admin] Expiration parse error:', e);
+        }
+
+        if (matchEndTime && (now > (matchEndTime + twoHoursMs))) {
+          console.log('[Admin] Auto-deleting expired booking (2h after slot):', b.id, b.date);
+          const updates = {};
+          updates[`bookings/${b.id}`] = null;
+          if (b.date) {
+            const slotKey = b.slotId || (b.slotTime ? b.slotTime.replace(/[^a-zA-Z0-9]/g, '_') : null);
+            if (slotKey) {
+              updates[`availability/${b.date}/${slotKey}`] = null;
+              if (b.session) {
+                updates[`availability/${b.date}/${b.session}/${slotKey}`] = null;
+              }
+            }
+          }
+          db.ref().update(updates).catch(function (err) {
+            console.warn('[Admin] Failed to remove expired booking:', err);
+          });
+        }
+      });
+    },
+
     viewBookingDetail(id) {
       let b = this.bookings.find(item => item.id === id);
       if (!b) {
@@ -1164,6 +1269,7 @@
       if (this.bookingDetailFooter) {
         let footerHtml = `
           <button type="button" class="btn btn-secondary" onclick="AdminApp.closeBookingDetailModal()">Close</button>
+          <button type="button" class="btn btn-danger" onclick="AdminApp.deleteBooking('${b.id}')"><i class="fas fa-trash"></i> Delete Booking</button>
         `;
 
         if (st === 'pending') {
@@ -1173,7 +1279,7 @@
           `;
         } else if (st === 'confirmed') {
           footerHtml += `
-            <button type="button" class="btn btn-danger" onclick="AdminApp.cancelBooking('${b.id}')"><i class="fas fa-ban"></i> Cancel Booking</button>
+            <button type="button" class="btn btn-warning" onclick="AdminApp.cancelBooking('${b.id}')"><i class="fas fa-ban"></i> Cancel Booking</button>
           `;
         }
 
@@ -1319,6 +1425,9 @@
                     <i class="fas fa-stop"></i> Terminate
                   </button>
                 ` : ''}
+                <button type="button" class="btn btn-sm btn-danger" onclick="AdminApp.deletePermanent('${pb.id}')" title="Delete Permanent Booking Record">
+                  <i class="fas fa-trash"></i> Delete
+                </button>
               </div>
             </td>
           </tr>
@@ -1402,6 +1511,25 @@
             terminatedAt: Date.now()
           }).then(function () {
             self.toast('Permanent booking terminated.', 'info');
+          });
+        }
+      );
+    },
+
+    deletePermanent(id) {
+      const self = this;
+      this.showConfirm(
+        'Delete Permanent Booking',
+        'Are you sure you want to completely delete this permanent booking record?',
+        function () {
+          const db = window.db || (typeof firebase !== 'undefined' && firebase.database ? firebase.database() : null);
+          if (!db) return;
+
+          db.ref('permanentBookings/' + id).remove().then(function () {
+            self.toast('Permanent booking deleted.', 'info');
+          }).catch(function (err) {
+            console.error('[Admin] Error deleting permanent booking:', err);
+            self.toast('Error deleting permanent booking: ' + err.message, 'error');
           });
         }
       );
@@ -1739,11 +1867,21 @@
       const fPermanentDay = document.getElementById('pricePermanentDay');
       const fPermanentNight = document.getElementById('pricePermanentNight');
 
-      if (fNormalDay && p.normalDay !== undefined) fNormalDay.value = p.normalDay;
-      if (fDayOriginal && p.dayOriginal !== undefined) fDayOriginal.value = p.dayOriginal;
-      if (fNormalNight && p.normalNight !== undefined) fNormalNight.value = p.normalNight;
-      if (fPermanentDay && p.permanentDay !== undefined) fPermanentDay.value = p.permanentDay;
-      if (fPermanentNight && p.permanentNight !== undefined) fPermanentNight.value = p.permanentNight;
+      if (fNormalDay && (p.normalDay !== undefined || p.dayPrice !== undefined)) {
+        fNormalDay.value = p.normalDay !== undefined ? p.normalDay : p.dayPrice;
+      }
+      if (fDayOriginal && (p.dayOriginal !== undefined || p.dayOriginalPrice !== undefined)) {
+        fDayOriginal.value = p.dayOriginal !== undefined ? p.dayOriginal : p.dayOriginalPrice;
+      }
+      if (fNormalNight && (p.normalNight !== undefined || p.nightPrice !== undefined)) {
+        fNormalNight.value = p.normalNight !== undefined ? p.normalNight : p.nightPrice;
+      }
+      if (fPermanentDay && (p.permanentDay !== undefined || p.permanentDayPrice !== undefined)) {
+        fPermanentDay.value = p.permanentDay !== undefined ? p.permanentDay : p.permanentDayPrice;
+      }
+      if (fPermanentNight && (p.permanentNight !== undefined || p.permanentNightPrice !== undefined)) {
+        fPermanentNight.value = p.permanentNight !== undefined ? p.permanentNight : p.permanentNightPrice;
+      }
     },
 
     savePricing() {
@@ -1753,12 +1891,28 @@
       const fPermanentDay = document.getElementById('pricePermanentDay');
       const fPermanentNight = document.getElementById('pricePermanentNight');
 
+      const dayVal = Number(fNormalDay.value) || 550;
+      const dayOrigVal = Number(fDayOriginal.value) || 600;
+      const nightVal = Number(fNormalNight.value) || 900;
+      const permDayVal = Number(fPermanentDay.value) || 500;
+      const permNightVal = Number(fPermanentNight.value) || 850;
+
       const data = {
-        normalDay: Number(fNormalDay.value) || 550,
-        dayOriginal: Number(fDayOriginal.value) || 600,
-        normalNight: Number(fNormalNight.value) || 900,
-        permanentDay: Number(fPermanentDay.value) || 500,
-        permanentNight: Number(fPermanentNight.value) || 850,
+        normalDay: dayVal,
+        dayPrice: dayVal,
+        day: dayVal,
+        dayOriginal: dayOrigVal,
+        dayOriginalPrice: dayOrigVal,
+        normalNight: nightVal,
+        nightPrice: nightVal,
+        night: nightVal,
+        permanentDay: permDayVal,
+        permanentDayPrice: permDayVal,
+        permDay: permDayVal,
+        permanentNight: permNightVal,
+        permanentNightPrice: permNightVal,
+        permNight: permNightVal,
+        discount: 50,
         updatedAt: Date.now()
       };
 
@@ -2380,7 +2534,159 @@
     },
 
     // =======================================================================
-    // 12. Settings Management
+    // 12. Reviews Management (Approve, Delete, Realtime Badge)
+    // =======================================================================
+    loadReviewsAdmin() {
+      const self = this;
+      const db = window.db || (typeof firebase !== 'undefined' && firebase.database ? firebase.database() : null);
+      if (!db) return;
+
+      const revRef = db.ref('reviews');
+      this.listeners.push({ ref: revRef, event: 'value' });
+
+      revRef.on('value', function (snapshot) {
+        const val = snapshot.val();
+        self.reviews = [];
+
+        if (val) {
+          Object.keys(val).forEach(function (key) {
+            const item = val[key];
+            if (typeof item === 'object' && item !== null) {
+              item.id = item.id || key;
+              self.reviews.push(item);
+            }
+          });
+        }
+
+        self.reviews.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+        let pendingCount = 0;
+        let approvedCount = 0;
+        self.reviews.forEach(function (r) {
+          if (r.status === 'approved') approvedCount++;
+          else pendingCount++;
+        });
+
+        const pendingBadge = document.getElementById('pendingReviewsBadge');
+        if (pendingBadge) {
+          if (pendingCount > 0) {
+            pendingBadge.textContent = pendingCount;
+            pendingBadge.classList.remove('hidden');
+          } else {
+            pendingBadge.classList.add('hidden');
+          }
+        }
+
+        const countPending = document.getElementById('adminPendingReviewsCount');
+        if (countPending) countPending.textContent = 'Pending: ' + pendingCount;
+
+        const countApproved = document.getElementById('adminApprovedReviewsCount');
+        if (countApproved) countApproved.textContent = 'Approved: ' + approvedCount;
+
+        if (self.currentTab === 'reviews') {
+          self.renderReviewsList();
+        }
+      }, function (err) {
+        console.error('[Admin] Error loading reviews:', err);
+      });
+    },
+
+    renderReviewsList() {
+      const container = document.getElementById('adminReviewsList');
+      if (!container) return;
+
+      if (this.reviews.length === 0) {
+        container.innerHTML = '<p class="form-hint text-center py-4">No player reviews submitted yet.</p>';
+        return;
+      }
+
+      let html = '<div class="admin-reviews-grid" style="display: flex; flex-direction: column; gap: 1rem;">';
+      const self = this;
+
+      this.reviews.forEach(function (rev) {
+        const author = self.escapeHtml(rev.author || rev.name || 'Player');
+        const team = self.escapeHtml(rev.team || rev.location || '');
+        const comment = self.escapeHtml(rev.comment || rev.text || '');
+        const rating = Math.min(5, Math.max(1, parseInt(rev.rating, 10) || 5));
+        const dateStr = rev.createdAt ? new Date(rev.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '-';
+        const isApproved = rev.status === 'approved';
+
+        let starsHtml = '';
+        for (let i = 1; i <= 5; i++) {
+          starsHtml += `<i class="fas fa-star" style="color: ${i <= rating ? '#fbbf24' : '#4b5563'}; margin-right: 2px;"></i>`;
+        }
+
+        html += `
+          <div class="card card-premium" style="padding: 1rem; border-left: 4px solid ${isApproved ? 'var(--color-primary)' : '#f59e0b'};">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 0.5rem;">
+              <div>
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                  <strong style="font-size: 1.05rem; color: var(--color-text-primary);">${author}</strong>
+                  ${team ? `<small class="text-secondary">(${team})</small>` : ''}
+                  <span class="badge ${isApproved ? 'badge-confirmed' : 'badge-pending'}">${isApproved ? 'Approved' : 'Pending Approval'}</span>
+                </div>
+                <div class="mt-1" style="font-size: 0.85rem;">
+                  ${starsHtml}
+                  <span class="text-secondary ml-2">${dateStr}</span>
+                </div>
+              </div>
+              <div class="action-buttons">
+                ${!isApproved ? `
+                  <button type="button" class="btn btn-sm btn-approve-direct" onclick="AdminApp.approveReview('${rev.id}')" title="Approve & Publish to Website">
+                    <i class="fas fa-check"></i> Approve
+                  </button>
+                ` : ''}
+                <button type="button" class="btn btn-sm btn-danger" onclick="AdminApp.deleteReview('${rev.id}')" title="Delete Review">
+                  <i class="fas fa-trash"></i> Delete
+                </button>
+              </div>
+            </div>
+            <div class="mt-2" style="color: var(--color-text-secondary); font-size: 0.95rem; line-height: 1.5; background: rgba(0,0,0,0.2); padding: 0.75rem; border-radius: var(--radius-sm);">
+              "${comment}"
+            </div>
+          </div>
+        `;
+      });
+
+      html += '</div>';
+      container.innerHTML = html;
+    },
+
+    approveReview(id) {
+      const self = this;
+      const db = window.db || (typeof firebase !== 'undefined' && firebase.database ? firebase.database() : null);
+      if (!db) return;
+
+      db.ref('reviews/' + id).update({
+        status: 'approved',
+        approvedAt: Date.now()
+      }).then(function () {
+        self.toast('Review approved and published to website!', 'success');
+      }).catch(function (err) {
+        self.toast('Failed to approve review: ' + err.message, 'error');
+      });
+    },
+
+    deleteReview(id) {
+      const self = this;
+      this.showConfirm(
+        'Delete Review',
+        'Are you sure you want to delete this review?',
+        function () {
+          const db = window.db || (typeof firebase !== 'undefined' && firebase.database ? firebase.database() : null);
+          if (!db) return;
+
+          db.ref('reviews/' + id).remove().then(function () {
+            self.toast('Review deleted successfully.', 'info');
+          }).catch(function (err) {
+            self.toast('Failed to delete review: ' + err.message, 'error');
+          });
+        }
+      );
+    },
+
+    // =======================================================================
+    // 13. Settings Management
     // =======================================================================
     loadSettings() {
       const self = this;
@@ -2402,37 +2708,33 @@
       const fWhatsapp = document.getElementById('settingsWhatsapp');
       const fAddress = document.getElementById('settingsAddress');
       const fMapLink = document.getElementById('settingsMapLink');
-      const fHours = document.getElementById('settingsHours');
-      const fHeroTitle = document.getElementById('settingsHeroTitle');
-      const fHeroSubtitle = document.getElementById('settingsHeroSubtitle');
-      const fAnnouncement = document.getElementById('settingsAnnouncement');
       const fFb = document.getElementById('settingsSocialFacebook');
-      const fInsta = document.getElementById('settingsSocialInstagram');
 
       if (fPhone && s.phone !== undefined) fPhone.value = s.phone;
       if (fWhatsapp && s.whatsapp !== undefined) fWhatsapp.value = s.whatsapp;
       if (fAddress && s.address !== undefined) fAddress.value = s.address;
       if (fMapLink && s.mapLink !== undefined) fMapLink.value = s.mapLink;
-      if (fHours && s.hours !== undefined) fHours.value = s.hours;
-      if (fHeroTitle && s.heroTitle !== undefined) fHeroTitle.value = s.heroTitle;
-      if (fHeroSubtitle && s.heroSubtitle !== undefined) fHeroSubtitle.value = s.heroSubtitle;
-      if (fAnnouncement && s.announcement !== undefined) fAnnouncement.value = s.announcement;
       if (fFb && s.socialFacebook !== undefined) fFb.value = s.socialFacebook;
-      if (fInsta && s.socialInstagram !== undefined) fInsta.value = s.socialInstagram;
     },
 
     saveSettings() {
+      const fPhone = document.getElementById('settingsPhone');
+      const fWhatsapp = document.getElementById('settingsWhatsapp');
+      const fAddress = document.getElementById('settingsAddress');
+      const fMapLink = document.getElementById('settingsMapLink');
+      const fFb = document.getElementById('settingsSocialFacebook');
+
+      let mapVal = fMapLink ? fMapLink.value.trim() : '';
+      if (mapVal && !mapVal.startsWith('http://') && !mapVal.startsWith('https://')) {
+        mapVal = 'https://' + mapVal;
+      }
+
       const data = {
-        phone: document.getElementById('settingsPhone').value.trim(),
-        whatsapp: document.getElementById('settingsWhatsapp').value.trim(),
-        address: document.getElementById('settingsAddress').value.trim(),
-        mapLink: document.getElementById('settingsMapLink').value.trim(),
-        hours: document.getElementById('settingsHours').value.trim(),
-        heroTitle: document.getElementById('settingsHeroTitle').value.trim(),
-        heroSubtitle: document.getElementById('settingsHeroSubtitle').value.trim(),
-        announcement: document.getElementById('settingsAnnouncement').value.trim(),
-        socialFacebook: document.getElementById('settingsSocialFacebook').value.trim(),
-        socialInstagram: document.getElementById('settingsSocialInstagram').value.trim(),
+        phone: fPhone ? fPhone.value.trim() : '',
+        whatsapp: fWhatsapp ? fWhatsapp.value.trim() : '',
+        address: fAddress ? fAddress.value.trim() : '',
+        mapLink: mapVal,
+        socialFacebook: fFb ? fFb.value.trim() : '',
         updatedAt: Date.now()
       };
 
@@ -2443,9 +2745,9 @@
       const saveBtn = document.getElementById('saveSettingsBtn');
       self.setButtonLoading(saveBtn, true, 'Saving settings...');
 
-      db.ref('settings').set(data).then(function () {
+      db.ref('settings').update(data).then(function () {
         self.setButtonLoading(saveBtn, false, 'Save Settings');
-        self.settings = data;
+        self.settings = Object.assign(self.settings, data);
         self.toast('Settings saved successfully!', 'success');
       }).catch(function (err) {
         self.setButtonLoading(saveBtn, false, 'Save Settings');

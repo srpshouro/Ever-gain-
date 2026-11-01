@@ -626,67 +626,76 @@
     <!-- 9.5. Player Reviews & Community Testimonials Section (Social Proof) -->
     <section class="section animate-in" id="testimonials">
       <div class="container">
-        <div class="text-center mb-4">
+        <div class="testimonials-header text-center mb-4">
           <h2 class="section-title" data-i18n="testimonialsTitle">খেলোয়াড়দের অভিজ্ঞতা ও মতামত</h2>
           <p class="section-subtitle" data-i18n="testimonialsSubtitle">বগুড়ার শীর্ষ ফুটবল দল ও খেলোয়াড়রা EVER GAIN সম্পর্কে যা বলছেন</p>
+          <div class="mt-3">
+            <button type="button" class="btn btn-primary btn-sm" id="openReviewModalBtn">
+              <i class="fas fa-feather-pointed"></i> <span data-i18n="giveReview">রিভিউ দিন</span>
+            </button>
+          </div>
         </div>
-        <div class="testimonials-grid">
-          <!-- Testimonial 1 -->
-          <div class="testimonial-card">
-            <div>
-              <div class="testimonial-stars">
-                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-              </div>
-              <p class="testimonial-quote" data-i18n="testi1Text">
-                "বগুড়ায় গ্রামের মনোরম পরিবেশে এরকম প্রিমিয়াম টার্ফ আগে দেখিনি! লাইটিং এবং গ্রাউন্ড কোয়ালিটি সত্যিই অসাধারণ।"
-              </p>
-            </div>
-            <div class="testimonial-author">
-              <div class="testimonial-avatar">তা</div>
+        <div class="testimonials-slider-wrapper">
+          <button type="button" class="slider-nav-btn prev" id="reviewPrevBtn" aria-label="Previous Review" title="পূর্ববর্তী রিভিউ"><i class="fas fa-chevron-left"></i></button>
+          <div class="testimonials-slider-track" id="testimonialsTrack">
+            <!-- Testimonial 1 -->
+            <div class="testimonial-card">
               <div>
-                <div class="testimonial-name" data-i18n="testi1Name">তানভীর আহমেদ</div>
-                <div class="testimonial-team" data-i18n="testi1Team">ক্যাপ্টেন, বগুড়া থান্ডার ফুটবল ক্লাব</div>
+                <div class="testimonial-stars">
+                  <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                </div>
+                <p class="testimonial-quote" data-i18n="testi1Text">
+                  "বগুড়ায় গ্রামের মনোরম পরিবেশে এরকম প্রিমিয়াম টার্ফ আগে দেখিনি! লাইটিং এবং গ্রাউন্ড কোয়ালিটি সত্যিই অসাধারণ।"
+                </p>
+              </div>
+              <div class="testimonial-author">
+                <div class="testimonial-avatar">তা</div>
+                <div>
+                  <div class="testimonial-name" data-i18n="testi1Name">তানভীর আহমেদ</div>
+                  <div class="testimonial-team" data-i18n="testi1Team">ক্যাপ্টেন, বগুড়া থান্ডার ফুটবল ক্লাব</div>
+                </div>
               </div>
             </div>
-          </div>
 
-          <!-- Testimonial 2 -->
-          <div class="testimonial-card">
-            <div>
-              <div class="testimonial-stars">
-                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-              </div>
-              <p class="testimonial-quote" data-i18n="testi2Text">
-                "আমরা প্রতি শুক্রবার নাইট স্লটে স্থায়ী বুকিং নিয়ে খেলি। ৫০ টাকা ছাড় এবং নিশ্চিত স্লট—সব মিলিয়ে দারুণ সার্ভিস!"
-              </p>
-            </div>
-            <div class="testimonial-author">
-              <div class="testimonial-avatar" style="background: linear-gradient(135deg, #3b82f6 0%, #1e3a8a 100%);">সা</div>
+            <!-- Testimonial 2 -->
+            <div class="testimonial-card">
               <div>
-                <div class="testimonial-name" data-i18n="testi2Name">সাকিব আল হাসান</div>
-                <div class="testimonial-team" data-i18n="testi2Team">টিম লিডার, রেড ডেভিলস স্কোয়াড</div>
+                <div class="testimonial-stars">
+                  <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                </div>
+                <p class="testimonial-quote" data-i18n="testi2Text">
+                  "আমরা প্রতি শুক্রবার নাইট স্লটে স্থায়ী বুকিং নিয়ে খেলি। ৫০ টাকা ছাড় এবং নিশ্চিত স্লট—সব মিলিয়ে দারুণ সার্ভিস!"
+                </p>
+              </div>
+              <div class="testimonial-author">
+                <div class="testimonial-avatar" style="background: linear-gradient(135deg, #3b82f6 0%, #1e3a8a 100%);">সা</div>
+                <div>
+                  <div class="testimonial-name" data-i18n="testi2Name">সাকিব আল হাসান</div>
+                  <div class="testimonial-team" data-i18n="testi2Team">টিম লিডার, রেড ডেভিলস স্কোয়াড</div>
+                </div>
               </div>
             </div>
-          </div>
 
-          <!-- Testimonial 3 -->
-          <div class="testimonial-card">
-            <div>
-              <div class="testimonial-stars">
-                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-              </div>
-              <p class="testimonial-quote" data-i18n="testi3Text">
-                "মোবাইল দিয়ে ৩ মিনিটে বুকিং করা যায়। বৃষ্টি কিংবা কাদার কোনো চিন্তা নেই। লকার রুম ও সার্ভিসও ফ্রেশ।"
-              </p>
-            </div>
-            <div class="testimonial-author">
-              <div class="testimonial-avatar" style="background: linear-gradient(135deg, #f59e0b 0%, #b45309 100%);">মা</div>
+            <!-- Testimonial 3 -->
+            <div class="testimonial-card">
               <div>
-                <div class="testimonial-name" data-i18n="testi3Name">মাহিন চৌধুরী</div>
-                <div class="testimonial-team" data-i18n="testi3Team">টিম ক্যাপ্টেন, ইলেভেন স্টারস</div>
+                <div class="testimonial-stars">
+                  <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                </div>
+                <p class="testimonial-quote" data-i18n="testi3Text">
+                  "মোবাইল দিয়ে ৩ মিনিটে বুকিং করা যায়। বৃষ্টি কিংবা কাদার কোনো চিন্তা নেই। লকার রুম ও সার্ভিসও ফ্রেশ।"
+                </p>
+              </div>
+              <div class="testimonial-author">
+                <div class="testimonial-avatar" style="background: linear-gradient(135deg, #f59e0b 0%, #b45309 100%);">মা</div>
+                <div>
+                  <div class="testimonial-name" data-i18n="testi3Name">মাহিন চৌধুরী</div>
+                  <div class="testimonial-team" data-i18n="testi3Team">টিম ক্যাপ্টেন, ইলেভেন স্টারস</div>
+                </div>
               </div>
             </div>
           </div>
+          <button type="button" class="slider-nav-btn next" id="reviewNextBtn" aria-label="Next Review" title="পরবর্তী রিভিউ"><i class="fas fa-chevron-right"></i></button>
         </div>
       </div>
     </section>
@@ -737,8 +746,8 @@
               EVER GAIN ইনডোর ফুটবল গ্রাউন্ড<br>বগুড়া সদর, বাংলাদেশ
             </p>
             <div class="mt-3">
-              <a href="contact.html" class="btn btn-secondary btn-block">
-                <i class="fas fa-map-location-dot"></i> <span data-i18n="navContact">যোগাযোগ পাতা দেখুন</span>
+              <a href="https://maps.google.com" target="_blank" rel="noopener noreferrer" id="homeMapLink" class="btn btn-secondary btn-block">
+                <i class="fas fa-map-location-dot"></i> <span data-i18n="viewMap">গুগল ম্যাপে দেখুন</span>
               </a>
             </div>
           </article>
@@ -867,6 +876,64 @@
       <span data-i18n="navContact">যোগাযোগ</span>
     </a>
   </nav>
+
+  <!-- Review Submission Modal (Single Review Per User) -->
+  <div class="modal-overlay hidden" id="reviewModalOverlay" role="dialog" aria-modal="true" aria-labelledby="reviewModalTitle">
+    <div class="modal modal-card" style="max-width: 480px; width: 90%;">
+      <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--color-border); padding-bottom: 0.75rem;">
+        <h3 class="modal-title" id="reviewModalTitle" style="margin: 0; font-size: 1.15rem; color: var(--color-text-primary);">
+          <i class="fas fa-star" style="color: #fbbf24;"></i> <span data-i18n="addReviewTitle">আপনার রিভিউ দিন</span>
+        </h3>
+        <button type="button" class="modal-close" id="closeReviewModalBtn" aria-label="Close" style="background: none; border: none; font-size: 1.5rem; color: var(--color-text-secondary); cursor: pointer;">&times;</button>
+      </div>
+      <form id="reviewSubmitForm" class="mt-3">
+        <div class="modal-body" style="display: flex; flex-direction: column; gap: 1rem;">
+          <div class="form-group">
+            <label class="form-label" for="reviewAuthorName" style="display: block; margin-bottom: 0.35rem; font-weight: 500;">
+              <span data-i18n="reviewName">আপনার নাম</span> <span class="text-danger">*</span>
+            </label>
+            <input type="text" id="reviewAuthorName" class="form-input" placeholder="আপনার নাম লিখুন" required maxlength="50">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="reviewAuthorTeam" style="display: block; margin-bottom: 0.35rem; font-weight: 500;">
+              <span data-i18n="reviewTeam">টিম / অবস্থান (ঐচ্ছিক)</span>
+            </label>
+            <input type="text" id="reviewAuthorTeam" class="form-input" placeholder="যেমন: ক্যাপ্টেন, বগুড়া ওয়ারিয়র্স" maxlength="60">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" style="display: block; margin-bottom: 0.35rem; font-weight: 500;">
+              <span data-i18n="reviewRating">রেটিং দিন</span> <span class="text-danger">*</span>
+            </label>
+            <div class="star-rating-selector" id="starRatingSelector" style="display: flex; gap: 0.5rem; font-size: 1.5rem;">
+              <button type="button" class="star-btn active" data-rating="1" aria-label="1 Star"><i class="fas fa-star"></i></button>
+              <button type="button" class="star-btn active" data-rating="2" aria-label="2 Stars"><i class="fas fa-star"></i></button>
+              <button type="button" class="star-btn active" data-rating="3" aria-label="3 Stars"><i class="fas fa-star"></i></button>
+              <button type="button" class="star-btn active" data-rating="4" aria-label="4 Stars"><i class="fas fa-star"></i></button>
+              <button type="button" class="star-btn active" data-rating="5" aria-label="5 Stars"><i class="fas fa-star"></i></button>
+            </div>
+            <input type="hidden" id="reviewRatingInput" value="5">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="reviewCommentText" style="display: block; margin-bottom: 0.35rem; font-weight: 500;">
+              <span data-i18n="reviewComment">আপনার মূল্যবান অভিজ্ঞতা / মতামত</span> <span class="text-danger">*</span>
+            </label>
+            <textarea id="reviewCommentText" class="form-textarea" rows="3" placeholder="টার্ফের গ্রাউন্ড, লাইটিং বা সার্ভিস সম্পর্কে আপনার মতামত..." required maxlength="300"></textarea>
+            <small class="form-hint" style="display: block; margin-top: 0.25rem; font-size: 0.8rem; color: var(--color-text-muted);"><span id="reviewCharCount">0</span>/300 অক্ষরের মধ্যে লিখুন</small>
+          </div>
+        </div>
+
+        <div class="modal-footer mt-4" style="display: flex; justify-content: flex-end; gap: 0.75rem; border-top: 1px solid var(--color-border); padding-top: 1rem;">
+          <button type="button" class="btn btn-secondary" id="cancelReviewModalBtn">বাতিল</button>
+          <button type="submit" class="btn btn-primary" id="submitReviewBtn">
+            <i class="fas fa-paper-plane"></i> রিভিউ জমা দিন
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <!-- 13. Toast Container -->
   <div class="toast-container" id="toastContainer"></div>

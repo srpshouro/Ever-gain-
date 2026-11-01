@@ -5480,6 +5480,110 @@ header.section.section-header,
   color: var(--color-text-muted);
 }
 
+/* Reviews Horizontal Slider / Side-Swipe Carousel */
+.testimonials-slider-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0 auto;
+}
+
+.testimonials-slider-track {
+  display: flex;
+  gap: 1.25rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  padding: 0.75rem 0.25rem 1.25rem;
+  width: 100%;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.testimonials-slider-track::-webkit-scrollbar {
+  display: none;
+}
+
+.testimonials-slider-track .testimonial-card {
+  flex: 0 0 calc(33.333% - 0.9rem);
+  min-width: 290px;
+  max-width: 400px;
+  scroll-snap-align: start;
+}
+
+.slider-nav-btn {
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  border-radius: 50%;
+  background: rgba(16, 28, 18, 0.85);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  color: var(--color-primary-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  z-index: 5;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.slider-nav-btn:hover {
+  background: var(--color-primary);
+  color: #ffffff;
+  border-color: var(--color-primary);
+  transform: scale(1.08);
+}
+
+.slider-nav-btn:active {
+  transform: scale(0.96);
+}
+
+/* Star Rating Selector in Review Modal */
+.star-rating-selector {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.star-rating-selector .star-btn {
+  background: none;
+  border: none;
+  padding: 0.25rem;
+  font-size: 1.75rem;
+  color: #4b5563;
+  cursor: pointer;
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.star-rating-selector .star-btn.active {
+  color: #fbbf24;
+}
+
+.star-rating-selector .star-btn:hover {
+  transform: scale(1.15);
+}
+
+@media (max-width: 992px) {
+  .testimonials-slider-track .testimonial-card {
+    flex: 0 0 calc(50% - 0.75rem);
+    min-width: 280px;
+  }
+}
+
+@media (max-width: 640px) {
+  .slider-nav-btn {
+    display: none;
+  }
+  .testimonials-slider-track .testimonial-card {
+    flex: 0 0 85%;
+    min-width: 260px;
+    padding: 1.35rem;
+  }
+}
+
 /* Floating WhatsApp Quick-Book & Back-to-Top */
 .floating-actions {
   position: fixed;
