@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="bn" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0a0f0a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="description" content="EVER GAIN ইনডোর ফুটবল টার্ফ এডমিন ড্যাশবোর্ড ও নিয়ন্ত্রণ প্যানেল">
+  
+  <link rel="icon" type="image/jpeg" href="assets/logo/logo.jpg">
+  <link rel="apple-touch-icon" href="assets/logo/logo.jpg">
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+Bengali:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <title>এডমিন ড্যাশবোর্ড | EVER GAIN</title>
+</head>
+<body class="admin-body">
+  <!-- Subtle Background Layers -->
+  <div class="bg-animated">
+    <div class="bg-gradient"></div>
+    <div class="bg-pattern"></div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 1. LOGIN SCREEN (Visible when unauthenticated)                            -->
+  <!-- ========================================================================= -->
+  <section class="admin-login-section flex-center" id="adminLoginSection">
+    <div class="container" style="max-width: 440px;">
+      <div class="card card-premium text-center">
+        <!-- Brand Header -->
+        <div class="mb-4">
+          <div class="mb-2">
+            <img src="assets/logo/logo.jpg" alt="EVER GAIN Logo" class="navbar-logo mx-auto" style="height: 64px; width: 64px; border-radius: 50%; object-fit: cover; border: 2px solid rgba(16, 185, 129, 0.5); display: block; box-shadow: 0 0 16px rgba(16, 185, 129, 0.4);">
+          </div>
+          <h1 class="navbar-logo-text" style="font-size: 1.75rem;">EVER GAIN</h1>
+          <p class="section-subtitle mt-1" style="font-size: 0.95rem;">টার্ফ ম্যানেজমেন্ট ও এডমিন প্যানেল</p>
+        </div>
+
+        <!-- Login Alert / Error Message -->
+        <div class="form-error hidden mb-3 text-left" id="adminLoginError"></div>
+
+        <!-- Login Form -->
+        <form id="adminLoginForm" class="admin-form text-left" novalidate>
+          <div class="form-group">
+            <label class="form-label" for="loginEmail">
+              <i class="fas fa-envelope"></i> এডমিন ইমেইল
+            </label>
+            <input
+              type="email"
+              id="loginEmail"
+              class="form-input"
+              placeholder="srpshourovdev1@gmail.com"
+              value="srpshourovdev1@gmail.com"
+              required
+              autocomplete="email"
+            >
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="loginPassword">
+              <i class="fas fa-lock"></i> পাসওয়ার্ড
+            </label>
+            <div class="input-icon-wrapper" style="position: relative;">
+              <input
+                type="password"
+                id="loginPassword"
+                class="form-input"
+                placeholder="evergain"
+                required
+                autocomplete="current-password"
+              >
+              <button
+                type="button"
+                id="togglePasswordBtn"
+                class="btn-icon"
+                style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--color-text-muted); cursor: pointer;"
+                aria-label="পাসওয়ার্ড দেখুন"
+              >
+                <i class="fas fa-eye" id="passwordEyeIcon"></i>
+              </button>
+            </div>
+          </div>
+
+          <button type="submit" id="loginSubmitBtn" class="btn btn-primary btn-block btn-lg mt-3">
+            <i class="fas fa-right-to-bracket"></i>
+            <span>ইমেইল দিয়ে লগইন করুন</span>
+          </button>
+
+          <div class="login-divider my-3 text-center" style="position: relative; margin: 1.25rem 0;">
+            <span style="background: rgba(14, 26, 16, 0.95); padding: 0 14px; color: var(--color-text-muted); font-size: 0.85rem; position: relative; z-index: 1;">অথবা</span>
+            <div style="position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: var(--color-border); z-index: 0;"></div>
+          </div>
+
+          <button type="button" id="googleLoginBtn" class="btn btn-secondary btn-block btn-lg" style="display: flex; align-items: center; justify-content: center; gap: 10px; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--color-border);">
+            <svg width="20" height="20" viewBox="0 0 48 48">
+              <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+              <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+              <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+              <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+            </svg>
+            <span>Google অ্যাকাউন্ট দিয়ে লগইন করুন</span>
+          </button>
+        </form>
+
+        <div class="mt-4 pt-3" style="border-top: 1px solid var(--color-border); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+          <a href="index.html" class="form-hint" style="color: var(--color-text-secondary); text-decoration: none;">
+            <i class="fas fa-arrow-left"></i> ওয়েবসাইটের মূল পাতায় ফিরে যান
+          </a>
+          <span class="badge badge-info" style="font-size: 0.72rem;">
+            <i class="fas fa-shield-alt"></i> Firebase Protected
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- 2. ADMIN DASHBOARD APP (Visible when authenticated)                       -->
+  <!-- ========================================================================= -->
+  <div class="admin-layout hidden" id="adminDashboardSection">
+    <!-- Header Bar -->
+    <header class="admin-header">
+      <div class="admin-header-left">
+        <button class="mobile-menu-btn" id="adminSidebarToggle" aria-label="মেনু টগল করুন">
+          <i class="fas fa-bars"></i>
+        </button>
+        <a href="admin.html" class="navbar-brand">
+          <img src="assets/logo/logo.jpg" alt="EVER GAIN Logo" class="navbar-logo" style="height: 34px; width: 34px; border-radius: 50%;">
+          <span class="navbar-logo-text">EVER GAIN</span>
+          <span class="badge badge-confirmed ml-2">ADMIN</span>
+        </a>
+      </div>
+
+      <div class="admin-header-right">
+        <!-- Live Site Preview Button -->
+        <a href="index.html" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" title="ওয়েবসাইট দেখুন">
+          <i class="fas fa-external-link-alt"></i>
+          <span class="hide-mobile">সাইট দেখুন</span>
+        </a>
+
+        <!-- Current Admin Email Badge -->
+        <div class="admin-user-badge">
+          <i class="fas fa-user-circle"></i>
+          <span id="currentAdminEmailDisplay" class="hide-mobile">admin@evergain.com</span>
+        </div>
+
+        <!-- Logout Button -->
+        <button id="adminLogoutBtn" class="btn btn-danger btn-sm" title="লগআউট করুন">
+          <i class="fas fa-right-from-bracket"></i>
+          <span class="hide-mobile">লগআউট</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Sidebar Backdrop for Mobile -->
+    <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+    <!-- Main Container: Sidebar + Content -->
+    <div class="admin-container">
+      <!-- Admin Sidebar Navigation -->
+      <aside class="admin-sidebar" id="adminSidebar">
+        <nav class="admin-nav" role="tablist">
+          <button class="admin-sidebar-link active" data-tab="dashboard" role="tab" aria-selected="true">
+            <i class="fas fa-chart-pie"></i>
+            <span>ড্যাশবোর্ড</span>
+          </button>
+
+          <button class="admin-sidebar-link" data-tab="bookings" role="tab" aria-selected="false">
+            <i class="fas fa-clipboard-list"></i>
+            <span>বুকিং ম্যানেজমেন্ট</span>
+            <span class="badge badge-pending hidden" id="pendingBookingsBadge">০</span>
+          </button>
+
+          <button class="admin-sidebar-link" data-tab="permanent" role="tab" aria-selected="false">
+            <i class="fas fa-arrows-rotate"></i>
+            <span>স্থায়ী বুকিং</span>
+            <span class="badge badge-active hidden" id="permanentBadge">০</span>
+          </button>
+
+          <button class="admin-sidebar-link" data-tab="slots" role="tab" aria-selected="false">
+            <i class="fas fa-clock"></i>
+            <span>স্লট ম্যানেজমেন্ট</span>
+          </button>
+
+          <button class="admin-sidebar-link" data-tab="pricing" role="tab" aria-selected="false">
+            <i class="fas fa-tags"></i>
+            <span>মূল্য সেটিংস</span>
+          </button>
+
+          <button class="admin-sidebar-link" data-tab="gallery" role="tab" aria-selected="false">
+            <i class="fas fa-images"></i>
+            <span>গ্যালারি</span>
+          </button>
+
+          <button class="admin-sidebar-link" data-tab="rules" role="tab" aria-selected="false">
+            <i class="fas fa-book-bookmark"></i>
+            <span>নিয়মাবলী</span>
+          </button>
+
+          <button class="admin-sidebar-link" data-tab="settings" role="tab" aria-selected="false">
+            <i class="fas fa-sliders"></i>
+            <span>সেটিংস</span>
+          </button>
+        </nav>
+      </aside>
+
+      <!-- Admin Main Content Area -->
+      <main class="admin-main" id="adminMain">
+        <!-- =================================================================== -->
+        <!-- TAB 1: DASHBOARD OVERVIEW                                           -->
+        <!-- =================================================================== -->
+        <section class="admin-section" id="tab-dashboard" role="tabpanel">
+          <div class="admin-section-header">
+            <div>
+              <h2 class="admin-title">ড্যাশবোর্ড ওভারভিউ</h2>
+              <p class="section-subtitle">এক নজরে বুকিং পরিসংখ্যান ও সাম্প্রতিক কার্যক্রম</p>
+            </div>
+            <button class="btn btn-secondary btn-sm" id="refreshDashboardBtn">
+              <i class="fas fa-sync-alt"></i> রিফ্রেশ
+            </button>
+          </div>
+
+          <!-- 6 Stat Cards Grid -->
+          <div class="stats-grid mb-4">
+            <!-- 1. Total Bookings -->
+            <div class="stat-card">
+              <div class="stat-icon-wrapper" style="background: rgba(16, 185, 129, 0.15); color: var(--color-primary);">
+                <i class="fas fa-futbol"></i>
+              </div>
+              <div class="stat-info">
+                <span class="stat-label">মোট বুকিং</span>
+                <span class="stat-value" id="statTotalBookings">০</span>
+              </div>
+            </div>
+
+            <!-- 2. Pending Bookings -->
+            <div class="stat-card">
+              <div class="stat-icon-wrapper" style="background: rgba(245, 158, 11, 0.15); color: var(--color-warning);">
+                <i class="fas fa-hourglass-half"></i>
+              </div>
+              <div class="stat-info">
+                <span class="stat-label">অপেক্ষমান</span>
+                <span class="stat-value" id="statPendingBookings">০</span>
+              </div>
+            </div>
+
+            <!-- 3. Confirmed Bookings -->
+            <div class="stat-card">
+              <div class="stat-icon-wrapper" style="background: rgba(59, 130, 246, 0.15); color: var(--color-info);">
+                <i class="fas fa-circle-check"></i>
+              </div>
+              <div class="stat-info">
+                <span class="stat-label">নিশ্চিত বুকিং</span>
+                <span class="stat-value" id="statConfirmedBookings">০</span>
+              </div>
+            </div>
+
+            <!-- 4. Cancelled / Rejected -->
+            <div class="stat-card">
+              <div class="stat-icon-wrapper" style="background: rgba(239, 68, 68, 0.15); color: var(--color-danger);">
+                <i class="fas fa-ban"></i>
+              </div>
+              <div class="stat-info">
+                <span class="stat-label">বাতিলকৃত</span>
+                <span class="stat-value" id="statCancelledBookings">০</span>
+              </div>
+            </div>
+
+            <!-- 5. Permanent Bookings -->
+            <div class="stat-card">
+              <div class="stat-icon-wrapper" style="background: rgba(132, 204, 22, 0.15); color: var(--color-accent);">
+                <i class="fas fa-arrows-rotate"></i>
+              </div>
+              <div class="stat-info">
+                <span class="stat-label">স্থায়ী বুকিং</span>
+                <span class="stat-value" id="statPermanentBookings">০</span>
+              </div>
+            </div>
+
+            <!-- 6. Today's Bookings -->
+            <div class="stat-card">
+              <div class="stat-icon-wrapper" style="background: rgba(168, 85, 247, 0.15); color: #a855f7;">
+                <i class="fas fa-calendar-day"></i>
+              </div>
+              <div class="stat-info">
+                <span class="stat-label">আজকের বুকিং</span>
+                <span class="stat-value" id="statTodayBookings">০</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recent Bookings Table Card -->
+          <div class="card card-premium">
+            <div class="d-flex justify-between align-center mb-3">
+              <h3 class="card-title">
+                <i class="fas fa-clock-rotate-left text-primary"></i> সাম্প্রতিক বুকিং সমূহ
+              </h3>
+              <button class="btn btn-secondary btn-sm" id="viewAllBookingsBtn">
+                <span>সব বুকিং দেখুন</span> <i class="fas fa-arrow-right"></i>
+              </button>
+            </div>
+
+            <div class="mobile-table-hint show-mobile">
+              <i class="fas fa-hand-pointer text-accent"></i>
+              <span>বুকিং কনফার্ম করতে ডানের <strong>[কনফার্ম]</strong> বাটনে চাপ দিন বা সারির ওপর ট্যাপ করুন</span>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table" id="recentBookingsTable">
+                <thead>
+                  <tr>
+                    <th>আইডি</th>
+                    <th>গ্রাহকের নাম</th>
+                    <th>মোবাইল নম্বর</th>
+                    <th>তারিখ</th>
+                    <th>সেশন ও স্লট</th>
+                    <th>মূল্য</th>
+                    <th>স্ট্যাটাস</th>
+                    <th>অ্যাকশন</th>
+                  </tr>
+                </thead>
+                <tbody id="recentBookingsTbody">
+                  <tr>
+                    <td colspan="8" class="text-center py-4 text-muted">লোড হচ্ছে...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- =================================================================== -->
+        <!-- TAB 2: BOOKINGS MANAGEMENT                                          -->
+        <!-- =================================================================== -->
+        <section class="admin-section hidden" id="tab-bookings" role="tabpanel">
+          <div class="admin-section-header">
+            <div>
+              <h2 class="admin-title">বুকিং ম্যানেজমেন্ট</h2>
+              <p class="section-subtitle">সকল স্লট বুকিং যাচাই, অনুমোদন ও বাতিল নিয়ন্ত্রণ করুন</p>
+            </div>
+          </div>
+
+          <!-- Filter & Search Toolbar -->
+          <div class="card card-premium mb-3">
+            <div class="filter-grid">
+              <!-- Search -->
+              <div class="form-group mb-0">
+                <label class="form-label" for="bookingSearchInput">
+                  <i class="fas fa-search"></i> অনুসন্ধান
+                </label>
+                <input
+                  type="text"
+                  id="bookingSearchInput"
+                  class="form-input"
+                  placeholder="নাম বা মোবাইল নম্বর..."
+                >
+              </div>
+
+              <!-- Date Picker Filter -->
+              <div class="form-group mb-0">
+                <label class="form-label" for="bookingDateFilter">
+                  <i class="fas fa-calendar"></i> তারিখ
+                </label>
+                <input
+                  type="date"
+                  id="bookingDateFilter"
+                  class="form-input"
+                >
+              </div>
+
+              <!-- Day/Night Session Filter -->
+              <div class="form-group mb-0">
+                <label class="form-label" for="bookingSessionFilter">
+                  <i class="fas fa-sun"></i> সেশন
+                </label>
+                <select id="bookingSessionFilter" class="form-select">
+                  <option value="">সব সেশন</option>
+                  <option value="day">ডে (Day)</option>
+                  <option value="night">নাইট (Night)</option>
+                </select>
+              </div>
+
+              <!-- Status Filter -->
+              <div class="form-group mb-0">
+                <label class="form-label" for="bookingStatusFilter">
+                  <i class="fas fa-filter"></i> অবস্থা
+                </label>
+                <select id="bookingStatusFilter" class="form-select">
+                  <option value="">সকল অবস্থা</option>
+                  <option value="pending">অপেক্ষমান (Pending)</option>
+                  <option value="confirmed">নিশ্চিত (Confirmed)</option>
+                  <option value="rejected">প্রত্যাখ্যাত (Rejected)</option>
+                  <option value="cancelled">বাতিলকৃত (Cancelled)</option>
+                </select>
+              </div>
+
+              <!-- Clear Filters -->
+              <div class="form-group mb-0 d-flex align-end">
+                <button type="button" id="clearBookingFiltersBtn" class="btn btn-secondary btn-block">
+                  <i class="fas fa-rotate-left"></i> রিসেট
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bookings Data Table -->
+          <div class="card card-premium">
+            <div class="d-flex justify-between align-center mb-2">
+              <span class="form-hint" id="bookingsCountDisplay">মোট বুকিং: ০ টি</span>
+            </div>
+            <div class="mobile-table-hint show-mobile">
+              <i class="fas fa-hand-pointer text-accent"></i>
+              <span>বুকিং কনফার্ম করতে ডানের <strong>[কনফার্ম]</strong> বাটনে চাপ দিন বা সারির ওপর ট্যাপ করুন</span>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table" id="allBookingsTable">
+                <thead>
+                  <tr>
+                    <th>আইডি</th>
+                    <th>নাম</th>
+                    <th>ফোন</th>
+                    <th>তারিখ</th>
+                    <th>সেশন</th>
+                    <th>স্লট</th>
+                    <th>মূল্য</th>
+                    <th>স্ট্যাটাস</th>
+                    <th style="min-width: 170px;">অ্যাকশন</th>
+                  </tr>
+                </thead>
+                <tbody id="allBookingsTbody">
+                  <tr>
+                    <td colspan="9" class="text-center py-4 text-muted">কোন বুকিং রেকর্ড নেই</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- =================================================================== -->
+        <!-- TAB 3: PERMANENT BOOKINGS MANAGEMENT                                -->
+        <!-- =================================================================== -->
+        <section class="admin-section hidden" id="tab-permanent" role="tabpanel">
+          <div class="admin-section-header">
+            <div>
+              <h2 class="admin-title">স্থায়ী বুকিং ম্যানেজমেন্ট</h2>
+              <p class="section-subtitle">সাপ্তাহিক ও মাসিক স্থায়ী স্লট আবেদন ও স্ট্যাটাস পরিচালনা</p>
+            </div>
+          </div>
+
+          <!-- Filter Bar -->
+          <div class="card card-premium mb-3">
+            <div class="filter-grid" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+              <div class="form-group mb-0">
+                <label class="form-label" for="permanentSearchInput">
+                  <i class="fas fa-search"></i> অনুসন্ধান
+                </label>
+                <input
+                  type="text"
+                  id="permanentSearchInput"
+                  class="form-input"
+                  placeholder="নাম বা মোবাইল নম্বর..."
+                >
+              </div>
+
+              <div class="form-group mb-0">
+                <label class="form-label" for="permanentStatusFilter">
+                  <i class="fas fa-filter"></i> অবস্থা
+                </label>
+                <select id="permanentStatusFilter" class="form-select">
+                  <option value="">সকল অবস্থা</option>
+                  <option value="pending">অপেক্ষমান (Pending)</option>
+                  <option value="active">সক্রিয় (Active)</option>
+                  <option value="paused">স্থগিত (Paused)</option>
+                  <option value="terminated">সমাপ্ত (Terminated)</option>
+                  <option value="rejected">প্রত্যাখ্যাত (Rejected)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Permanent Bookings Table -->
+          <div class="card card-premium">
+            <div class="mobile-table-hint show-mobile">
+              <i class="fas fa-hand-pointer text-accent"></i>
+              <span>স্থায়ী বুকিং সক্রিয় বা নিয়ন্ত্রণ করতে ডানের বাটনে চাপ দিন</span>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table" id="permanentBookingsTable">
+                <thead>
+                  <tr>
+                    <th>আইডি</th>
+                    <th>গ্রাহকের নাম</th>
+                    <th>মোবাইল নম্বর</th>
+                    <th>বার (Weekday)</th>
+                    <th>সেশন</th>
+                    <th>স্লট</th>
+                    <th>মাসিক ফি</th>
+                    <th>স্ট্যাটাস</th>
+                    <th style="min-width: 220px;">অ্যাকশন</th>
+                  </tr>
+                </thead>
+                <tbody id="permanentTableBody">
+                  <tr>
+                    <td colspan="9" class="text-center py-4 text-muted">কোন স্থায়ী বুকিং রেকর্ড নেই</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- =================================================================== -->
+        <!-- TAB 4: SLOT MANAGEMENT                                              -->
+        <!-- =================================================================== -->
+        <section class="admin-section hidden" id="tab-slots" role="tabpanel">
+          <div class="admin-section-header">
+            <div>
+              <h2 class="admin-title">স্লট ও সময়সূচি ম্যানেজমেন্ট</h2>
+              <p class="section-subtitle">প্রতিদিনের সেশন স্লট, বন্ধের দিন ও কার্যদিবস কনফিগারেশন</p>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <!-- Left Column: Slots Setup -->
+            <div class="card card-premium">
+              <div class="d-flex justify-between align-center mb-3">
+                <h3 class="card-title">
+                  <i class="fas fa-clock text-primary"></i> সেশন স্লট তালিকা
+                </h3>
+                <!-- Session Selector Pill -->
+                <div class="admin-tabs" id="slotSessionTabs">
+                  <button type="button" class="admin-tab active" id="slotSessionDayBtn" data-session="day">
+                    <i class="fas fa-sun"></i> ডে (Day)
+                  </button>
+                  <button type="button" class="admin-tab" id="slotSessionNightBtn" data-session="night">
+                    <i class="fas fa-moon"></i> নাইট (Night)
+                  </button>
+                </div>
+              </div>
+
+              <!-- Add New Slot Form -->
+              <form id="addSlotForm" class="card mb-3" style="background: var(--color-surface); padding: 1rem;">
+                <h4 style="font-size: 0.95rem; margin-bottom: 0.75rem;">নতুন স্লট যুক্ত করুন</h4>
+                <div class="grid-2" style="gap: 0.5rem;">
+                  <div class="form-group mb-2">
+                    <label class="form-label" for="slotStartTime">শুরুর সময়</label>
+                    <input type="time" id="slotStartTime" class="form-input" required>
+                  </div>
+                  <div class="form-group mb-2">
+                    <label class="form-label" for="slotEndTime">শেষ সময়</label>
+                    <input type="time" id="slotEndTime" class="form-input" required>
+                  </div>
+                </div>
+                <button type="submit" id="addSlotBtn" class="btn btn-primary btn-block btn-sm mt-1">
+                  <i class="fas fa-plus"></i> স্লট যোগ করুন
+                </button>
+              </form>
+
+              <!-- Current Slots List -->
+              <div id="slotsListContainer" class="slots-management-list">
+                <div class="text-center py-4 text-muted">স্লট লোড হচ্ছে...</div>
+              </div>
+            </div>
+
+            <!-- Right Column: Blocked Dates & Working Days -->
+            <div class="d-flex flex-column gap-3">
+              <!-- Block Dates Card -->
+              <div class="card card-premium">
+                <h3 class="card-title mb-2">
+                  <i class="fas fa-calendar-xmark text-danger"></i> নির্দিষ্ট দিন বন্ধ ঘোষণা (Block Dates)
+                </h3>
+                <p class="form-hint mb-3">মেরামত, টুর্নামেন্ট বা ছুটির কারণে টার্ফ বুকিং বন্ধ রাখুন</p>
+
+                <form id="blockDateForm" class="d-flex gap-2 mb-3">
+                  <input type="date" id="blockDateInput" class="form-input" required>
+                  <input type="text" id="blockDateReasonInput" class="form-input" placeholder="কারণ (যেমন: টুর্নামেন্ট)">
+                  <button type="submit" id="blockDateBtn" class="btn btn-danger btn-sm" style="white-space: nowrap;">
+                    <i class="fas fa-lock"></i> বন্ধ করুন
+                  </button>
+                </form>
+
+                <div id="blockedDatesContainer" class="blocked-dates-list">
+                  <p class="form-hint text-center py-2">কোন তারিখ বন্ধ নেই</p>
+                </div>
+              </div>
+
+              <!-- Working Days Card -->
+              <div class="card card-premium">
+                <h3 class="card-title mb-2">
+                  <i class="fas fa-calendar-check text-primary"></i> কার্যদিবস কনফিগারেশন
+                </h3>
+                <p class="form-hint mb-3">যেসব বারে টার্ফ নিয়মিত খোলা থাকবে</p>
+
+                <form id="workingDaysForm">
+                  <div class="grid-2 mb-3" style="gap: 0.5rem;">
+                    <label class="form-checkbox">
+                      <input type="checkbox" class="form-checkbox-input" name="workingDay" value="5" checked>
+                      <span class="form-checkbox-label">শুক্রবার (Friday)</span>
+                    </label>
+                    <label class="form-checkbox">
+                      <input type="checkbox" class="form-checkbox-input" name="workingDay" value="6" checked>
+                      <span class="form-checkbox-label">শনিবার (Saturday)</span>
+                    </label>
+                    <label class="form-checkbox">
+                      <input type="checkbox" class="form-checkbox-input" name="workingDay" value="0" checked>
+                      <span class="form-checkbox-label">রবিবার (Sunday)</span>
+                    </label>
+                    <label class="form-checkbox">
+                      <input type="checkbox" class="form-checkbox-input" name="workingDay" value="1" checked>
+                      <span class="form-checkbox-label">সোমবার (Monday)</span>
+                    </label>
+                    <label class="form-checkbox">
+                      <input type="checkbox" class="form-checkbox-input" name="workingDay" value="2" checked>
+                      <span class="form-checkbox-label">মঙ্গলবার (Tuesday)</span>
+                    </label>
+                    <label class="form-checkbox">
+                      <input type="checkbox" class="form-checkbox-input" name="workingDay" value="3" checked>
+                      <span class="form-checkbox-label">বুধবার (Wednesday)</span>
+                    </label>
+                    <label class="form-checkbox">
+                      <input type="checkbox" class="form-checkbox-input" name="workingDay" value="4" checked>
+                      <span class="form-checkbox-label">বৃহস্পতিবার (Thursday)</span>
+                    </label>
+                  </div>
+                  <button type="submit" id="saveWorkingDaysBtn" class="btn btn-secondary btn-block btn-sm">
+                    <i class="fas fa-floppy-disk"></i> কার্যদিবস সংরক্ষণ করুন
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- =================================================================== -->
+        <!-- TAB 5: PRICING CONFIGURATION                                        -->
+        <!-- =================================================================== -->
+        <section class="admin-section hidden" id="tab-pricing" role="tabpanel">
+          <div class="admin-section-header">
+            <div>
+              <h2 class="admin-title">মূল্য নির্ধারণ সেটিংস</h2>
+              <p class="section-subtitle">সাধারণ ও স্থায়ী স্লটের ডে এবং নাইট সেশনের মূল্য পরিবর্তন করুন</p>
+            </div>
+          </div>
+
+          <div class="card card-premium" style="max-width: 720px;">
+            <form id="pricingForm" class="admin-form">
+              <div class="grid-2">
+                <!-- Normal Day Price -->
+                <div class="form-group">
+                  <label class="form-label" for="priceNormalDay">
+                    <i class="fas fa-sun text-warning"></i> সাধারণ ডে মূল্য (Normal Day) ৳
+                  </label>
+                  <input
+                    type="number"
+                    id="priceNormalDay"
+                    class="form-input"
+                    value="550"
+                    min="0"
+                    step="50"
+                    required
+                  >
+                  <span class="form-hint">গ্রাহক প্রতি সাধারণ ডে স্লটের বর্তমান মূল্য</span>
+                </div>
+
+                <!-- Normal Day Original (Crossed Out) Price -->
+                <div class="form-group">
+                  <label class="form-label" for="priceDayOriginal">
+                    <i class="fas fa-tag"></i> ডে আসল মূল্য (কাটা মূল্য) ৳
+                  </label>
+                  <input
+                    type="number"
+                    id="priceDayOriginal"
+                    class="form-input"
+                    value="600"
+                    min="0"
+                    step="50"
+                    required
+                  >
+                  <span class="form-hint">অফার প্রদর্শনের জন্য কাটা দাগে দৃশ্যমান হবে</span>
+                </div>
+
+                <!-- Normal Night Price -->
+                <div class="form-group">
+                  <label class="form-label" for="priceNormalNight">
+                    <i class="fas fa-moon text-info"></i> সাধারণ নাইট মূল্য (Normal Night) ৳
+                  </label>
+                  <input
+                    type="number"
+                    id="priceNormalNight"
+                    class="form-input"
+                    value="900"
+                    min="0"
+                    step="50"
+                    required
+                  >
+                  <span class="form-hint">গ্রাহক প্রতি সাধারণ নাইট স্লটের মূল্য</span>
+                </div>
+
+                <!-- Permanent Day Price -->
+                <div class="form-group">
+                  <label class="form-label" for="pricePermanentDay">
+                    <i class="fas fa-repeat text-primary"></i> স্থায়ী ডে মূল্য (প্রতি স্লট) ৳
+                  </label>
+                  <input
+                    type="number"
+                    id="pricePermanentDay"
+                    class="form-input"
+                    value="500"
+                    min="0"
+                    step="50"
+                    required
+                  >
+                  <span class="form-hint">স্থায়ী গ্রাহকদের প্রতি ডে স্লটের বিশেষ মূল্য</span>
+                </div>
+
+                <!-- Permanent Night Price -->
+                <div class="form-group">
+                  <label class="form-label" for="pricePermanentNight">
+                    <i class="fas fa-repeat text-accent"></i> স্থায়ী নাইট মূল্য (প্রতি স্লট) ৳
+                  </label>
+                  <input
+                    type="number"
+                    id="pricePermanentNight"
+                    class="form-input"
+                    value="850"
+                    min="0"
+                    step="50"
+                    required
+                  >
+                  <span class="form-hint">স্থায়ী গ্রাহকদের প্রতি নাইট স্লটের বিশেষ মূল্য</span>
+                </div>
+              </div>
+
+              <div class="mt-4 pt-3" style="border-top: 1px solid var(--color-border);">
+                <button type="submit" id="savePricingBtn" class="btn btn-primary btn-lg">
+                  <i class="fas fa-floppy-disk"></i> মূল্য সেটিংস সংরক্ষণ করুন
+                </button>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <!-- =================================================================== -->
+        <!-- TAB 6: GALLERY MANAGEMENT                                           -->
+        <!-- =================================================================== -->
+        <section class="admin-section hidden" id="tab-gallery" role="tabpanel">
+          <div class="admin-section-header">
+            <div>
+              <h2 class="admin-title">গ্যালারি ম্যানেজমেন্ট</h2>
+              <p class="section-subtitle">টার্ফের ছবি ও ভিডিও আপলোড এবং গ্যালারি সাজানো</p>
+            </div>
+          </div>
+
+          <!-- Upload Form Card -->
+          <div class="card card-premium mb-4">
+            <h3 class="card-title mb-3">
+              <i class="fas fa-cloud-arrow-up text-primary"></i> নতুন ছবি / ভিডিও যুক্ত করুন
+            </h3>
+
+            <form id="galleryUploadForm" class="admin-form">
+              <!-- Drag and Drop Upload Zone -->
+              <div class="upload-zone" id="galleryUploadZone">
+                <i class="fas fa-cloud-arrow-up" style="font-size: 2.5rem; color: var(--color-primary); margin-bottom: 0.5rem;"></i>
+                <p>ছবি নির্বাচন করতে ক্লিক করুন অথবা ফাইল এখানে টেনে আনুন</p>
+                <span class="form-hint">সাপোর্টেড ফরম্যাট: JPG, PNG, WebP, MP4 (সর্বোচ্চ 10MB)</span>
+                <input type="file" id="galleryFileInput" class="hidden" accept="image/*,video/*">
+              </div>
+              <div id="fileSelectedDisplay" class="form-hint text-center hidden mt-2"></div>
+
+              <div class="grid-3 mt-3">
+                <div class="form-group mb-2">
+                  <label class="form-label" for="galleryTitleInput">শিরোনাম</label>
+                  <input type="text" id="galleryTitleInput" class="form-input" placeholder="যেমন: নাইট ম্যাচ একশন" required>
+                </div>
+
+                <div class="form-group mb-2">
+                  <label class="form-label" for="galleryTypeSelect">মিডিয়া টাইপ</label>
+                  <select id="galleryTypeSelect" class="form-select">
+                    <option value="image">ছবি (Image)</option>
+                    <option value="video">ভিডিও (Video)</option>
+                  </select>
+                </div>
+
+                <div class="form-group mb-2">
+                  <label class="form-label" for="galleryUrlFallback">সরাসরি লিঙ্ক (ঐচ্ছিক)</label>
+                  <input type="url" id="galleryUrlFallback" class="form-input" placeholder="https://...">
+                </div>
+              </div>
+
+              <div class="form-group mb-3">
+                <label class="form-label" for="galleryDescInput">বিবরণ (ঐচ্ছিক)</label>
+                <textarea id="galleryDescInput" class="form-textarea" rows="2" placeholder="সংক্ষিপ্ত বিবরণ লিখুন..."></textarea>
+              </div>
+
+              <button type="submit" id="galleryUploadBtn" class="btn btn-primary">
+                <i class="fas fa-upload"></i> গ্যালারিতে যোগ করুন
+              </button>
+            </form>
+          </div>
+
+          <!-- Gallery Items Grid -->
+          <div class="card card-premium">
+            <h3 class="card-title mb-3">বর্তমান গ্যালারি আইটেম সমূহ</h3>
+            <div id="adminGalleryGrid" class="admin-gallery-grid">
+              <div class="text-center py-4 text-muted">গ্যালারি আইটেম লোড হচ্ছে...</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- =================================================================== -->
+        <!-- TAB 7: RULES MANAGEMENT                                             -->
+        <!-- =================================================================== -->
+        <section class="admin-section hidden" id="tab-rules" role="tabpanel">
+          <div class="admin-section-header">
+            <div>
+              <h2 class="admin-title">নিয়মাবলী ম্যানেজমেন্ট</h2>
+              <p class="section-subtitle">গ্রাহক ও খেলোয়াড়দের জন্য টার্ফের নিয়ম কানুন পরিচালনা</p>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <!-- Add Rule Form -->
+            <div class="card card-premium">
+              <h3 class="card-title mb-3">
+                <i class="fas fa-plus-circle text-primary"></i> নতুন নিয়ম যোগ করুন
+              </h3>
+
+              <form id="addRuleForm" class="admin-form">
+                <div class="form-group">
+                  <label class="form-label" for="ruleIconInput">
+                    <i class="fas fa-icons"></i> FontAwesome আইকন ক্লাস
+                  </label>
+                  <input
+                    type="text"
+                    id="ruleIconInput"
+                    class="form-input"
+                    value="fas fa-futbol"
+                    placeholder="fas fa-futbol"
+                    required
+                  >
+                  <span class="form-hint">যেমন: fas fa-clock, fas fa-ban, fas fa-shoe-prints</span>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="ruleTitleInput">
+                    <i class="fas fa-heading"></i> নিয়মের শিরোনাম
+                  </label>
+                  <input
+                    type="text"
+                    id="ruleTitleInput"
+                    class="form-input"
+                    placeholder="যেমন: সঠিক জুতো পরিধান আবশ্যক"
+                    required
+                  >
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="ruleDescInput">
+                    <i class="fas fa-align-left"></i> বিস্তারিত বিবরণ
+                  </label>
+                  <textarea
+                    id="ruleDescInput"
+                    class="form-textarea"
+                    rows="3"
+                    placeholder="নিয়মের বিস্তারিত বিবরণ লিখুন..."
+                    required
+                  ></textarea>
+                </div>
+
+                <button type="submit" id="addRuleBtn" class="btn btn-primary btn-block">
+                  <i class="fas fa-plus"></i> নিয়ম সংরক্ষণ করুন
+                </button>
+              </form>
+            </div>
+
+            <!-- Rules List -->
+            <div class="card card-premium">
+              <h3 class="card-title mb-3">বর্তমান নিয়মের তালিকা</h3>
+              <div id="adminRulesList" class="admin-rules-list">
+                <div class="text-center py-4 text-muted">নিয়মাবলী লোড হচ্ছে...</div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- =================================================================== -->
+        <!-- TAB 8: WEBSITE SETTINGS                                             -->
+        <!-- =================================================================== -->
+        <section class="admin-section hidden" id="tab-settings" role="tabpanel">
+          <div class="admin-section-header">
+            <div>
+              <h2 class="admin-title">ওয়েবসাইট সাধারণ সেটিংস</h2>
+              <p class="section-subtitle">যোগাযোগ তথ্য, ব্যানার ঘোষণা এবং হোমপেজের টেক্সট কনফিগারেশন</p>
+            </div>
+          </div>
+
+          <div class="card card-premium" style="max-width: 800px;">
+            <form id="adminSettingsForm" class="admin-form">
+              <h3 class="card-title mb-3" style="font-size: 1.1rem; border-bottom: 1px solid var(--color-border); padding-bottom: 0.5rem;">
+                <i class="fas fa-phone text-primary"></i> যোগাযোগ ও লোকেশন সেটিংস
+              </h3>
+
+              <div class="grid-2">
+                <div class="form-group">
+                  <label class="form-label" for="settingsPhone">মোবাইল নম্বর</label>
+                  <input type="text" id="settingsPhone" class="form-input" placeholder="০১৭০০-০০০০০০" required>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="settingsWhatsapp">হোয়াটসঅ্যাপ নম্বর</label>
+                  <input type="text" id="settingsWhatsapp" class="form-input" placeholder="০১৭০০-০০০০০০" required>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="settingsAddress">টার্ফের পূর্ণাঙ্গ ঠিকানা</label>
+                  <input type="text" id="settingsAddress" class="form-input" placeholder="মিরপুর, ঢাকা - ১২১৬" required>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="settingsHours">কার্যকর সময়সূচি</label>
+                  <input type="text" id="settingsHours" class="form-input" placeholder="সকাল ৮:০০ - রাত ১২:০০" required>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="settingsMapLink">গুগল ম্যাপ লিংক</label>
+                <input type="url" id="settingsMapLink" class="form-input" placeholder="https://maps.google.com/?q=...">
+              </div>
+
+              <h3 class="card-title mb-3 mt-4" style="font-size: 1.1rem; border-bottom: 1px solid var(--color-border); padding-bottom: 0.5rem;">
+                <i class="fas fa-bullhorn text-warning"></i> হোমপেজ টেক্সট ও ঘোষণা ব্যানার
+              </h3>
+
+              <div class="form-group">
+                <label class="form-label" for="settingsHeroTitle">হোমপেজ প্রধান শিরোনাম</label>
+                <input type="text" id="settingsHeroTitle" class="form-input" placeholder="EVER GAIN — প্রিমিয়াম ইনডোর ফুটবল টার্ফ">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="settingsHeroSubtitle">হোমপেজ উপ-শিরোনাম</label>
+                <input type="text" id="settingsHeroSubtitle" class="form-input" placeholder="সেরা টার্ফে খেলুন আপনার বন্ধুদের সাথে">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="settingsAnnouncement">জরুরি ঘোষণা / ব্যানার বার্তা (ঐচ্ছিক)</label>
+                <textarea id="settingsAnnouncement" class="form-textarea" rows="2" placeholder="ওয়েবসাইটের শীর্ষে বিশেষ নোটিশ বা অফার দেখাতে এখানে লিখুন..."></textarea>
+              </div>
+
+              <h3 class="card-title mb-3 mt-4" style="font-size: 1.1rem; border-bottom: 1px solid var(--color-border); padding-bottom: 0.5rem;">
+                <i class="fab fa-facebook text-info"></i> সোশ্যাল মিডিয়া লিঙ্ক
+              </h3>
+
+              <div class="grid-2">
+                <div class="form-group">
+                  <label class="form-label" for="settingsSocialFacebook">ফেসবুক পেজ লিংক</label>
+                  <input type="url" id="settingsSocialFacebook" class="form-input" placeholder="https://facebook.com/evergain">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="settingsSocialInstagram">ইনস্টাগ্রাম লিংক</label>
+                  <input type="url" id="settingsSocialInstagram" class="form-input" placeholder="https://instagram.com/evergain">
+                </div>
+              </div>
+
+              <div class="mt-4 pt-3" style="border-top: 1px solid var(--color-border); display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                <button type="submit" id="saveSettingsBtn" class="btn btn-primary btn-lg">
+                  <i class="fas fa-floppy-disk"></i> সেটিংস সংরক্ষণ করুন
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- One-Click Database Seed & Setup Card -->
+          <div class="card card-premium mt-4 p-4" style="background: rgba(18, 32, 20, 0.7); border: 1px solid rgba(16, 185, 129, 0.3);">
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.75rem;">
+              <div class="card-icon" style="width: 42px; height: 42px; font-size: 1.2rem; background: rgba(16, 185, 129, 0.2); color: var(--color-primary-light);">
+                <i class="fas fa-database"></i>
+              </div>
+              <div>
+                <h3 class="card-title" style="margin: 0; font-size: 1.15rem;">Realtime Database এক-ক্লিকে সিড ও ইনিশিয়ালাইজ</h3>
+                <p class="card-text text-secondary mt-1" style="font-size: 0.88rem; margin: 0;">
+                  ডাটাবেজে ডিফল্ট মূল্য (Pricing), ১২টি ডে ও ৬টি নাইট স্লট (Slots), ৭টি নিয়মাবলী (Rules), এবং টার্ফ সেটিংস সরাসরি যুক্ত করুন।
+                </p>
+              </div>
+            </div>
+
+            <div class="mt-3 p-3 rounded" style="background: rgba(0, 0, 0, 0.25); border: 1px dashed var(--color-border);">
+              <p class="text-secondary" style="font-size: 0.85rem; margin-bottom: 0.75rem;">
+                <i class="fas fa-circle-info text-info"></i> আপনার ফায়ারবেস রিয়েলটাইম ডাটাবেজ খালি থাকলে নিচের বাটনে ক্লিক করে সাথে সাথে সমস্ত প্রয়োজনীয় ডেটা প্রস্তুত করে নিতে পারেন।
+              </p>
+              <button type="button" id="seedDatabaseBtn" class="btn btn-secondary">
+                <i class="fas fa-wand-magic-sparkles text-primary"></i>
+                <span>ডিফল্ট ডেটা দিয়ে Realtime DB সেটআপ করুন</span>
+              </button>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- 3. MODALS                                                                 -->
+  <!-- ========================================================================= -->
+
+  <!-- Booking Detail Modal -->
+  <div class="modal-overlay hidden" id="bookingDetailModalOverlay">
+    <div class="modal" id="bookingDetailModal">
+      <div class="modal-header">
+        <h3 class="modal-title">
+          <i class="fas fa-circle-info text-primary"></i> বুকিং বিস্তারিত বিবরণ
+        </h3>
+        <button type="button" class="modal-close" id="closeBookingDetailModalBtn" aria-label="বন্ধ করুন">
+          <i class="fas fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modal-body" id="bookingDetailModalBody">
+        <!-- Injected via JavaScript -->
+      </div>
+
+      <div class="modal-footer" id="bookingDetailModalFooter">
+        <button type="button" class="btn btn-secondary" id="dismissBookingDetailBtn">বন্ধ করুন</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Universal Confirmation Modal (Delete, Cancel, Reject, Terminate) -->
+  <div class="modal-overlay hidden" id="confirmModalOverlay">
+    <div class="modal" id="confirmModal" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="confirmModalTitle">
+          <i class="fas fa-triangle-exclamation text-warning"></i> নিশ্চিতকরণ
+        </h3>
+        <button type="button" class="modal-close" id="closeConfirmModalBtn" aria-label="বন্ধ করুন">
+          <i class="fas fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <p id="confirmModalMessage" class="card-text">আপনি কি এই প্রক্রিয়াটি নিশ্চিত করতে চান?</p>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="cancelConfirmBtn">না, বাতিল</button>
+        <button type="button" class="btn btn-danger" id="executeConfirmBtn">হ্যাঁ, নিশ্চিত করুন</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Universal Edit Modal (Slot, Rule, Media) -->
+  <div class="modal-overlay hidden" id="editModalOverlay">
+    <div class="modal" id="editModal" style="max-width: 520px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="editModalTitle">তথ্য সম্পাদনা</h3>
+        <button type="button" class="modal-close" id="closeEditModalBtn" aria-label="বন্ধ করুন">
+          <i class="fas fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="modal-body" id="editModalBody">
+        <!-- Dynamically injected fields -->
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="cancelEditModalBtn">বাতিল</button>
+        <button type="button" class="btn btn-primary" id="saveEditModalBtn">সংরক্ষণ করুন</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notifications Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- ========================================================================= -->
+  <!-- 4. SCRIPTS                                                                -->
+  <!-- ========================================================================= -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="bn" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0a0f0a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="description" content="EVER GAIN ইনডোর ফুটবল টার্ফ অনলাইন বুকিং। সাধারণ এবং স্থায়ী সাপ্তাহিক বুকিং সুবিধা।">
+  <link rel="icon" type="image/jpeg" href="assets/logo/logo.jpg">
+  <link rel="apple-touch-icon" href="assets/logo/logo.jpg">
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+Bengali:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <title>টার্ফ বুকিং | EVER GAIN</title>
+</head>
+<body>
+  <!-- Animated Background -->
+  <div class="bg-animated">
+    <div class="bg-gradient"></div>
+    <canvas class="bg-particles" id="particleCanvas"></canvas>
+    <div class="bg-pattern"></div>
+  </div>
+
+  <!-- Top Navigation -->
+  <nav class="navbar" id="navbar">
+    <div class="container">
+      <a href="index.html" class="navbar-brand">
+        <img src="assets/logo/logo.jpg" alt="EVER GAIN Logo" class="navbar-logo">
+        <span class="navbar-logo-text">EVER GAIN</span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link"><span data-i18n="navHome">হোম</span></a>
+        <a href="booking.html" class="nav-link active"><span data-i18n="navBooking">বুকিং</span></a>
+        <a href="gallery.html" class="nav-link"><span data-i18n="navGallery">গ্যালারি</span></a>
+        <a href="rules.html" class="nav-link"><span data-i18n="navRules">নিয়মাবলী</span></a>
+        <a href="contact.html" class="nav-link"><span data-i18n="navContact">যোগাযোগ</span></a>
+      </div>
+      <div class="navbar-right">
+        <button type="button" class="lang-toggle-btn" id="langToggleBtn" onclick="EverGain.toggleLanguage()" aria-label="Language Switcher">
+          <span class="lang-text lang-bn active">বাং</span>
+          <span class="lang-divider">/</span>
+          <span class="lang-text lang-en">EN</span>
+        </button>
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="মেনু খুলুন">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu Drawer -->
+  <div class="mobile-menu" id="mobileMenu">
+    <div class="mobile-menu-header">
+      <a href="index.html" class="navbar-brand">
+        <img src="assets/logo/logo.jpg" alt="EVER GAIN Logo" class="navbar-logo">
+        <span class="navbar-logo-text">EVER GAIN</span>
+      </a>
+      <button class="mobile-menu-btn" id="mobileMenuClose" aria-label="মেনু বন্ধ করুন">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="mobile-lang-wrapper" style="padding: 0 var(--space-lg); margin-top: 0.75rem; margin-bottom: 0.5rem;">
+      <button type="button" class="btn btn-secondary btn-sm btn-block" id="langToggleBtnMobile" onclick="EverGain.toggleLanguage()">
+        <i class="fas fa-globe"></i> <span>Language: বাংলা / English</span>
+      </button>
+    </div>
+    <div class="mobile-nav-links">
+      <a href="index.html" class="mobile-nav-link">
+        <i class="fas fa-home"></i> <span data-i18n="navHome">হোম</span>
+      </a>
+      <a href="booking.html" class="mobile-nav-link active">
+        <i class="fas fa-calendar-check"></i> <span data-i18n="navBooking">বুকিং</span>
+      </a>
+      <a href="gallery.html" class="mobile-nav-link">
+        <i class="fas fa-images"></i> <span data-i18n="navGallery">গ্যালারি</span>
+      </a>
+      <a href="rules.html" class="mobile-nav-link">
+        <i class="fas fa-book-open"></i> <span data-i18n="navRules">নিয়মাবলী</span>
+      </a>
+      <a href="contact.html" class="mobile-nav-link">
+        <i class="fas fa-phone"></i> <span data-i18n="navContact">যোগাযোগ</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Main Booking Content -->
+  <main class="section">
+    <div class="container">
+      <!-- Page Header -->
+      <header class="text-center mb-4">
+        <h1 class="section-title" data-i18n="bookingPageTitle">টার্ফ অনলাইন বুকিং</h1>
+        <p class="section-subtitle" data-i18n="bookingPageSubtitle">আপনার প্রিয় স্লটটি বেছে নিন এবং ঝামেলাহীনভাবে ফুটবল খেলার আনন্দ উপভোগ করুন</p>
+      </header>
+
+      <!-- Booking Steps Visual Indicator -->
+      <div class="booking-steps" id="bookingSteps" aria-label="বুকিং ধাপ নির্দেশক">
+        <div class="booking-step active" data-step="1">
+          <div class="booking-step-num">১</div>
+          <div class="booking-step-label" data-i18n="step1">ক্যাটাগরি</div>
+        </div>
+        <div class="booking-step" data-step="2">
+          <div class="booking-step-num">২</div>
+          <div class="booking-step-label" data-i18n="step2">তারিখ ও সময়</div>
+        </div>
+        <div class="booking-step" data-step="3">
+          <div class="booking-step-num">৩</div>
+          <div class="booking-step-label" data-i18n="step3">তথ্য</div>
+        </div>
+        <div class="booking-step" data-step="4">
+          <div class="booking-step-num">৪</div>
+          <div class="booking-step-label" data-i18n="step4">নিশ্চিত</div>
+        </div>
+      </div>
+
+      <!-- STEP 1: CATEGORY SELECTION -->
+      <section class="booking-step-content" id="step1Container">
+        <div class="text-center mb-3">
+          <h2 class="card-title" style="font-size: 1.5rem;" data-i18n="step1Title">ধাপ ১: বুকিং ক্যাটাগরি ও সেশন নির্বাচন করুন</h2>
+          <p class="card-text text-secondary" data-i18n="step1Subtitle">সাধারণ একক ম্যাচের বুকিং নাকি নিয়মিত দল হিসেবে স্থায়ী সাপ্তাহিক বুকিং?</p>
+        </div>
+
+        <div class="grid-2">
+          <!-- Normal Booking Category -->
+          <div class="card booking-category-card" id="cardNormal" data-type="normal">
+            <div class="card-header-flex mb-2">
+              <div class="card-icon">
+                <i class="fas fa-futbol"></i>
+              </div>
+              <div>
+                <h3 class="card-title" data-i18n="normalCardTitle">সাধারণ বুকিং</h3>
+                <span class="badge badge-info">একক ম্যাচ</span>
+              </div>
+            </div>
+            <p class="card-text mb-3" data-i18n="normalCardDesc">যে কোনো একক দিনে নিজের সুবিধাজনক স্লটে খেলার জন্য আদর্শ প্যাকেজ।</p>
+
+            <div class="pricing-subgrid">
+              <!-- Day Sub-card -->
+              <div class="pricing-card pricing-card-day" id="optNormalDay" onclick="selectCategory('normal', 'day')">
+                <div class="pricing-card-badge">
+                  <i class="fas fa-sun"></i> <span data-i18n="daySessionHours">ডে সেশন (সকাল ৬:০০ - সন্ধ্যা ৬:০০)</span>
+                </div>
+                <div class="price-current mt-2">
+                  <span class="price-original" id="displayNormalDayOrig">৳৬০০</span>
+                  <span class="price-amount" id="displayNormalDay">৳৫৫০</span>
+                  <span class="price-label" data-i18n="perHour">/ ঘণ্টা</span>
+                </div>
+                <ul class="pricing-features mt-2">
+                  <li><i class="fas fa-check text-primary"></i> পরবর্তী ১৪ দিনের অগ্রিম বুকিং</li>
+                  <li><i class="fas fa-check text-primary"></i> মানসম্মত কৃত্রিম টার্ফ</li>
+                  <li><i class="fas fa-check text-primary"></i> বল ও আনুষঙ্গিক সুবিধা</li>
+                </ul>
+                <button type="button" class="btn btn-secondary btn-sm btn-block mt-2 category-select-btn">
+                  <i class="fas fa-hand-pointer"></i> <span data-i18n="bookDaySlot">ডে সেশন নির্বাচন করুন</span>
+                </button>
+              </div>
+
+              <!-- Night Sub-card -->
+              <div class="pricing-card pricing-card-night mt-2" id="optNormalNight" onclick="selectCategory('normal', 'night')">
+                <div class="pricing-card-badge">
+                  <i class="fas fa-moon"></i> <span data-i18n="nightSessionHours">নাইট সেশন (সন্ধ্যা ৬:০০ - রাত ১২:০০)</span>
+                </div>
+                <div class="price-current mt-2">
+                  <span class="price-amount" id="displayNormalNight">৳৯০০</span>
+                  <span class="price-label" data-i18n="perHour">/ ঘণ্টা</span>
+                </div>
+                <ul class="pricing-features mt-2">
+                  <li><i class="fas fa-check text-primary"></i> শক্তিশালী এলইডি ফ্লাডলাইট</li>
+                  <li><i class="fas fa-check text-primary"></i> প্রফেশনাল নাইট ম্যাচ অভিজ্ঞতা</li>
+                  <li><i class="fas fa-check text-primary"></i> ড্রিম লাইট পরিবেশ</li>
+                </ul>
+                <button type="button" class="btn btn-secondary btn-sm btn-block mt-2 category-select-btn">
+                  <i class="fas fa-hand-pointer"></i> <span data-i18n="bookNightSlot">নাইট সেশন নির্বাচন করুন</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Permanent Booking Category -->
+          <div class="card booking-category-card card-premium" id="cardPermanent" data-type="permanent">
+            <div class="card-header-flex mb-2">
+              <div class="card-icon" style="background: rgba(132, 204, 22, 0.2); color: var(--color-accent-light);">
+                <i class="fas fa-crown"></i>
+              </div>
+              <div>
+                <h3 class="card-title" data-i18n="permanentCardTitle">স্থায়ী বুকিং</h3>
+                <span class="badge permanent-badge" data-i18n="permanentBadge">সাপ্তাহিক স্লট গ্যারান্টি</span>
+              </div>
+            </div>
+            
+            <!-- Mandatory Condition Box -->
+            <div class="condition-box mb-3">
+              <i class="fas fa-exclamation-triangle" style="color: var(--color-warning);"></i>
+              <div>
+                <strong data-i18n="permanentCondTitle">বাধ্যতামূলক শর্ত:</strong> <span data-i18n="mandatoryCondLabel">স্থায়ী বুকিং করলে প্রতি সপ্তাহে অন্তত ১টি ম্যাচ খেলতে হবে। এটি বাধ্যতামূলক। প্রতি ম্যাচেই পাবেন বিশেষ মূল্য ছাড়!</span>
+              </div>
+            </div>
+
+            <div class="pricing-subgrid">
+              <!-- Day Sub-card Permanent -->
+              <div class="pricing-card pricing-card-day" id="optPermanentDay" onclick="selectCategory('permanent', 'day')">
+                <div class="pricing-card-badge">
+                  <i class="fas fa-sun"></i> <span data-i18n="daySessionTitle">ডে সেশন (স্থায়ী)</span>
+                  <span class="price-save" data-i18n="daySaveBadge">৳৫০ সাশ্রয়</span>
+                </div>
+                <div class="price-current mt-2">
+                  <span class="price-original" id="displayPermanentDayOrig">৳৫৫০</span>
+                  <span class="price-amount" id="displayPermanentDay">৳৫০০</span>
+                  <span class="price-label">/ ঘণ্টা</span>
+                </div>
+                <ul class="pricing-features mt-2">
+                  <li><i class="fas fa-star text-accent"></i> নির্দিষ্ট বারে সাপ্তাহিক নির্ধারিত স্লট</li>
+                  <li><i class="fas fa-star text-accent"></i> স্লট হারানোর কোনো ঝুঁকি নেই</li>
+                  <li><i class="fas fa-star text-accent"></i> প্রতি ঘণ্টায় ৳৫০ সরাসরি ছাড়</li>
+                </ul>
+                <button type="button" class="btn btn-secondary btn-sm btn-block mt-2 category-select-btn">
+                  <i class="fas fa-hand-pointer"></i> <span data-i18n="permanentDayPricing">ডে স্থায়ী নির্বাচন করুন</span>
+                </button>
+              </div>
+
+              <!-- Night Sub-card Permanent -->
+              <div class="pricing-card pricing-card-night mt-2" id="optPermanentNight" onclick="selectCategory('permanent', 'night')">
+                <div class="pricing-card-badge">
+                  <i class="fas fa-moon"></i> <span data-i18n="nightSessionTitle">নাইট সেশন (স্থায়ী)</span>
+                  <span class="price-save" data-i18n="daySaveBadge">৳৫০ সাশ্রয়</span>
+                </div>
+                <div class="price-current mt-2">
+                  <span class="price-original" id="displayPermanentNightOrig">৳৯০০</span>
+                  <span class="price-amount" id="displayPermanentNight">৳৮৫০</span>
+                  <span class="price-label">/ ঘণ্টা</span>
+                </div>
+                <ul class="pricing-features mt-2">
+                  <li><i class="fas fa-star text-accent"></i> প্রাইম টাইম ফ্লাডলাইট নিশ্চিত স্লট</li>
+                  <li><i class="fas fa-star text-accent"></i> কর্পোরেট ও রেগুলার দলের সেরা পছন্দ</li>
+                  <li><i class="fas fa-star text-accent"></i> অগ্রাধিকার সাপোর্ট ও কনফার্মেশন</li>
+                </ul>
+                <button type="button" class="btn btn-secondary btn-sm btn-block mt-2 category-select-btn">
+                  <i class="fas fa-hand-pointer"></i> <span data-i18n="permanentNightPricing">নাইট স্থায়ী নির্বাচন করুন</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 1 Actions -->
+        <div class="booking-actions mt-4 text-center">
+          <button type="button" class="btn btn-primary btn-lg" id="step1NextBtn" onclick="goToStep(2)" disabled>
+            <span data-i18n="nextStepBtn">পরবর্তী ধাপ</span> <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+      </section>
+
+      <!-- STEP 2: DATE & TIME SELECTION -->
+      <section class="booking-step-content hidden" id="step2Container">
+        <div class="text-center mb-3">
+          <h2 class="card-title" style="font-size: 1.5rem;" id="step2HeaderTitle" data-i18n="step2TitleNormal">ধাপ ২: তারিখ ও সময় স্লট নির্বাচন করুন</h2>
+          <p class="card-text text-secondary" id="step2Subtitle" data-i18n="bookingPageSubtitle">আপনার পছন্দ অনুযায়ী উপলব্ধ সময় বেছে নিন</p>
+        </div>
+
+        <!-- Category Info Bar -->
+        <div class="card mb-3" style="padding: 1rem;">
+          <div class="d-flex-between">
+            <div>
+              <span class="text-muted">নির্বাচিত ক্যাটাগরি:</span>
+              <strong id="badgeCategorySummary" class="text-primary ml-1">-</strong>
+            </div>
+            <div>
+              <span class="text-muted">রেট:</span>
+              <strong id="badgePriceSummary" class="text-accent ml-1">-</strong>
+            </div>
+            <button type="button" class="btn btn-secondary btn-sm" onclick="goToStep(1)">
+              <i class="fas fa-edit"></i> পরিবর্তন
+            </button>
+          </div>
+        </div>
+
+        <!-- Date Picker for Normal Booking -->
+        <div id="normalDatePickerWrapper">
+          <h3 class="card-title mb-2" style="font-size: 1.15rem;">
+            <i class="fas fa-calendar-day text-primary"></i> <span data-i18n="chooseDateLabel">খেলার তারিখ বেছে নিন (পরবর্তী ১৪ দিন)</span>
+          </h3>
+          <div class="booking-calendar" id="dateCardsContainer">
+            <!-- Dynamically generated 14 date cards -->
+          </div>
+        </div>
+
+        <!-- Weekday Picker for Permanent Booking -->
+        <div id="permanentWeekdayWrapper" class="hidden">
+          <h3 class="card-title mb-2" style="font-size: 1.15rem;">
+            <i class="fas fa-calendar-week text-accent"></i> <span data-i18n="chooseWeekdayLabel">সপ্তাহের স্থায়ী দিন বেছে নিন</span>
+          </h3>
+          <div class="condition-box mb-2">
+            <i class="fas fa-info-circle"></i> আপনি প্রতি সপ্তাহের এই নির্দিষ্ট দিনে নিয়মিত খেলার স্লট পাবেন।
+          </div>
+          <div class="booking-calendar" id="weekdayCardsContainer">
+            <!-- Dynamically generated 7 weekday cards -->
+          </div>
+        </div>
+
+        <!-- Time Slots Grid Area -->
+        <div class="card mt-4" id="slotsSectionCard">
+          <div class="d-flex-between mb-3" style="flex-wrap: wrap; gap: 0.5rem;">
+            <div>
+              <h3 class="card-title" style="font-size: 1.15rem;">
+                <i class="fas fa-clock text-primary"></i> <span data-i18n="chooseSlotLabel">উপলব্ধ সময় স্লটসমূহ</span>
+              </h3>
+              <p class="card-text text-muted" id="selectedDateLabel">প্রথমে একটি তারিখ নির্বাচন করুন</p>
+            </div>
+            <!-- Slot Status Legend -->
+            <div class="slot-legend">
+              <span class="legend-item"><span class="legend-dot available"></span> <span data-i18n="legendAvailable">খালি</span></span>
+              <span class="legend-item"><span class="legend-dot selected"></span> <span data-i18n="legendSelected">নির্বাচিত</span></span>
+              <span class="legend-item"><span class="legend-dot pending"></span> <span data-i18n="legendPending">অপেক্ষমাণ</span></span>
+              <span class="legend-item"><span class="legend-dot booked"></span> <span data-i18n="legendBooked">বুকড</span></span>
+            </div>
+          </div>
+
+          <!-- Slots Skeleton (Loading State) -->
+          <div class="booking-slots skeleton-container hidden" id="slotsSkeleton">
+            <div class="skeleton skeleton-card" style="height: 65px;"></div>
+            <div class="skeleton skeleton-card" style="height: 65px;"></div>
+            <div class="skeleton skeleton-card" style="height: 65px;"></div>
+            <div class="skeleton skeleton-card" style="height: 65px;"></div>
+            <div class="skeleton skeleton-card" style="height: 65px;"></div>
+            <div class="skeleton skeleton-card" style="height: 65px;"></div>
+          </div>
+
+          <!-- Slots Actual Grid -->
+          <div class="booking-slots" id="slotsGrid">
+            <!-- Generated via booking.js -->
+          </div>
+
+          <!-- Empty or Helper Message -->
+          <div id="slotsEmptyMessage" class="text-center p-3 text-muted">
+            <i class="fas fa-calendar-alt fa-2x mb-2" style="opacity: 0.5;"></i>
+            <p>স্লট দেখতে অনুগ্রহ করে ওপর থেকে একটি তারিখ নির্বাচন করুন</p>
+          </div>
+        </div>
+
+        <!-- Step 2 Actions -->
+        <div class="booking-actions mt-4 d-flex-between">
+          <button type="button" class="btn btn-secondary btn-lg" onclick="goToStep(1)">
+            <i class="fas fa-arrow-left"></i> <span data-i18n="prevStepBtn">পূর্ববর্তী ধাপ</span>
+          </button>
+          <button type="button" class="btn btn-primary btn-lg" id="step2NextBtn" onclick="goToStep(3)" disabled>
+            <span data-i18n="nextStepBtn">পরবর্তী ধাপ: তথ্য</span> <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+      </section>
+
+      <!-- STEP 3: CUSTOMER INFORMATION FORM -->
+      <section class="booking-step-content hidden" id="step3Container">
+        <div class="text-center mb-3">
+          <h2 class="card-title" style="font-size: 1.5rem;" data-i18n="step3Title">ধাপ ৩: আপনার ব্যক্তিগত তথ্য দিন</h2>
+          <p class="card-text text-secondary" data-i18n="step3Subtitle">বুকিং নিশ্চিতকরণের জন্য সঠিক যোগাযোগের তথ্য প্রদান করুন</p>
+        </div>
+
+        <div class="card booking-form max-w-700 mx-auto">
+          <form id="bookingCustomerForm" onsubmit="event.preventDefault(); goToStep(4);">
+            <!-- Name Field -->
+            <div class="form-group mb-3">
+              <label for="customerName" class="form-label">
+                <span data-i18n="nameLabel">আপনার নাম *</span>
+              </label>
+              <div class="input-icon-wrapper">
+                <i class="fas fa-user"></i>
+                <input type="text" id="customerName" class="form-input" placeholder="আপনার সম্পূর্ণ নাম লিখুন" data-i18n-placeholder="namePlaceholder" required autocomplete="name">
+              </div>
+              <div class="form-error hidden" id="customerNameError">অনুগ্রহ করে আপনার সঠিক নাম লিখুন</div>
+            </div>
+
+            <!-- Phone Field -->
+            <div class="form-group mb-3">
+              <label for="customerPhone" class="form-label">
+                <span data-i18n="phoneLabel">মোবাইল নম্বর *</span>
+              </label>
+              <div class="input-icon-wrapper">
+                <i class="fas fa-phone-alt"></i>
+                <input type="tel" id="customerPhone" class="form-input" placeholder="01XXXXXXXXX" data-i18n-placeholder="phonePlaceholder" required autocomplete="tel">
+              </div>
+              <div class="form-hint">বাংলাদেশি ১১ ডিজিটের নম্বর লিখুন (যেমন: 01712345678)</div>
+              <div class="form-error hidden" id="customerPhoneError">অনুগ্রহ করে একটি সঠিক ১১ ডিজিটের মোবাইল নম্বর দিন</div>
+            </div>
+
+            <!-- Message Field -->
+            <div class="form-group mb-3">
+              <label for="bookingMessage" class="form-label">
+                <span data-i18n="msgLabel">অতিরিক্ত তথ্য বা বিশেষ অনুরোধ (ঐচ্ছিক)</span>
+              </label>
+              <textarea id="bookingMessage" class="form-textarea" rows="3" placeholder="দলের নাম, অতিরিক্ত সরঞ্জাম বা কোনো বিশেষ বার্তা থাকলে লিখুন..." data-i18n-placeholder="msgPlaceholder"></textarea>
+            </div>
+
+            <!-- Mandatory Condition for Permanent Booking -->
+            <div class="condition-box mb-3 hidden" id="permanentConditionBox">
+              <div class="form-checkbox">
+                <input type="checkbox" id="conditionAccept" class="form-checkbox-input">
+                <label for="conditionAccept" class="form-checkbox-label">
+                  <strong class="text-warning"><i class="fas fa-shield-alt"></i> আবশ্যকীয় স্থায়ী চুক্তি:</strong>
+                  <span data-i18n="mandatoryCondLabel">স্থায়ী বুকিং করলে প্রতি সপ্তাহে অন্তত ১টি ম্যাচ খেলতে হবে। এটি বাধ্যতামূলক।</span> <span class="text-danger">*</span>
+                </label>
+              </div>
+              <div class="form-error hidden" id="conditionAcceptError">স্থায়ী বুকিংয়ের জন্য এই শর্তটি মেনে নেওয়া বাধ্যতামূলক।</div>
+            </div>
+
+            <!-- Step 3 Actions -->
+            <div class="booking-actions mt-4 d-flex-between">
+              <button type="button" class="btn btn-secondary btn-lg" onclick="goToStep(2)">
+                <i class="fas fa-arrow-left"></i> <span data-i18n="prevStepBtn">পূর্ববর্তী ধাপ</span>
+              </button>
+              <button type="submit" class="btn btn-primary btn-lg" id="step3NextBtn">
+                <span data-i18n="nextStepBtn">পরবর্তী ধাপ</span> <i class="fas fa-arrow-right"></i>
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- STEP 4: SUMMARY & CONFIRMATION -->
+      <section class="booking-step-content hidden" id="step4Container">
+        <div class="text-center mb-3">
+          <h2 class="card-title" style="font-size: 1.5rem;" data-i18n="step4Title">ধাপ ৪: বুকিং সারসংক্ষেপ ও চূড়ান্ত নিশ্চিতকরণ</h2>
+          <p class="card-text text-secondary" data-i18n="step4Subtitle">সব তথ্য যাচাই করে বুকিং রিকোয়েস্ট সাবমিট করুন</p>
+        </div>
+
+        <div class="card booking-summary card-premium max-w-700 mx-auto">
+          <div class="card-header-flex mb-3">
+            <div class="card-icon">
+              <i class="fas fa-file-invoice"></i>
+            </div>
+            <div>
+              <h3 class="card-title">বুকিং বিবরণী</h3>
+              <span class="badge badge-pending">অনুমোদনের জন্য প্রস্তুত</span>
+            </div>
+          </div>
+
+          <div class="summary-details">
+            <div class="summary-row">
+              <span class="summary-label" data-i18n="summaryTypeLabel">বুকিং টাইপ:</span>
+              <span class="summary-value" id="sumType">-</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-label" data-i18n="summarySessionLabel">সেশন:</span>
+              <span class="summary-value" id="sumSession">-</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-label" id="sumDateLabel" data-i18n="summaryDateLabel">তারিখ:</span>
+              <span class="summary-value" id="sumDateValue">-</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-label" data-i18n="summarySlotLabel">সময় স্লট:</span>
+              <span class="summary-value" id="sumSlot">-</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-label" data-i18n="summaryNameLabel">গ্রাহকের নাম:</span>
+              <span class="summary-value" id="sumCustomerName">-</span>
+            </div>
+            <div class="summary-row">
+              <span class="summary-label" data-i18n="summaryPhoneLabel">মোবাইল নম্বর:</span>
+              <span class="summary-value" id="sumCustomerPhone">-</span>
+            </div>
+            <div class="summary-row" id="sumMessageRow">
+              <span class="summary-label" data-i18n="msgLabel">বার্তা:</span>
+              <span class="summary-value" id="sumCustomerMessage">-</span>
+            </div>
+            <div class="summary-row" id="sumConditionRow">
+              <span class="summary-label">সাপ্তাহিক শর্ত:</span>
+              <span class="summary-value text-accent"><i class="fas fa-check-circle"></i> প্রতি সপ্তাহে ১টি ম্যাচ (স্বীকৃত)</span>
+            </div>
+            <div class="summary-row summary-total mt-3">
+              <span class="summary-label font-bold" style="font-size: 1.2rem;" data-i18n="summaryPriceLabel">মোট ফি:</span>
+              <span class="summary-value font-bold text-accent" style="font-size: 1.5rem;" id="sumPrice">৳০</span>
+            </div>
+          </div>
+
+          <!-- Disclaimer / Waiting for Approval Notice -->
+          <div class="condition-box mt-3 text-center">
+            <i class="fas fa-info-circle text-primary"></i>
+            <div>
+              <span data-i18n="disclaimerText">বুকিং জমা দেওয়ার পর অনুমোদনের জন্য অপেক্ষা করুন। এডমিন কনফার্ম করলে বুকিং চূড়ান্ত হবে।</span>
+            </div>
+          </div>
+
+          <!-- Step 4 Actions -->
+          <div class="booking-actions mt-4 d-flex-between">
+            <button type="button" class="btn btn-secondary btn-lg" onclick="goToStep(3)">
+              <i class="fas fa-arrow-left"></i> <span data-i18n="prevStepBtn">তথ্য সম্পাদনা</span>
+            </button>
+            <button type="button" class="btn btn-primary btn-lg" id="submitBookingBtn" onclick="submitBooking()">
+              <i class="fas fa-check-circle"></i> <span data-i18n="submitBtnText">বুকিং জমা দিন</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- BOOKING STATUS CHECK SECTION (BELOW MAIN BOOKING) -->
+      <section class="section mt-4" id="bookingStatusCheckSection">
+        <div class="card card-premium max-w-800 mx-auto">
+          <div class="text-center mb-3">
+            <div class="card-icon mx-auto mb-2" style="display: inline-flex;">
+              <i class="fas fa-search"></i>
+            </div>
+            <h2 class="card-title" style="font-size: 1.4rem;" data-i18n="searchStatusTitle">বুকিং স্ট্যাটাস অনুসন্ধান</h2>
+            <p class="card-text text-secondary" data-i18n="searchStatusSubtitle">আপনার মোবাইল নম্বর দিয়ে পূর্বে করা বুকিংয়ের বর্তমান অবস্থা ও ইতিহাস দেখুন</p>
+          </div>
+
+          <form id="statusSearchForm" onsubmit="event.preventDefault(); checkBookingStatus();" class="status-search-box mb-3">
+            <div class="form-group mb-2">
+              <div class="input-icon-wrapper">
+                <i class="fas fa-mobile-alt"></i>
+                <input type="tel" id="statusPhoneInput" class="form-input" placeholder="আপনার ১১ ডিজিটের মোবাইল নম্বর দিন (যেমন: 01712345678)" data-i18n-placeholder="statusPhonePlaceholder" required>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block" id="searchStatusBtn">
+              <i class="fas fa-search"></i> <span data-i18n="searchStatusBtn">স্ট্যাটাস অনুসন্ধান করুন</span>
+            </button>
+          </form>
+
+          <!-- Search Results Container -->
+          <div id="bookingStatusResults" class="mt-3">
+            <!-- Will be populated dynamically by booking.js -->
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- BOOKING CONFIRMATION MODAL -->
+  <div class="modal-overlay" id="confirmModalOverlay">
+    <div class="modal max-w-600" id="confirmationModal">
+      <div class="modal-header">
+        <div class="modal-title">
+          <i class="fas fa-check-circle text-primary"></i> <span data-i18n="modalSuccessTitle">বুকিং সফলভাবে জমা হয়েছে!</span>
+        </div>
+        <button class="modal-close" id="modalCloseBtn" aria-label="বন্ধ করুন" onclick="closeConfirmationModal()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body text-center">
+        <div class="success-icon-wrapper mb-3">
+          <i class="fas fa-check-circle text-primary fa-4x animate-bounce"></i>
+        </div>
+        <h3 class="card-title mb-2">ধন্যবাদ, আপনার বুকিং রিকোয়েস্ট গৃহীত হয়েছে!</h3>
+        <p class="card-text text-secondary mb-3" data-i18n="modalSuccessMsg">
+          আপনার বুকিং রিকোয়েস্ট জমা হয়েছে। অনুমোদনের জন্য অপেক্ষা করুন। আমাদের টিম দ্রুত আপনার সাথে যোগাযোগ করবে।
+        </p>
+
+        <!-- Ticket Card -->
+        <div class="card p-3 text-left mb-3" style="background: rgba(10, 25, 10, 0.8); border: 1px dashed var(--color-primary);">
+          <div class="d-flex-between mb-2">
+            <span class="text-muted">বুকিং আইডি:</span>
+            <strong class="text-accent" id="modalBookingId" style="letter-spacing: 1px;">-</strong>
+          </div>
+          <div class="d-flex-between mb-2">
+            <span class="text-muted">বর্তমান অবস্থা:</span>
+            <span class="badge badge-pending" id="modalBookingStatus">অপেক্ষমাণ</span>
+          </div>
+          <div class="d-flex-between mb-2">
+            <span class="text-muted">বুকিং ধরন:</span>
+            <span id="modalBookingType">-</span>
+          </div>
+          <div class="d-flex-between mb-2">
+            <span class="text-muted">খেলার সময়:</span>
+            <span id="modalBookingSlot">-</span>
+          </div>
+          <div class="d-flex-between">
+            <span class="text-muted">মোট ফি:</span>
+            <strong class="text-accent" id="modalBookingPrice">-</strong>
+          </div>
+        </div>
+
+        <div class="condition-box text-center mb-3">
+          <i class="fas fa-info-circle text-info"></i>
+          <span>ভবিষ্যতে বুকিং স্ট্যাটাস ট্র্যাক করতে আপনার বুকিং আইডিটি লিখে রাখুন।</span>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" onclick="closeConfirmationModal(); resetBookingWizard();">
+          <i class="fas fa-plus-circle"></i> <span data-i18n="newBookingBtn">নতুন বুকিং করুন</span>
+        </button>
+        <button type="button" class="btn btn-primary" onclick="viewMyBookingsFromModal()">
+          <i class="fas fa-list-alt"></i> <span data-i18n="viewStatusBtn">স্ট্যাটাস দেখুন</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Bottom Navigation -->
+  <nav class="bottom-nav" id="bottomNav">
+    <a href="index.html" class="bottom-nav-item">
+      <i class="fas fa-home"></i>
+      <span data-i18n="navHome">হোম</span>
+    </a>
+    <a href="booking.html" class="bottom-nav-item active">
+      <i class="fas fa-calendar-check"></i>
+      <span data-i18n="navBooking">বুকিং</span>
+    </a>
+    <a href="gallery.html" class="bottom-nav-item">
+      <i class="fas fa-images"></i>
+      <span data-i18n="navGallery">গ্যালারি</span>
+    </a>
+    <a href="rules.html" class="bottom-nav-item">
+      <i class="fas fa-book-open"></i>
+      <span data-i18n="navRules">নিয়মাবলী</span>
+    </a>
+    <a href="contact.html" class="bottom-nav-item">
+      <i class="fas fa-phone"></i>
+      <span data-i18n="navContact">যোগাযোগ</span>
+    </a>
+  </nav>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Page Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <!-- Brand Summary -->
+        <div class="footer-col footer-brand-col">
+          <a href="index.html" class="navbar-brand" style="display: inline-flex; align-items: center; gap: 8px;">
+            <img src="assets/logo/logo.jpg" alt="EVER GAIN Logo" class="navbar-logo" style="height: 38px;">
+            <span class="navbar-logo-text">EVER GAIN</span>
+          </a>
+          <p class="footer-desc" data-i18n="footerDesc">
+            আপনার ইনডোর ফুটবলের সেরা গন্তব্য। আধুনিক সিন্থেটিক টার্ফ ও আন্তর্জাতিক মানের ফ্লাডলাইটে দিন ও রাতে সেরা খেলার অভিজ্ঞতা।
+          </p>
+          <div class="footer-social" style="display: flex; gap: 0.75rem; align-items: center;">
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" aria-label="Facebook">
+              <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="https://wa.me/8801700000000" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" aria-label="WhatsApp">
+              <i class="fab fa-whatsapp"></i>
+            </a>
+            <a href="tel:+8801700000000" class="btn btn-secondary btn-sm" aria-label="Phone">
+              <i class="fas fa-phone"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Quick Links -->
+        <div class="footer-col">
+          <h4 class="footer-heading" data-i18n="quickLinks" style="color: var(--color-text-primary); font-size: 1.15rem; font-weight: 600; margin-bottom: 1rem; border-left: 3px solid var(--color-primary); padding-left: 0.5rem;">প্রয়োজনীয় লিংক</h4>
+          <ul class="footer-nav" style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.6rem;">
+            <li><a href="index.html" style="color: var(--color-text-secondary); text-decoration: none;"><i class="fas fa-angle-right" style="color: var(--color-primary); margin-right: 6px;"></i> <span data-i18n="navHome">হোম</span></a></li>
+            <li><a href="booking.html" style="color: var(--color-text-secondary); text-decoration: none;"><i class="fas fa-angle-right" style="color: var(--color-primary); margin-right: 6px;"></i> <span data-i18n="navBooking">স্লট বুকিং</span></a></li>
+            <li><a href="gallery.html" style="color: var(--color-text-secondary); text-decoration: none;"><i class="fas fa-angle-right" style="color: var(--color-primary); margin-right: 6px;"></i> <span data-i18n="navGallery">ফটো ও ভিডিও গ্যালারি</span></a></li>
+            <li><a href="rules.html" style="color: var(--color-text-secondary); text-decoration: none;"><i class="fas fa-angle-right" style="color: var(--color-primary); margin-right: 6px;"></i> <span data-i18n="navRules">গ্রাউন্ড নিয়মাবলী</span></a></li>
+            <li><a href="contact.html" style="color: var(--color-text-secondary); text-decoration: none;"><i class="fas fa-angle-right" style="color: var(--color-primary); margin-right: 6px;"></i> <span data-i18n="navContact">যোগাযোগ ও লোকেশন</span></a></li>
+          </ul>
+        </div>
+
+        <!-- Working Hours & Contact -->
+        <div class="footer-col">
+          <h4 class="footer-heading" data-i18n="hoursPricing" style="color: var(--color-text-primary); font-size: 1.15rem; font-weight: 600; margin-bottom: 1rem; border-left: 3px solid var(--color-primary); padding-left: 0.5rem;">গ্রাউন্ড তথ্য</h4>
+          <p class="footer-info-item" style="margin-bottom: 0.75rem;"><span class="badge-live-247"><span class="beacon-dot"></span> <span class="open-hours-text">২৪/৭ খোলা (সার্বক্ষণিক উন্মুক্ত)</span></span></p>
+          <p class="footer-info-item" style="color: var(--color-text-secondary); font-size: 0.95rem; margin-bottom: 0.5rem;"><i class="fas fa-map-marker-alt" style="color: var(--color-primary); margin-right: 6px;"></i> বাংলাদেশ</p>
+          <p class="footer-info-item" style="color: var(--color-text-secondary); font-size: 0.95rem; margin-bottom: 0.75rem;"><i class="fas fa-phone-alt" style="color: var(--color-primary); margin-right: 6px;"></i> +৮৮০ ১৭০০-০০০০০০</p>
+          <div>
+            <a href="https://wa.me/8801700000000" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-sm">
+              <i class="fab fa-whatsapp"></i> <span data-i18n="messageUs">হোয়াটসঅ্যাপ চ্যাট</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom" style="border-top: 1px solid var(--color-border); padding-top: 1rem; margin-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <p style="margin: 0; color: var(--color-text-muted); font-size: 0.88rem;" data-i18n="allRights">&copy; 2026 EVER GAIN Indoor Football. সর্বস্বত্ব সংরক্ষিত।</p>
+        <a href="admin.html" style="color: var(--color-text-muted); font-size: 0.85rem; text-decoration: none;"><i class="fas fa-lock"></i> <span data-i18n="adminEntry">অ্যাডমিন প্রবেশ</span></a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts in Required Order -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="booking.js"></script>
+</body>
+</html>

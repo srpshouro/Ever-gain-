@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="bn" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0a0f0a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="description" content="EVER GAIN ইনডোর ফুটবল গ্রাউন্ডের শৃঙ্খলা ও নিরাপত্তা সংক্রান্ত নিয়মাবলী। খেলার চমৎকার অভিজ্ঞতা পেতে নিয়মগুলো মেনে চলুন।">
+  <title>গ্রাউন্ড নিয়মাবলী | EVER GAIN - ইনডোর ফুটবল গ্রাউন্ড</title>
+
+  <!-- Google Fonts: Inter & Noto Sans Bengali -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+Bengali:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome 6.5 -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <!-- PWA Manifest & Favicon -->
+  <link rel="icon" type="image/jpeg" href="assets/logo/logo.jpg">
+  <link rel="apple-touch-icon" href="assets/logo/logo.jpg">
+  <link rel="manifest" href="manifest.json">
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Animated Background -->
+  <div class="bg-animated">
+    <div class="bg-gradient"></div>
+    <canvas class="bg-particles" id="particleCanvas"></canvas>
+    <div class="bg-pattern"></div>
+  </div>
+
+  <!-- Top Navigation Bar -->
+  <nav class="navbar" id="navbar">
+    <div class="container">
+      <a href="index.html" class="navbar-brand">
+        <img src="assets/logo/logo.jpg" alt="EVER GAIN Logo" class="navbar-logo">
+        <span class="navbar-logo-text">EVER GAIN</span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link"><span data-i18n="navHome">হোম</span></a>
+        <a href="booking.html" class="nav-link"><span data-i18n="navBooking">বুকিং</span></a>
+        <a href="gallery.html" class="nav-link"><span data-i18n="navGallery">গ্যালারি</span></a>
+        <a href="rules.html" class="nav-link active"><span data-i18n="navRules">নিয়মাবলী</span></a>
+        <a href="contact.html" class="nav-link"><span data-i18n="navContact">যোগাযোগ</span></a>
+      </div>
+      <div class="navbar-right">
+        <button type="button" class="lang-toggle-btn" id="langToggleBtn" onclick="EverGain.toggleLanguage()" aria-label="Language Switcher">
+          <span class="lang-text lang-bn active">বাং</span>
+          <span class="lang-divider">/</span>
+          <span class="lang-text lang-en">EN</span>
+        </button>
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="মেনু খুলুন" aria-expanded="false">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Slide Navigation Menu -->
+  <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+    <div class="mobile-menu-header">
+      <a href="index.html" class="navbar-brand">
+        <img src="assets/logo/logo.jpg" alt="EVER GAIN Logo" class="navbar-logo">
+        <span class="navbar-logo-text">EVER GAIN</span>
+      </a>
+      <button class="mobile-menu-close" id="mobileMenuClose" aria-label="মেনু বন্ধ করুন">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="mobile-lang-wrapper" style="padding: 0 var(--space-lg); margin-top: 0.75rem; margin-bottom: 0.5rem;">
+      <button type="button" class="btn btn-secondary btn-sm btn-block" id="langToggleBtnMobile" onclick="EverGain.toggleLanguage()">
+        <i class="fas fa-globe"></i> <span>Language: বাংলা / English</span>
+      </button>
+    </div>
+    <div class="mobile-nav-links">
+      <a href="index.html" class="mobile-nav-link">
+        <i class="fas fa-home"></i> <span data-i18n="navHome">হোম</span>
+      </a>
+      <a href="booking.html" class="mobile-nav-link">
+        <i class="fas fa-calendar-check"></i> <span data-i18n="navBooking">বুকিং</span>
+      </a>
+      <a href="gallery.html" class="mobile-nav-link">
+        <i class="fas fa-images"></i> <span data-i18n="navGallery">গ্যালারি</span>
+      </a>
+      <a href="rules.html" class="mobile-nav-link active">
+        <i class="fas fa-book-open"></i> <span data-i18n="navRules">নিয়মাবলী</span>
+      </a>
+      <a href="contact.html" class="mobile-nav-link">
+        <i class="fas fa-phone"></i> <span data-i18n="navContact">যোগাযোগ</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Page Header -->
+  <header class="section rules-header text-center">
+    <div class="container">
+      <div class="badge badge-available mb-2 animate-in">
+        <i class="fas fa-shield-halved"></i> <span data-i18n="rulesBadge">সুশৃঙ্খল ও নিরাপদ খেলা</span>
+      </div>
+      <h1 class="section-title animate-in" data-i18n="rulesTitle">গ্রাউন্ড নিয়মাবলী</h1>
+      <p class="section-subtitle animate-in" data-i18n="rulesSubtitle">
+        EVER GAIN ইনডোর ফুটবল গ্রাউন্ডে সবার জন্য আনন্দদায়ক ও নিরাপদ খেলার পরিবেশ বজায় রাখার নির্দেশিকা
+      </p>
+    </div>
+  </header>
+
+  <!-- Main Rules Content Section -->
+  <main class="section rules-content-section pt-0">
+    <div class="container">
+
+      <!-- Loading Skeleton (Rules Cards) -->
+      <div class="grid-3 mb-4" id="rulesSkeleton" aria-label="নিয়মাবলী লোড হচ্ছে...">
+        <div class="card card-premium skeleton skeleton-card" style="height: 220px;"></div>
+        <div class="card card-premium skeleton skeleton-card" style="height: 220px;"></div>
+        <div class="card card-premium skeleton skeleton-card" style="height: 220px;"></div>
+        <div class="card card-premium skeleton skeleton-card" style="height: 220px;"></div>
+        <div class="card card-premium skeleton skeleton-card" style="height: 220px;"></div>
+        <div class="card card-premium skeleton skeleton-card" style="height: 220px;"></div>
+      </div>
+
+      <!-- Rules Cards Container (Populated dynamically) -->
+      <div class="grid-3 mb-4 hidden" id="rulesContainer" role="region" aria-label="গ্রাউন্ডের সকল নিয়মাবলী"></div>
+
+      <!-- Mandatory Condition Box -->
+      <div class="condition-box animate-in mt-4">
+        <div class="condition-box-header">
+          <i class="fas fa-circle-exclamation"></i>
+          <h4 data-i18n="permanentCondTitle">জরুরি শর্তাবলী ও গ্রাউন্ড নীতিমালা</h4>
+        </div>
+        <ul class="condition-list">
+          <li>বুকিং স্লটের সময় পরিবর্তন বা বাতিল করতে হলে ন্যূনতম ৬ ঘণ্টা পূর্বে কর্তৃপক্ষকে অবহিত করতে হবে।</li>
+          <li>গ্রাউন্ডে প্রবেশের পূর্বে সকল খেলোয়াড়কে যথাযথ স্পোর্টস পোশাক ও টার্ফ শু পরিধান করতে হবে।</li>
+          <li>অননুমোদিত কোনো বহিরাগত বা দর্শক খেলা চলাকালীন টার্ফের মাঠে প্রবেশ করতে পারবেন না।</li>
+          <li>ইনডোর গ্রাউন্ডে খেলার সময় ব্যক্তিগত মূল্যবান সামগ্রীর (মোবাইল, ঘড়ি, ওয়ালেট ইত্যাদি) দায়িত্ব নিজ নিজ খেলোয়াড়ের।</li>
+          <li>যেকোনো অনাকাঙ্ক্ষিত পরিস্থিতি, প্রযুক্তিগত ক্রুটি বা জরুরি রক্ষণাবেক্ষণের জন্য গ্রাউন্ড কর্তৃপক্ষ সময়সূচি পুনর্বিন্যাস করার অধিকার সংরক্ষণ করে।</li>
+        </ul>
+      </div>
+
+      <!-- Booking CTA Banner -->
+      <div class="card card-premium text-center animate-in mt-4 p-4">
+        <div class="card-icon" style="margin: 0 auto 1rem; color: var(--color-primary-light, #34d399); font-size: 2.2rem;">
+          <i class="fas fa-calendar-check"></i>
+        </div>
+        <h3 class="card-title" data-i18n="rulesCtaTitle">নিয়মাবলী জেনে নিয়েছেন? আজই স্লট বুক করুন!</h3>
+        <p class="card-text text-secondary mb-3" style="max-width: 600px; margin-left: auto; margin-right: auto;" data-i18n="rulesCtaDesc">
+          আপনার দলের সাথে উপভোগ করুন সেরা ইনডোর ফুটবলের রোমাঞ্চ। মাত্র কয়েকটি ক্লিকেই অনলাইনে পছন্দের তারিখ ও সময় বুক করুন।
+        </p>
+        <div class="cta-actions flex-center" style="gap: 1rem; flex-wrap: wrap;">
+          <a href="booking.html" class="btn btn-primary btn-lg">
+            <i class="fas fa-futbol"></i> <span data-i18n="rulesBookBtn">স্লট বুকিং করুন</span>
+          </a>
+          <a href="https://wa.me/8801700000000" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-lg">
+            <i class="fab fa-whatsapp"></i> <span data-i18n="rulesWaBtn">সরাসরি হোয়াটসঅ্যাপে যোগাযোগ</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Bottom Navigation Bar (Mobile) -->
+  <nav class="bottom-nav" id="bottomNav">
+    <a href="index.html" class="bottom-nav-item">
+      <i class="fas fa-home"></i>
+      <span data-i18n="navHome">হোম</span>
+    </a>
+    <a href="booking.html" class="bottom-nav-item">
+      <i class="fas fa-calendar-check"></i>
+      <span data-i18n="navBooking">বুকিং</span>
+    </a>
+    <a href="gallery.html" class="bottom-nav-item">
+      <i class="fas fa-images"></i>
+      <span data-i18n="navGallery">গ্যালারি</span>
+    </a>
+    <a href="rules.html" class="bottom-nav-item active">
+      <i class="fas fa-book-open"></i>
+      <span data-i18n="navRules">নিয়মাবলী</span>
+    </a>
+    <a href="contact.html" class="bottom-nav-item">
+      <i class="fas fa-phone"></i>
+      <span data-i18n="navContact">যোগাযোগ</span>
+    </a>
+  </nav>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+
+  <!-- Site Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <!-- Column 1: Brand -->
+        <div class="footer-col footer-brand-col">
+          <a href="index.html" class="navbar-brand" style="display: inline-flex; align-items: center; gap: 8px; margin-bottom: 0.75rem;">
+            <img src="assets/logo/logo.jpg" alt="EVER GAIN Logo" class="navbar-logo" style="height: 38px;">
+            <span class="navbar-logo-text">EVER GAIN</span>
+          </a>
+          <p class="footer-desc" data-i18n="footerDesc">
+            আপনার ইনডোর ফুটবলের সেরা গন্তব্য। আধুনিক সিন্থেটিক টার্ফ ও আন্তর্জাতিক মানের ফ্লাডলাইটে দিন ও রাতে সেরা খেলার অভিজ্ঞতা।
+          </p>
+          <div class="footer-social" style="display: flex; gap: 0.75rem; align-items: center;">
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" aria-label="Facebook">
+              <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="https://wa.me/8801700000000" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" aria-label="WhatsApp">
+              <i class="fab fa-whatsapp"></i>
+            </a>
+            <a href="tel:+8801700000000" class="btn btn-secondary btn-sm" aria-label="Phone">
+              <i class="fas fa-phone"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Column 2: Quick Links -->
+        <div class="footer-col">
+          <h4 class="footer-heading" data-i18n="quickLinks" style="color: var(--color-text-primary); font-size: 1.15rem; font-weight: 600; margin-bottom: 1rem; border-left: 3px solid var(--color-primary); padding-left: 0.5rem;">প্রয়োজনীয় লিংক</h4>
+          <ul class="footer-nav" style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.6rem;">
+            <li><a href="index.html" style="color: var(--color-text-secondary); text-decoration: none;"><i class="fas fa-angle-right" style="color: var(--color-primary); margin-right: 6px;"></i> <span data-i18n="navHome">হোম</span></a></li>
+            <li><a href="booking.html" style="color: var(--color-text-secondary); text-decoration: none;"><i class="fas fa-angle-right" style="color: var(--color-primary); margin-right: 6px;"></i> <span data-i18n="navBooking">স্লট বুকিং</span></a></li>
+            <li><a href="gallery.html" style="color: var(--color-text-secondary); text-decoration: none;"><i class="fas fa-angle-right" style="color: var(--color-primary); margin-right: 6px;"></i> <span data-i18n="navGallery">ফটো ও ভিডিও গ্যালারি</span></a></li>
+            <li><a href="rules.html" style="color: var(--color-text-secondary); text-decoration: none;"><i class="fas fa-angle-right" style="color: var(--color-primary); margin-right: 6px;"></i> <span data-i18n="navRules">গ্রাউন্ড নিয়মাবলী</span></a></li>
+            <li><a href="contact.html" style="color: var(--color-text-secondary); text-decoration: none;"><i class="fas fa-angle-right" style="color: var(--color-primary); margin-right: 6px;"></i> <span data-i18n="navContact">যোগাযোগ ও লোকেশন</span></a></li>
+          </ul>
+        </div>
+
+        <!-- Column 3: Ground Info -->
+        <div class="footer-col">
+          <h4 class="footer-heading" data-i18n="hoursPricing" style="color: var(--color-text-primary); font-size: 1.15rem; font-weight: 600; margin-bottom: 1rem; border-left: 3px solid var(--color-primary); padding-left: 0.5rem;">গ্রাউন্ড তথ্য</h4>
+          <p class="footer-info-item" style="margin-bottom: 0.75rem;"><span class="badge-live-247"><span class="beacon-dot"></span> <span class="open-hours-text">২৪/৭ খোলা (সার্বক্ষণিক উন্মুক্ত)</span></span></p>
+          <p class="footer-info-item" style="color: var(--color-text-secondary); font-size: 0.95rem; margin-bottom: 0.5rem;"><i class="fas fa-map-marker-alt" style="color: var(--color-primary); margin-right: 6px;"></i> বাংলাদেশ</p>
+          <p class="footer-info-item" style="color: var(--color-text-secondary); font-size: 0.95rem; margin-bottom: 0.75rem;"><i class="fas fa-phone-alt" style="color: var(--color-primary); margin-right: 6px;"></i> +৮৮০ ১৭০০-০০০০০০</p>
+          <div>
+            <a href="https://wa.me/8801700000000" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-sm">
+              <i class="fab fa-whatsapp"></i> <span data-i18n="messageUs">হোয়াটসঅ্যাপ চ্যাট</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom" style="border-top: 1px solid var(--color-border); padding-top: 1rem; margin-top: 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <p style="margin: 0; color: var(--color-text-muted); font-size: 0.88rem;" data-i18n="allRights">&copy; 2026 EVER GAIN Indoor Football. সর্বস্বত্ব সংরক্ষিত।</p>
+        <a href="admin.html" style="color: var(--color-text-muted); font-size: 0.85rem; text-decoration: none;"><i class="fas fa-lock"></i> <span data-i18n="adminEntry">অ্যাডমিন প্রবেশ</span></a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
+
+  <!-- App Scripts -->
+  <script src="firebase-config.js"></script>
+  <script src="rules.js"></script>
+</body>
+</html>

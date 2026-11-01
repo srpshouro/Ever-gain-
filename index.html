@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="bn" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0a0f0a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="description" content="EVER GAIN — আপনার ইনডোর ফুটবলের সেরা গন্তব্য। প্রিমিয়াম সিন্থেটিক টার্ফ, শক্তিশালী ফ্লাডলাইট এবং সাশ্রয়ী মূল্যে দিন ও রাতের ফুটবল স্লট বুক করুন।">
+  <link rel="icon" type="image/jpeg" href="assets/logo/logo.jpg">
+  <link rel="apple-touch-icon" href="assets/logo/logo.jpg">
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+Bengali:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <title>EVER GAIN | আপনার ইনডোর ফুটবলের সেরা গন্তব্য</title>
+</head>
+<body>
+
+  <!-- 1. Animated Background -->
+  <div class="bg-animated" aria-hidden="true">
+    <div class="bg-gradient"></div>
+    <canvas class="bg-particles" id="particleCanvas"></canvas>
+    <div class="bg-pattern"></div>
+  </div>
+
+  <!-- 2. Navigation -->
+  <nav class="navbar" id="navbar">
+    <div class="container">
+      <a href="index.html" class="navbar-brand">
+        <img src="assets/logo/logo.jpg" alt="EVER GAIN Logo" class="navbar-logo">
+        <span class="navbar-logo-text">EVER GAIN</span>
+      </a>
+      <div class="nav-links">
+        <a href="index.html" class="nav-link active"><span data-i18n="navHome">হোম</span></a>
+        <a href="booking.html" class="nav-link"><span data-i18n="navBooking">বুকিং</span></a>
+        <a href="gallery.html" class="nav-link"><span data-i18n="navGallery">গ্যালারি</span></a>
+        <a href="rules.html" class="nav-link"><span data-i18n="navRules">নিয়মাবলী</span></a>
+        <a href="contact.html" class="nav-link"><span data-i18n="navContact">যোগাযোগ</span></a>
+      </div>
+      <div class="navbar-right">
+        <button type="button" class="lang-toggle-btn" id="langToggleBtn" onclick="EverGain.toggleLanguage()" aria-label="Language Switcher">
+          <span class="lang-text lang-bn active">বাং</span>
+          <span class="lang-divider">/</span>
+          <span class="lang-text lang-en">EN</span>
+        </button>
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu" aria-expanded="false" aria-controls="mobileMenu">
+          <i class="fas fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- 3. Mobile Menu Overlay -->
+  <div class="mobile-menu" id="mobileMenu" aria-label="Mobile Navigation">
+    <div class="mobile-menu-header">
+      <a href="index.html" class="navbar-brand">
+        <img src="assets/logo/logo.jpg" alt="EVER GAIN Logo" class="navbar-logo">
+        <span class="navbar-logo-text">EVER GAIN</span>
+      </a>
+      <button class="modal-close mobile-menu-close" id="mobileMenuClose" aria-label="মেনু বন্ধ করুন">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="mobile-lang-wrapper" style="padding: 0 var(--space-lg); margin-top: 0.75rem; margin-bottom: 0.5rem;">
+      <button type="button" class="btn btn-secondary btn-sm btn-block" id="langToggleBtnMobile" onclick="EverGain.toggleLanguage()">
+        <i class="fas fa-globe"></i> <span>Language: বাংলা / English</span>
+      </button>
+    </div>
+    <div class="mobile-nav-links">
+      <a href="index.html" class="mobile-nav-link active">
+        <i class="fas fa-home"></i> <span data-i18n="navHome">হোম</span>
+      </a>
+      <a href="booking.html" class="mobile-nav-link">
+        <i class="fas fa-calendar-check"></i> <span data-i18n="navBooking">বুকিং</span>
+      </a>
+      <a href="gallery.html" class="mobile-nav-link">
+        <i class="fas fa-images"></i> <span data-i18n="navGallery">গ্যালারি</span>
+      </a>
+      <a href="rules.html" class="mobile-nav-link">
+        <i class="fas fa-book-open"></i> <span data-i18n="navRules">নিয়মাবলী</span>
+      </a>
+      <a href="contact.html" class="mobile-nav-link">
+        <i class="fas fa-phone"></i> <span data-i18n="navContact">যোগাযোগ</span>
+      </a>
+    </div>
+    <div class="mobile-menu-footer">
+      <div class="mobile-menu-contact">
+        <p><i class="fas fa-phone-alt"></i> <span id="mobileContactPhone">+880 1700-000000</span></p>
+        <p><i class="fab fa-whatsapp"></i> <span>সরাসরি হোয়াটসঅ্যাপে বুকিং সহায়তা</span></p>
+      </div>
+      <a href="booking.html" class="btn btn-primary btn-block">
+        <i class="fas fa-calendar-plus"></i> এখনই স্লট বুক করুন
+      </a>
+    </div>
+  </div>
+
+  <main>
+    <!-- 4. Hero Section - Ultra-Premium Luxury Presentation -->
+    <header class="hero" id="hero">
+      <div class="hero-overlay"></div>
+      <div class="container hero-content">
+        <!-- Live Status Pill with Beacon Ping -->
+        <div class="hero-live-pill animate-in stagger-1">
+          <span class="beacon-dot-live"></span>
+          <span data-i18n="heroLivePill">🟢 লাইভ এরেনা: ২৪/৭ খোলা • প্রিমিয়াম কৃত্রিম টার্ফ • ইনস্ট্যান্ট অনলাইন কনফার্মেশন</span>
+        </div>
+
+        <h1 class="hero-title animate-in stagger-2">
+          <span class="text-accent">EVER</span> GAIN
+        </h1>
+
+        <p class="hero-subtitle text-bengali animate-in stagger-3" data-i18n="heroHeadline">
+          আপনার ইনডোর ফুটবলের সেরা গন্তব্য
+        </p>
+
+        <p class="card-text animate-in stagger-4" style="max-width: 680px; margin: 0 auto 1.25rem; font-size: 1.12rem; line-height: 1.65;" data-i18n="heroDesc">
+          বৃষ্টি, কাদা কিংবা প্রখর রোদের চিন্তা ছেড়ে দিন! বিশ্বমানের সিন্থেটিক টার্ফ, শক্তিশালী ফ্লিকার-ফ্রি লাইটিং ও বন্ধুসুলভ পরিবেশে দিন ও রাতে বন্ধুদের নিয়ে উপভোগ করুন ইনডোর ফুটবলের আসল উন্মাদনা।
+        </p>
+
+        <!-- 3 Floating Interactive Glass Badges -->
+        <div class="hero-floating-badges animate-in stagger-4">
+          <div class="hero-float-badge">
+            <i class="fas fa-star" style="color: #fbbf24;"></i>
+            <span data-i18n="badgeRating">৪.৯/৫ রেটিং (৫০০+ সন্তুষ্ট দল)</span>
+          </div>
+          <div class="hero-float-badge">
+            <i class="fas fa-shield-halved" style="color: var(--color-primary);"></i>
+            <span data-i18n="badgeTurf">উন্নত মানের শক-প্যাড কৃত্রিম টার্ফ (জিরো ইনজুরি)</span>
+          </div>
+          <div class="hero-float-badge">
+            <i class="fas fa-bolt" style="color: #60a5fa;"></i>
+            <span data-i18n="badgeLight">৪K আল্ট্রা এইচডি ফ্লাডলাইট (ফ্লিকার-ফ্রি)</span>
+          </div>
+        </div>
+
+        <!-- Magnetic Hero CTA Buttons -->
+        <div class="hero-cta animate-in stagger-5">
+          <a href="booking.html" class="btn btn-primary btn-lg" style="box-shadow: 0 0 25px rgba(16, 185, 129, 0.45);">
+            <i class="fas fa-calendar-check"></i> <span data-i18n="bookNow">এখনই বুকিং দিন</span>
+          </a>
+          <a href="gallery.html" class="btn btn-secondary btn-lg">
+            <i class="fas fa-play-circle text-accent"></i> <span data-i18n="heroTourBtn">গ্রাউন্ড লাইভ ট্যুর</span>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <!-- Infinite Live Broadcast Marquee Ticker -->
+    <aside class="ticker-section" aria-label="Announcement Ticker">
+      <div class="ticker-track">
+        <!-- Set 1 -->
+        <div class="ticker-item"><i class="fas fa-bolt"></i> <span>আজকের ডে ও নাইট স্লট দ্রুত বুকিং হচ্ছে!</span><span class="ticker-bullet"></span></div>
+        <div class="ticker-item"><i class="fas fa-crown"></i> <span>স্থায়ী সাপ্তাহিক বুকিংয়ে প্রতি ঘণ্টায় ৳৫০ নিশ্চিত ছাড়!</span><span class="ticker-bullet"></span></div>
+        <div class="ticker-item"><i class="fas fa-futbol"></i> <span>উন্নত মানের শক-প্যাড সবুজ টার্ফ — নিরাপদ ও আরামদায়ক খেলা</span><span class="ticker-bullet"></span></div>
+        <div class="ticker-item"><i class="fas fa-mobile-screen"></i> <span>অনলাইনে মাত্র ৩ ক্লিকে ইনস্ট্যান্ট স্লট বুকিং রিকোয়েস্ট</span><span class="ticker-bullet"></span></div>
+        <div class="ticker-item"><i class="fas fa-lightbulb"></i> <span>ফ্লিকার-ফ্রি আন্তর্জাতিক মানের এলইডি ফ্লাডলাইট সিস্টেম</span><span class="ticker-bullet"></span></div>
+        <div class="ticker-item"><i class="fas fa-shower"></i> <span>আধুনিক ড্রেসিং রুম, প্লেয়ার্স লাউঞ্জ ও নিরাপদ পার্কিং জোন</span><span class="ticker-bullet"></span></div>
+        <!-- Set 2 for seamless infinite looping -->
+        <div class="ticker-item"><i class="fas fa-bolt"></i> <span>আজকের ডে ও নাইট স্লট দ্রুত বুকিং হচ্ছে!</span><span class="ticker-bullet"></span></div>
+        <div class="ticker-item"><i class="fas fa-crown"></i> <span>স্থায়ী সাপ্তাহিক বুকিংয়ে প্রতি ঘণ্টায় ৳৫০ নিশ্চিত ছাড়!</span><span class="ticker-bullet"></span></div>
+        <div class="ticker-item"><i class="fas fa-futbol"></i> <span>উন্নত মানের শক-প্যাড সবুজ টার্ফ — নিরাপদ ও আরামদায়ক খেলা</span><span class="ticker-bullet"></span></div>
+        <div class="ticker-item"><i class="fas fa-mobile-screen"></i> <span>অনলাইনে মাত্র ৩ ক্লিকে ইনস্ট্যান্ট স্লট বুকিং রিকোয়েস্ট</span><span class="ticker-bullet"></span></div>
+        <div class="ticker-item"><i class="fas fa-lightbulb"></i> <span>ফ্লিকার-ফ্রি আন্তর্জাতিক মানের এলইডি ফ্লাডলাইট সিস্টেম</span><span class="ticker-bullet"></span></div>
+        <div class="ticker-item"><i class="fas fa-shower"></i> <span>আধুনিক ড্রেসিং রুম, প্লেয়ার্স লাউঞ্জ ও নিরাপদ পার্কিং জোন</span><span class="ticker-bullet"></span></div>
+      </div>
+    </aside>
+
+    <!-- Live Arena Status Bar & Stats Counter Grid -->
+    <div class="container mt-4">
+      <!-- Live Pulse Card -->
+      <div class="live-pulse-card animate-in">
+        <div class="live-pulse-status">
+          <span class="beacon-dot-live"></span>
+          <div>
+            <strong style="display: block; color: var(--color-text-primary);" data-i18n="livePulseTitle">আজকের এরেনা স্ট্যাটাস ও লাইভ পালস</strong>
+            <small style="color: var(--color-text-muted);">
+              <span data-i18n="livePulseDay">☀️ ডে সেশন: স্লট খোলা</span> • <span data-i18n="livePulseNight">🌙 নাইট সেশন: বুকিং চলছে</span>
+            </small>
+          </div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+          <div class="live-clock-badge">
+            <i class="far fa-clock text-accent"></i>
+            <span id="liveClockDisplay">বাংলাদেশ সময়: ০২:০০ PM</span>
+          </div>
+          <a href="booking.html" class="btn btn-primary btn-sm">
+            <span data-i18n="livePulseCta">আজকের স্লট দেখুন</span> <i class="fas fa-arrow-right"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- 4 Key Stats Counters with requestAnimationFrame Number Ticker -->
+      <div class="stats-counter-grid animate-in" id="statsCounterGrid">
+        <div class="stat-counter-card">
+          <i class="fas fa-trophy stat-counter-icon"></i>
+          <div class="stat-counter-value" data-target="500">০</div>
+          <div class="stat-counter-label" data-i18n="statMatches">সফল ম্যাচ অনুষ্ঠিত</div>
+        </div>
+        <div class="stat-counter-card">
+          <i class="fas fa-clock stat-counter-icon" style="color: #60a5fa;"></i>
+          <div class="stat-counter-value" data-text="২৪/৭">২৪/৭</div>
+          <div class="stat-counter-label" data-i18n="statOpen">সার্বক্ষণিক খোলা</div>
+        </div>
+        <div class="stat-counter-card">
+          <i class="fas fa-users stat-counter-icon" style="color: #f59e0b;"></i>
+          <div class="stat-counter-value" data-target="50">০</div>
+          <div class="stat-counter-label" data-i18n="statTeams">নিবন্ধিত নিয়মিত দল</div>
+        </div>
+        <div class="stat-counter-card">
+          <i class="fas fa-heart stat-counter-icon" style="color: #ec4899;"></i>
+          <div class="stat-counter-value" data-target="100">০</div>
+          <div class="stat-counter-label" data-i18n="statSatisfied">গ্রাহক সন্তুষ্টি</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Quick Booking Cards -->
+    <section class="section animate-in" id="quick-booking">
+      <div class="container">
+        <div class="text-center mb-4">
+          <h2 class="section-title" data-i18n="quickBooking">বুকিং ক্যাটাগরি</h2>
+          <p class="section-subtitle" data-i18n="quickBookingSubtitle">আপনার সুবিধাজনক সময়ে ইনডোর ফুটবলের অনন্য অভিজ্ঞতা উপভোগ করুন</p>
+        </div>
+        <div class="grid-2">
+          <!-- Day Booking Card -->
+          <article class="card pricing-card pricing-card-day animate-in stagger-1">
+            <div class="card-icon">
+              <i class="fas fa-sun"></i>
+            </div>
+            <div class="price-save" data-i18n="daySaveBadge">৳৫০ বিশেষ ছাড়</div>
+            <h3 class="card-title" data-i18n="dayBooking">ডে বুকিং</h3>
+            <p class="card-text" data-i18n="dayBookingDesc">
+              সকাল ৬:০০ টা থেকে বিকেল ৫:০০ টা পর্যন্ত। খোলামেলা মনোরম পরিবেশ ও প্রাকৃতিক আলোয় প্রাণবন্ত ফুটবল ম্যাচ খেলুন বন্ধুদের সাথে।
+            </p>
+            <div class="price-current">
+              <span class="price-original" id="quickDayOriginalPrice">৳৬০০</span>
+              <span class="price-amount" id="quickDayPrice">৳৫৫০</span>
+              <span class="price-label" data-i18n="perHour">/ ঘণ্টা</span>
+            </div>
+            <a href="booking.html?type=day" class="btn btn-primary btn-block">
+              <i class="fas fa-ticket-alt"></i> <span data-i18n="bookDaySlot">স্লট বুক করুন</span>
+            </a>
+          </article>
+
+          <!-- Night Booking Card -->
+          <article class="card pricing-card pricing-card-night animate-in stagger-2">
+            <div class="card-icon">
+              <i class="fas fa-moon"></i>
+            </div>
+            <div class="badge badge-confirmed" data-i18n="nightSaveBadge">আন্তর্জাতিক ফ্লাডলাইট</div>
+            <h3 class="card-title" data-i18n="nightBooking">নাইট বুকিং</h3>
+            <p class="card-text" data-i18n="nightBookingDesc">
+              সন্ধ্যা ৬:০০ টা থেকে রাত ১২:০০ টা পর্যন্ত। উচ্চক্ষমতাসম্পন্ন এলইডি ফ্লাডলাইটের উজ্জ্বল আলোয় রোমাঞ্চকর নাইট ফুটবলের সেরা অনুভূতি।
+            </p>
+            <div class="price-current">
+              <span class="price-amount" id="quickNightPrice">৳৯০০</span>
+              <span class="price-label" data-i18n="perHour">/ ঘণ্টা</span>
+            </div>
+            <a href="booking.html?type=night" class="btn btn-primary btn-block">
+              <i class="fas fa-ticket-alt"></i> <span data-i18n="bookNightSlot">স্লট বুক করুন</span>
+            </a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Pricing Overview -->
+    <section class="section animate-in" id="pricing-overview">
+      <div class="container">
+        <div class="text-center mb-4">
+          <h2 class="section-title" data-i18n="pricingTitle">মূল্য তালিকা ও সাশ্রয়ী অফার</h2>
+          <p class="section-subtitle" data-i18n="pricingSubtitle">সকলের সাধ্যের মধ্যে সেরা সুবিধা ও পেশাদার ইনডোর গ্রাউন্ডের নিশ্চয়তা</p>
+        </div>
+        <div class="grid-2">
+          <!-- Normal Booking Comparison Card -->
+          <div class="card animate-in stagger-1">
+            <div class="card-title">
+              <i class="fas fa-calendar-day text-accent"></i> <span data-i18n="normalCardTitle">সাধারণ বুকিং</span>
+            </div>
+            <p class="card-text" data-i18n="normalCardDesc">
+              যেকোনো একটি নির্দিষ্ট দিনের জন্য একক বুকিং। যখন খুশি স্লট খালি থাকা সাপেক্ষে বুকিং সম্পন্ন করুন।
+            </p>
+            
+            <div style="display: flex; flex-direction: column; gap: 1rem; margin: 1.5rem 0;">
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: rgba(0,0,0,0.25); border-radius: var(--radius-md); border: 1px solid var(--color-border);">
+                <div>
+                  <strong style="display: block; color: var(--color-text-primary);" data-i18n="daySessionTitle"><i class="fas fa-sun" style="color: #f59e0b; margin-right: 6px;"></i> ডে সেশন</strong>
+                  <small style="color: var(--color-text-muted);" data-i18n="daySessionHours">সকাল ৬:০০ — বিকাল ৫:০০</small>
+                </div>
+                <div style="text-align: right;">
+                  <span class="price-original" id="overviewNormalDayOriginal">৳৬০০</span>
+                  <span style="font-size: 1.35rem; font-weight: 700; color: var(--color-primary-light);" id="overviewNormalDayPrice">৳৫৫০</span>
+                  <span class="price-label" data-i18n="perHour">/ঘণ্টা</span>
+                </div>
+              </div>
+
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: rgba(0,0,0,0.25); border-radius: var(--radius-md); border: 1px solid var(--color-border);">
+                <div>
+                  <strong style="display: block; color: var(--color-text-primary);" data-i18n="nightSessionTitle"><i class="fas fa-moon" style="color: #60a5fa; margin-right: 6px;"></i> নাইট সেশন</strong>
+                  <small style="color: var(--color-text-muted);" data-i18n="nightSessionHours">সন্ধ্যা ৬:০০ — রাত ১২:০০+</small>
+                </div>
+                <div style="text-align: right;">
+                  <span style="font-size: 1.35rem; font-weight: 700; color: var(--color-primary-light);" id="overviewNormalNightPrice">৳৯০০</span>
+                  <span class="price-label" data-i18n="perHour">/ঘণ্টা</span>
+                </div>
+              </div>
+            </div>
+
+            <a href="booking.html" class="btn btn-secondary btn-block">
+              <i class="fas fa-calendar-alt"></i> <span data-i18n="bookNow">এখনই বুকিং দিন</span>
+            </a>
+          </div>
+
+          <!-- Permanent Booking Comparison Card -->
+          <div class="card card-premium animate-in stagger-2">
+            <div class="card-title">
+              <span class="permanent-badge" data-i18n="permanentBadge">
+                <i class="fas fa-crown"></i> বিশেষ নিয়মিত অফার
+              </span>
+            </div>
+            <p class="card-text" data-i18n="permanentSubtitle">
+              প্রতি সপ্তাহে আপনার দলের জন্য নির্দিষ্ট দিন ও সময় নির্ধারিত থাকবে। সাথে প্রতি ঘণ্টায় নিশ্চিত ৳৫০ সাশ্রয়!
+            </p>
+            
+            <div style="display: flex; flex-direction: column; gap: 1rem; margin: 1.5rem 0;">
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: rgba(0,0,0,0.3); border-radius: var(--radius-md); border: 1px solid var(--color-border-hover);">
+                <div>
+                  <strong style="display: block; color: var(--color-text-primary);" data-i18n="permanentDayPricing"><i class="fas fa-sun" style="color: #f59e0b; margin-right: 6px;"></i> স্থায়ী ডে স্লট</strong>
+                  <span class="price-save" data-i18n="daySaveBadge">৳৫০ সাশ্রয়</span>
+                </div>
+                <div style="text-align: right;">
+                  <span class="price-original" id="overviewPermanentDayOriginal">৳৫৫০</span>
+                  <span style="font-size: 1.35rem; font-weight: 700; color: var(--color-accent-light);" id="overviewPermanentDayPrice">৳৫০০</span>
+                  <span class="price-label" data-i18n="perHour">/ঘণ্টা</span>
+                </div>
+              </div>
+
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: rgba(0,0,0,0.3); border-radius: var(--radius-md); border: 1px solid var(--color-border-hover);">
+                <div>
+                  <strong style="display: block; color: var(--color-text-primary);" data-i18n="permanentNightPricing"><i class="fas fa-moon" style="color: #60a5fa; margin-right: 6px;"></i> স্থায়ী নাইট স্লট</strong>
+                  <span class="price-save" data-i18n="daySaveBadge">৳৫০ সাশ্রয়</span>
+                </div>
+                <div style="text-align: right;">
+                  <span class="price-original" id="overviewPermanentNightOriginal">৳৯০০</span>
+                  <span style="font-size: 1.35rem; font-weight: 700; color: var(--color-accent-light);" id="overviewPermanentNightPrice">৳৮৫০</span>
+                  <span class="price-label" data-i18n="perHour">/ঘণ্টা</span>
+                </div>
+              </div>
+            </div>
+
+            <a href="booking.html?mode=permanent" class="btn btn-primary btn-block">
+              <i class="fas fa-crown"></i> স্থায়ী বুকিং আবেদন করুন
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6.5. Interactive Turf Match Calculator Section (Ultra-Premium Polish) -->
+    <section class="section animate-in" id="turf-calculator">
+      <div class="container">
+        <div class="text-center mb-4">
+          <h2 class="section-title" data-i18n="calcTitle">ম্যাচ খরচ ক্যালকুলেটর</h2>
+          <p class="section-subtitle" data-i18n="calcSubtitle">আপনার ম্যাচ সময় ও সেশন অনুযায়ী তাৎক্ষণিক খরচ ও সাশ্রয় হিসাব করুন</p>
+        </div>
+
+        <div class="calc-card">
+          <div class="calc-grid">
+            <!-- Calculator Controls -->
+            <div>
+              <!-- 1. Session Picker -->
+              <div class="mb-3">
+                <label class="calc-group-title" data-i18n="calcSessionLabel">
+                  <i class="fas fa-sun text-accent"></i> সেশন নির্বাচন করুন:
+                </label>
+                <div class="calc-option-group" id="calcSessionGroup">
+                  <button type="button" class="calc-pill-btn active" data-session="day">
+                    <i class="fas fa-sun" style="color: #f59e0b; margin-right: 5px;"></i> ডে সেশন (৳৫৫০/ঘণ্টা)
+                  </button>
+                  <button type="button" class="calc-pill-btn" data-session="night">
+                    <i class="fas fa-moon" style="color: #60a5fa; margin-right: 5px;"></i> নাইট সেশন (৳৯০০/ঘণ্টা)
+                  </button>
+                </div>
+              </div>
+
+              <!-- 2. Match Duration Picker -->
+              <div class="mb-3">
+                <label class="calc-group-title" data-i18n="calcDurationLabel">
+                  <i class="fas fa-stopwatch text-accent"></i> খেলার সময়কাল বেছে নিন:
+                </label>
+                <div class="calc-option-group" id="calcDurationGroup">
+                  <button type="button" class="calc-pill-btn active" data-hours="1">১ ঘণ্টা</button>
+                  <button type="button" class="calc-pill-btn" data-hours="1.5">১.৫ ঘণ্টা</button>
+                  <button type="button" class="calc-pill-btn" data-hours="2">২ ঘণ্টা</button>
+                  <button type="button" class="calc-pill-btn" data-hours="3">৩ ঘণ্টা</button>
+                </div>
+              </div>
+
+              <!-- 3. Booking Type Toggle -->
+              <div class="mb-2">
+                <label class="calc-group-title" data-i18n="calcTypeLabel">
+                  <i class="fas fa-crown text-accent"></i> বুকিং প্যাকেজ ধরন:
+                </label>
+                <div class="calc-option-group" id="calcTypeGroup">
+                  <button type="button" class="calc-pill-btn active" data-type="normal" data-i18n="calcSingleMatch">
+                    সাধারণ ম্যাচ
+                  </button>
+                  <button type="button" class="calc-pill-btn" data-type="permanent" data-i18n="calcPermMatch">
+                    👑 সাপ্তাহিক স্থায়ী বুকিং
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Realtime Dynamic Calculation Result Box -->
+            <div class="calc-result-box">
+              <div class="calc-result-title" data-i18n="calcEstCost">আনুমানিক ম্যাচ ফি</div>
+              <div class="calc-price-display" id="calcResultPrice">৳৫৫০</div>
+              <div class="calc-badge-save" id="calcSaveNotice" style="display: none;" data-i18n="calcSaveLabel">
+                স্থায়ী বুকিং ছাড়: প্রতি ঘণ্টায় ৳৫০ সাশ্রয়
+              </div>
+              <p style="font-size: 0.88rem; color: var(--color-text-secondary); margin-bottom: 1.25rem;" id="calcSummaryText">
+                ১ ঘণ্টা ডে ম্যাচ • সাধারণ বুকিং
+              </p>
+              <a href="booking.html?type=day" class="btn btn-primary btn-block btn-lg" id="calcBookNowBtn" style="box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);">
+                <i class="fas fa-calendar-check"></i> <span data-i18n="calcBookBtn">এই প্যাকেজে স্লট বুক করুন</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. Why Choose EVER GAIN -->
+    <section class="section animate-in" id="why-choose">
+      <div class="container">
+        <div class="text-center mb-4">
+          <h2 class="section-title" data-i18n="whyChooseTitle">কেন EVER GAIN বেছে নিবেন?</h2>
+          <p class="section-subtitle" data-i18n="whyChooseSubtitle">আমাদের আধুনিক সুযোগ-সুবিধা যা আপনার খেলার অভিজ্ঞতাকে করে তুলবে অতুলনীয়</p>
+        </div>
+        <div class="grid-3">
+          <!-- Feature 1 -->
+          <article class="card animate-in stagger-1">
+            <div class="card-icon">
+              <i class="fas fa-futbol"></i>
+            </div>
+            <h3 class="card-title" data-i18n="feature1Title">প্রিমিয়াম ইনডোর গ্রাউন্ড</h3>
+            <p class="card-text" data-i18n="feature1Desc">
+              আন্তর্জাতিক মানের শক-অ্যাবজরবিং কৃত্রিম টার্ফ, যা খেলোয়াড়দের হাঁটু ও গোড়ালির আঘাত প্রতিরোধে সহায়তা করে।
+            </p>
+          </article>
+
+          <!-- Feature 2 -->
+          <article class="card animate-in stagger-2">
+            <div class="card-icon">
+              <i class="fas fa-lightbulb"></i>
+            </div>
+            <h3 class="card-title" data-i18n="feature2Title">আধুনিক লাইটিং সিস্টেম</h3>
+            <p class="card-text" data-i18n="feature2Desc">
+              উন্নত প্রযুক্তির ফ্লিকার-ফ্রি পেশাদার এলইডি ফ্লাডলাইট, যা রাতেও দিনের মতো পরিষ্কার দৃষ্টি নিশ্চিত করে।
+            </p>
+          </article>
+
+          <!-- Feature 3 -->
+          <article class="card animate-in stagger-3">
+            <div class="card-icon">
+              <i class="fas fa-clock"></i>
+            </div>
+            <h3 class="card-title" data-i18n="feature3Title">সুবিধাজনক সময়সূচি</h3>
+            <p class="card-text" data-i18n="feature3Desc">
+              সকাল ৬:০০ টা থেকে রাত ১২:০০ টা পর্যন্ত একটানা স্লট সুবিধা। নিয়মিত খেলোয়াড়দের জন্য রয়েছে সাপ্তাহিক স্থায়ী রিজার্ভেশন।
+            </p>
+          </article>
+
+          <!-- Feature 4 -->
+          <article class="card animate-in stagger-4">
+            <div class="card-icon">
+              <i class="fas fa-hand-holding-dollar"></i>
+            </div>
+            <h3 class="card-title" data-i18n="feature4Title">সাশ্রয়ী মূল্য</h3>
+            <p class="card-text" data-i18n="feature4Desc">
+              গ্রাম ও মফস্বল এলাকার সাধারণ ফুটবলপ্রেমীদের বাজেটের কথা মাথায় রেখে সবচেয়ে সাশ্রয়ী প্যাকেজ ও স্থায়ী বুকিং ডিসকাউন্ট।
+            </p>
+          </article>
+
+          <!-- Feature 5 -->
+          <article class="card animate-in stagger-5">
+            <div class="card-icon">
+              <i class="fas fa-mobile-screen-button"></i>
+            </div>
+            <h3 class="card-title" data-i18n="feature5Title">সহজ অনলাইন বুকিং</h3>
+            <p class="card-text" data-i18n="feature5Desc">
+              কোনো জটিলতা ছাড়া আপনার মোবাইল থেকেই সহজে ক্যালেন্ডার দেখে পছন্দের দিন ও স্লট নির্বাচন করে দ্রুত নিশ্চিত করুন।
+            </p>
+          </article>
+
+          <!-- Feature 6 -->
+          <article class="card animate-in stagger-6">
+            <div class="card-icon">
+              <i class="fas fa-handshake-angle"></i>
+            </div>
+            <h3 class="card-title" data-i18n="feature6Title">বন্ধুত্বপূর্ণ পরিবেশ</h3>
+            <p class="card-text" data-i18n="feature6Desc">
+              পরিচ্ছন্ন ড্রেসিং রুম, বিশ্রামাগার, নিরাপদ বিশুদ্ধ খাবার পানি ও সর্বদাই আন্তরিক কর্মীদলের সার্বক্ষণিক সেবা।
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. Gallery Preview -->
+    <section class="section animate-in" id="gallery-preview">
+      <div class="container">
+        <div class="text-center mb-4">
+          <h2 class="section-title">আমাদের গ্রাউন্ড</h2>
+          <p class="section-subtitle">EVER GAIN ইনডোর ফুটবলের নজরকাড়া পরিবেশের এক ঝলক</p>
+        </div>
+        <div class="gallery-grid" id="galleryPreviewGrid">
+          <!-- Real Turf Photo 1 -->
+          <div class="gallery-item animate-in stagger-1" onclick="window.location.href='gallery.html'" role="button" tabindex="0" title="গ্যালারি দেখুন">
+            <img src="assets/images/Evergain2.jpg" alt="EVER GAIN Turf" class="gallery-img" loading="lazy">
+            <div class="gallery-hover-indicator" aria-hidden="true"><i class="fas fa-expand"></i></div>
+          </div>
+
+          <!-- Real Turf Photo 2 -->
+          <div class="gallery-item animate-in stagger-2" onclick="window.location.href='gallery.html'" role="button" tabindex="0" title="গ্যালারি দেখুন">
+            <img src="assets/images/Evergain3.jpg" alt="EVER GAIN Turf" class="gallery-img" loading="lazy">
+            <div class="gallery-hover-indicator" aria-hidden="true"><i class="fas fa-expand"></i></div>
+          </div>
+
+          <!-- Real Turf Photo 3 -->
+          <div class="gallery-item animate-in stagger-3" onclick="window.location.href='gallery.html'" role="button" tabindex="0" title="গ্যালারি দেখুন">
+            <img src="assets/images/Evergain4.jpg" alt="EVER GAIN Turf" class="gallery-img" loading="lazy">
+            <div class="gallery-hover-indicator" aria-hidden="true"><i class="fas fa-expand"></i></div>
+          </div>
+
+          <!-- Real Turf Photo 4 -->
+          <div class="gallery-item animate-in stagger-4" onclick="window.location.href='gallery.html'" role="button" tabindex="0" title="গ্যালারি দেখুন">
+            <img src="assets/images/Evergain5.jpg" alt="EVER GAIN Turf" class="gallery-img" loading="lazy">
+            <div class="gallery-hover-indicator" aria-hidden="true"><i class="fas fa-expand"></i></div>
+          </div>
+
+          <!-- Real Turf Photo 5 -->
+          <div class="gallery-item animate-in stagger-5" onclick="window.location.href='gallery.html'" role="button" tabindex="0" title="গ্যালারি দেখুন">
+            <img src="assets/images/Evergain6.jpg" alt="EVER GAIN Turf" class="gallery-img" loading="lazy">
+            <div class="gallery-hover-indicator" aria-hidden="true"><i class="fas fa-expand"></i></div>
+          </div>
+
+          <!-- Real Turf Photo 6 -->
+          <div class="gallery-item animate-in stagger-6" onclick="window.location.href='gallery.html'" role="button" tabindex="0" title="গ্যালারি দেখুন">
+            <img src="assets/images/Evergain7.jpg" alt="EVER GAIN Turf" class="gallery-img" loading="lazy">
+            <div class="gallery-hover-indicator" aria-hidden="true"><i class="fas fa-expand"></i></div>
+          </div>
+        </div>
+        <div class="text-center mt-4">
+          <a href="gallery.html" class="btn btn-secondary btn-lg">
+            <i class="fas fa-images"></i> <span data-i18n="viewFullGallery">সম্পূর্ণ গ্যালারি দেখুন</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. Permanent Booking Highlight -->
+    <section class="section animate-in" id="permanent-highlight">
+      <div class="container">
+        <div class="card card-premium" style="position: relative; overflow: hidden; padding: 2.5rem 2rem;">
+          <div class="text-center mb-3">
+            <span class="permanent-badge">
+              <i class="fas fa-crown"></i> <span data-i18n="permanentBadge">বিশেষ নিয়মিত অফার</span>
+            </span>
+            <h2 class="section-title mt-2" data-i18n="permanentTitle">স্থায়ী বুকিং</h2>
+            <p class="section-subtitle" data-i18n="permanentSubtitle">আপনার প্রিয় দলের জন্য প্রতি সপ্তাহের নির্দিষ্ট দিন ও স্লট নিশ্চিত করুন</p>
+          </div>
+
+          <div style="max-width: 800px; margin: 0 auto;">
+            <p class="card-text text-center mb-4" style="font-size: 1.05rem; line-height: 1.7;" data-i18n="permanentDesc">
+              আপনি বা আপনার টিম কি নিয়মিত ফুটবল খেলেন? EVER GAIN স্থায়ী বুকিং সুবিধার মাধ্যমে আপনি প্রতি সপ্তাহের জন্য একটি নির্দিষ্ট দিন ও নির্দিষ্ট সময় স্থায়ীভাবে বুক করে রাখতে পারবেন। স্লট হারিয়ে যাওয়ার কোনো ঝুঁকি নেই এবং প্রতিটি ম্যাচের প্রতি ঘণ্টায় উপভোগ করবেন সরাসরি <strong>৳৫০ নিশ্চিত ছাড়</strong>!
+            </p>
+
+            <!-- Condition prominently shown -->
+            <div class="condition-box" style="margin-bottom: 2rem;">
+              <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; color: #fbbf24; font-size: 1.1rem; font-weight: 600;">
+                <i class="fas fa-circle-exclamation"></i>
+                <span data-i18n="permanentCondTitle">স্থায়ী বুকিংয়ের প্রধান শর্তাবলী</span>
+              </div>
+              <p style="margin: 0; color: var(--color-text-primary); font-size: 1.05rem; font-weight: 600;">
+                <mark style="background: rgba(245, 158, 11, 0.2); color: #fde68a; padding: 2px 8px; border-radius: 4px;" data-i18n="permanentCondHighlight">প্রতি সপ্তাহে অন্তত ১টি ম্যাচ খেলতে হবে</mark>
+              </p>
+              <p style="margin-top: 0.5rem; font-size: 0.9rem; color: var(--color-text-secondary); line-height: 1.5;" data-i18n="permanentCondNote">
+                স্থায়ী বুকিং সচল রাখতে সপ্তাহে ন্যূনতম একটি ম্যাচ আয়োজন করা আবশ্যক। কোনো সপ্তাহে বিশেষ কারণে খেলতে অপারগ হলে অন্তত ২৪ ঘণ্টা পূর্বে ম্যানেজমেন্টকে জানিয়ে স্লট রিশিডিউল করতে হবে।
+              </p>
+            </div>
+
+            <div class="grid-3 mb-4">
+              <div style="background: rgba(0,0,0,0.25); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--color-border); text-align: center;">
+                <i class="fas fa-calendar-check text-accent" style="font-size: 1.5rem; margin-bottom: 0.5rem; display: block;"></i>
+                <strong style="color: var(--color-text-primary); display: block;" data-i18n="permPoint1Title">নির্দিষ্ট স্লট নিশ্চিত</strong>
+                <small style="color: var(--color-text-muted);" data-i18n="permPoint1Desc">অন্য কেউ আপনার স্লট বুক করতে পারবে না</small>
+              </div>
+              <div style="background: rgba(0,0,0,0.25); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--color-border); text-align: center;">
+                <i class="fas fa-tags text-accent" style="font-size: 1.5rem; margin-bottom: 0.5rem; display: block;"></i>
+                <strong style="color: var(--color-text-primary); display: block;" data-i18n="permPoint2Title">ঘণ্টাপ্রতি ৳৫০ সাশ্রয়</strong>
+                <small style="color: var(--color-text-muted);" data-i18n="permPoint2Desc">ডে ও নাইট উভয় স্লটেই প্রযোজ্য</small>
+              </div>
+              <div style="background: rgba(0,0,0,0.25); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--color-border); text-align: center;">
+                <i class="fas fa-headset text-accent" style="font-size: 1.5rem; margin-bottom: 0.5rem; display: block;"></i>
+                <strong style="color: var(--color-text-primary); display: block;" data-i18n="permPoint3Title">ভিআইপি হেল্পলাইন</strong>
+                <small style="color: var(--color-text-muted);" data-i18n="permPoint3Desc">সরাসরি হোয়াটসঅ্যাপে সার্বক্ষণিক সহায়তা</small>
+              </div>
+            </div>
+
+            <div class="text-center">
+              <a href="booking.html?mode=permanent" class="btn btn-primary btn-lg">
+                <i class="fas fa-crown"></i> <span data-i18n="permanentCta">স্থায়ী বুকিং করুন</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9.5. Player Reviews & Community Testimonials Section (Social Proof) -->
+    <section class="section animate-in" id="testimonials">
+      <div class="container">
+        <div class="text-center mb-4">
+          <h2 class="section-title" data-i18n="testimonialsTitle">খেলোয়াড়দের অভিজ্ঞতা ও মতামত</h2>
+          <p class="section-subtitle" data-i18n="testimonialsSubtitle">বগুড়ার শীর্ষ ফুটবল দল ও খেলোয়াড়রা EVER GAIN সম্পর্কে যা বলছেন</p>
+        </div>
+        <div class="testimonials-grid">
+          <!-- Testimonial 1 -->
+          <div class="testimonial-card">
+            <div>
+              <div class="testimonial-stars">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+              </div>
+              <p class="testimonial-quote" data-i18n="testi1Text">
+                "বগুড়ায় গ্রামের মনোরম পরিবেশে এরকম প্রিমিয়াম টার্ফ আগে দেখিনি! লাইটিং এবং গ্রাউন্ড কোয়ালিটি সত্যিই অসাধারণ।"
+              </p>
+            </div>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar">তা</div>
+              <div>
+                <div class="testimonial-name" data-i18n="testi1Name">তানভীর আহমেদ</div>
+                <div class="testimonial-team" data-i18n="testi1Team">ক্যাপ্টেন, বগুড়া থান্ডার ফুটবল ক্লাব</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Testimonial 2 -->
+          <div class="testimonial-card">
+            <div>
+              <div class="testimonial-stars">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+              </div>
+              <p class="testimonial-quote" data-i18n="testi2Text">
+                "আমরা প্রতি শুক্রবার নাইট স্লটে স্থায়ী বুকিং নিয়ে খেলি। ৫০ টাকা ছাড় এবং নিশ্চিত স্লট—সব মিলিয়ে দারুণ সার্ভিস!"
+              </p>
+            </div>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar" style="background: linear-gradient(135deg, #3b82f6 0%, #1e3a8a 100%);">সা</div>
+              <div>
+                <div class="testimonial-name" data-i18n="testi2Name">সাকিব আল হাসান</div>
+                <div class="testimonial-team" data-i18n="testi2Team">টিম লিডার, রেড ডেভিলস স্কোয়াড</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Testimonial 3 -->
+          <div class="testimonial-card">
+            <div>
+              <div class="testimonial-stars">
+                <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+              </div>
+              <p class="testimonial-quote" data-i18n="testi3Text">
+                "মোবাইল দিয়ে ৩ মিনিটে বুকিং করা যায়। বৃষ্টি কিংবা কাদার কোনো চিন্তা নেই। লকার রুম ও সার্ভিসও ফ্রেশ।"
+              </p>
+            </div>
+            <div class="testimonial-author">
+              <div class="testimonial-avatar" style="background: linear-gradient(135deg, #f59e0b 0%, #b45309 100%);">মা</div>
+              <div>
+                <div class="testimonial-name" data-i18n="testi3Name">মাহিন চৌধুরী</div>
+                <div class="testimonial-team" data-i18n="testi3Team">টিম ক্যাপ্টেন, ইলেভেন স্টারস</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10. Contact Preview -->
+    <section class="section animate-in" id="contact-preview">
+      <div class="container">
+        <div class="text-center mb-4">
+          <h2 class="section-title" data-i18n="contactPreviewTitle">যোগাযোগ ও অবস্থান</h2>
+          <p class="section-subtitle" data-i18n="contactPreviewSubtitle">যেকোনো প্রশ্ন, স্লট যাচাই কিংবা সরাসরি কথা বলতে আমাদের সাথে যোগাযোগ করুন</p>
+        </div>
+        <div class="grid-3">
+          <!-- Phone Card -->
+          <article class="card animate-in stagger-1 text-center">
+            <div class="card-icon">
+              <i class="fas fa-phone-volume"></i>
+            </div>
+            <h3 class="card-title" data-i18n="phoneCardTitle">সরাসরি ফোন করুন</h3>
+            <p class="card-text" data-i18n="phoneCardDesc">যেকোনো তথ্য জানতে বা স্লট অনুসন্ধানে সরাসরি আমাদের কল দিন</p>
+            <div class="mt-3">
+              <a href="tel:+8801700000000" class="btn btn-secondary btn-block" id="contactPhoneBtn">
+                <i class="fas fa-phone"></i> <span id="contactPhoneDisplay">+880 1700-000000</span>
+              </a>
+            </div>
+          </article>
+
+          <!-- WhatsApp Card -->
+          <article class="card animate-in stagger-2 text-center">
+            <div class="card-icon">
+              <i class="fab fa-whatsapp" style="color: #25d366;"></i>
+            </div>
+            <h3 class="card-title" data-i18n="waCardTitle">হোয়াটসঅ্যাপ চ্যাট</h3>
+            <p class="card-text" data-i18n="waCardDesc">ছবি, ভিডিও ও দ্রুত মেসেজিংয়ের মাধ্যমে তাৎক্ষণিক সহায়তা পান</p>
+            <div class="mt-3">
+              <a href="https://wa.me/8801700000000" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-block" id="contactWhatsappBtn">
+                <i class="fab fa-whatsapp"></i> <span id="contactWhatsappDisplay" data-i18n="messageUs">হোয়াটসঅ্যাপে চ্যাট করুন</span>
+              </a>
+            </div>
+          </article>
+
+          <!-- Location Card -->
+          <article class="card animate-in stagger-3 text-center">
+            <div class="card-icon">
+              <i class="fas fa-location-dot"></i>
+            </div>
+            <h3 class="card-title" data-i18n="locCardTitle">গ্রাউন্ডের ঠিকানা</h3>
+            <p class="card-text" id="contactAddressDisplay">
+              EVER GAIN ইনডোর ফুটবল গ্রাউন্ড<br>বগুড়া সদর, বাংলাদেশ
+            </p>
+            <div class="mt-3">
+              <a href="contact.html" class="btn btn-secondary btn-block">
+                <i class="fas fa-map-location-dot"></i> <span data-i18n="navContact">যোগাযোগ পাতা দেখুন</span>
+              </a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 11. Footer -->
+  <footer class="footer" id="footer">
+    <div class="container">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 2.5rem; margin-bottom: 2.5rem;">
+        <!-- Column 1: Brand -->
+        <div class="footer-col">
+          <a href="index.html" class="navbar-brand" style="margin-bottom: 1rem; display: inline-flex; align-items: center; gap: 8px;">
+            <img src="assets/logo/logo.jpg" alt="EVER GAIN Logo" class="navbar-logo" style="height: 38px;">
+            <span class="navbar-logo-text">EVER GAIN</span>
+          </a>
+          <p class="card-text" style="color: var(--color-text-secondary); line-height: 1.6; margin-bottom: 1.25rem;" data-i18n="footerDesc">
+            আপনার ইনডোর ফুটবলের সেরা গন্তব্য। আধুনিক সিন্থেটিক টার্ফ ও আন্তর্জাতিক মানের ফ্লাডলাইটে দিন ও রাতে সেরা খেলার অভিজ্ঞতা।
+          </p>
+          <div style="display: flex; gap: 0.75rem; align-items: center;">
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" id="footerFbLink" aria-label="Facebook">
+              <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="https://wa.me/8801700000000" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" id="footerWaLink" aria-label="WhatsApp">
+              <i class="fab fa-whatsapp"></i>
+            </a>
+            <a href="tel:+8801700000000" class="btn btn-secondary btn-sm" id="footerPhoneLink" aria-label="Phone">
+              <i class="fas fa-phone"></i>
+            </a>
+          </div>
+        </div>
+
+        <!-- Column 2: Quick Links -->
+        <div class="footer-col">
+          <h4 style="color: var(--color-text-primary); font-size: 1.15rem; font-weight: 600; margin-bottom: 1rem; border-left: 3px solid var(--color-primary); padding-left: 0.5rem;" data-i18n="quickLinks">
+            দ্রুত লিঙ্ক
+          </h4>
+          <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.6rem;">
+            <li><a href="index.html" style="color: var(--color-text-secondary); text-decoration: none; transition: var(--transition-fast);"><i class="fas fa-angle-right" style="color: var(--color-primary); margin-right: 6px;"></i> <span data-i18n="navHome">হোম</span></a></li>
+            <li><a href="booking.html" style="color: var(--color-text-secondary); text-decoration: none; transition: var(--transition-fast);"><i class="fas fa-angle-right" style="color: var(--color-primary); margin-right: 6px;"></i> <span data-i18n="navBooking">স্লট বুকিং</span></a></li>
+            <li><a href="gallery.html" style="color: var(--color-text-secondary); text-decoration: none; transition: var(--transition-fast);"><i class="fas fa-angle-right" style="color: var(--color-primary); margin-right: 6px;"></i> <span data-i18n="navGallery">ফটো ও ভিডিও গ্যালারি</span></a></li>
+            <li><a href="rules.html" style="color: var(--color-text-secondary); text-decoration: none; transition: var(--transition-fast);"><i class="fas fa-angle-right" style="color: var(--color-primary); margin-right: 6px;"></i> <span data-i18n="navRules">গ্রাউন্ড নিয়মাবলী</span></a></li>
+            <li><a href="contact.html" style="color: var(--color-text-secondary); text-decoration: none; transition: var(--transition-fast);"><i class="fas fa-angle-right" style="color: var(--color-primary); margin-right: 6px;"></i> <span data-i18n="navContact">যোগাযোগ ও ম্যাপ</span></a></li>
+          </ul>
+        </div>
+
+        <!-- Column 3: Hours & Pricing -->
+        <div class="footer-col">
+          <h4 style="color: var(--color-text-primary); font-size: 1.15rem; font-weight: 600; margin-bottom: 1rem; border-left: 3px solid var(--color-primary); padding-left: 0.5rem;" data-i18n="hoursPricing">
+            সময়সূচি ও খোলা
+          </h4>
+          <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem; color: var(--color-text-secondary); font-size: 0.95rem;">
+            <li style="display: flex; align-items: center; gap: 8px;">
+              <span class="badge-live-247"><span class="beacon-dot"></span> <span data-i18n="open247Badge">২৪/৭ সার্বক্ষণিক খোলা</span></span>
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: 8px;">
+              <i class="fas fa-sun" style="color: #f59e0b; margin-top: 4px;"></i>
+              <span><strong data-i18n="daySessionTitle">ডে সেশন:</strong> সকাল ৬:০০ — বিকাল ৫:০০ (৳৫৫০/ঘণ্টা)</span>
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: 8px;">
+              <i class="fas fa-moon" style="color: #60a5fa; margin-top: 4px;"></i>
+              <span><strong data-i18n="nightSessionTitle">নাইট সেশন:</strong> সন্ধ্যা ৬:০০ — রাত ১২:০০+ (৳৯০০/ঘণ্টা)</span>
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: 8px;">
+              <i class="fas fa-crown text-accent" style="margin-top: 4px;"></i>
+              <span><strong data-i18n="permanentTitle">স্থায়ী বুকিং:</strong> <span data-i18n="hourlyDiscountNote">প্রতি ঘণ্টায় ৳৫০ সাশ্রয়</span></span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Column 4: Contact Info -->
+        <div class="footer-col">
+          <h4 style="color: var(--color-text-primary); font-size: 1.15rem; font-weight: 600; margin-bottom: 1rem; border-left: 3px solid var(--color-primary); padding-left: 0.5rem;" data-i18n="navContact">
+            যোগাযোগ
+          </h4>
+          <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem; color: var(--color-text-secondary); font-size: 0.95rem;">
+            <li style="display: flex; align-items: flex-start; gap: 8px;">
+              <i class="fas fa-location-dot" style="color: var(--color-primary); margin-top: 4px;"></i>
+              <span id="footerAddress">EVER GAIN গ্রাউন্ড, বাংলাদেশ</span>
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: 8px;">
+              <i class="fas fa-phone" style="color: var(--color-primary); margin-top: 4px;"></i>
+              <span id="footerPhone">+880 1700-000000</span>
+            </li>
+            <li style="display: flex; align-items: flex-start; gap: 8px;">
+              <i class="fas fa-bolt text-accent" style="margin-top: 4px;"></i>
+              <span data-i18n="openHours">২৪ ঘণ্টা লাইটিং ও সার্ভিস সুবিধা</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="border-top: 1px solid var(--color-border); padding-top: 1.5rem; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; font-size: 0.9rem; color: var(--color-text-muted);">
+        <p style="margin: 0;" data-i18n="allRights">© ২০২৬ EVER GAIN. সর্বস্বত্ব সংরক্ষিত।</p>
+        <div>
+          <a href="admin.html" style="color: var(--color-text-muted); text-decoration: none; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 4px;">
+            <i class="fas fa-lock"></i> <span data-i18n="adminEntry">অ্যাডমিন প্রবেশ</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 12. Bottom Navigation (Mobile) -->
+  <nav class="bottom-nav" id="bottomNav">
+    <a href="index.html" class="bottom-nav-item active">
+      <i class="fas fa-home"></i>
+      <span data-i18n="navHome">হোম</span>
+    </a>
+    <a href="booking.html" class="bottom-nav-item">
+      <i class="fas fa-calendar-check"></i>
+      <span data-i18n="navBooking">বুকিং</span>
+    </a>
+    <a href="gallery.html" class="bottom-nav-item">
+      <i class="fas fa-images"></i>
+      <span data-i18n="navGallery">গ্যালারি</span>
+    </a>
+    <a href="rules.html" class="bottom-nav-item">
+      <i class="fas fa-book-open"></i>
+      <span data-i18n="navRules">নিয়মাবলী</span>
+    </a>
+    <a href="contact.html" class="bottom-nav-item">
+      <i class="fas fa-phone"></i>
+      <span data-i18n="navContact">যোগাযোগ</span>
+    </a>
+  </nav>
+
+  <!-- 13. Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Floating Action Buttons (Instant WhatsApp Booking & Scroll-To-Top) -->
+  <div class="floating-actions" aria-label="Quick Actions">
+    <button type="button" class="floating-top-btn" id="floatingTopBtn" aria-label="উপরে যান" title="উপরে যান">
+      <i class="fas fa-chevron-up"></i>
+    </button>
+    <a href="https://wa.me/8801700000000" target="_blank" rel="noopener noreferrer" class="floating-wa-btn" id="floatingWaBtn" aria-label="WhatsApp Booking Chat" title="সরাসরি হোয়াটসঅ্যাপে বুকিং সহায়তা">
+      <i class="fab fa-whatsapp"></i>
+    </a>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
