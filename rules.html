@@ -154,7 +154,7 @@
           <a href="booking.html" class="btn btn-primary btn-lg">
             <i class="fas fa-futbol"></i> <span data-i18n="rulesBookBtn">স্লট বুকিং করুন</span>
           </a>
-          <a href="https://wa.me/8801700000000" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-lg">
+          <a href="https://wa.me/8801700000000" id="rulesWaBtn" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-lg footer-wa-link">
             <i class="fab fa-whatsapp"></i> <span data-i18n="rulesWaBtn">সরাসরি হোয়াটসঅ্যাপে যোগাযোগ</span>
           </a>
         </div>
@@ -204,13 +204,13 @@
             আপনার ইনডোর ফুটবলের সেরা গন্তব্য। আধুনিক সিন্থেটিক টার্ফ ও আন্তর্জাতিক মানের ফ্লাডলাইটে দিন ও রাতে সেরা খেলার অভিজ্ঞতা।
           </p>
           <div class="footer-social" style="display: flex; gap: 0.75rem; align-items: center;">
-            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" aria-label="Facebook">
+            <a href="https://facebook.com" id="footerSocialFacebook" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" aria-label="Facebook">
               <i class="fab fa-facebook-f"></i>
             </a>
-            <a href="https://wa.me/8801700000000" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" aria-label="WhatsApp">
+            <a href="https://wa.me/8801700000000" id="footerSocialWhatsapp" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm footer-wa-link" aria-label="WhatsApp">
               <i class="fab fa-whatsapp"></i>
             </a>
-            <a href="tel:+8801700000000" class="btn btn-secondary btn-sm" aria-label="Phone">
+            <a href="tel:+8801700000000" id="footerSocialPhone" class="btn btn-secondary btn-sm footer-phone-link" aria-label="Phone">
               <i class="fas fa-phone"></i>
             </a>
           </div>
@@ -232,10 +232,10 @@
         <div class="footer-col">
           <h4 class="footer-heading" data-i18n="hoursPricing" style="color: var(--color-text-primary); font-size: 1.15rem; font-weight: 600; margin-bottom: 1rem; border-left: 3px solid var(--color-primary); padding-left: 0.5rem;">গ্রাউন্ড তথ্য</h4>
           <p class="footer-info-item" style="margin-bottom: 0.75rem;"><span class="badge-live-247"><span class="beacon-dot"></span> <span class="open-hours-text">২৪/৭ খোলা (সার্বক্ষণিক উন্মুক্ত)</span></span></p>
-          <p class="footer-info-item" style="color: var(--color-text-secondary); font-size: 0.95rem; margin-bottom: 0.5rem;"><i class="fas fa-map-marker-alt" style="color: var(--color-primary); margin-right: 6px;"></i> বাংলাদেশ</p>
-          <p class="footer-info-item" style="color: var(--color-text-secondary); font-size: 0.95rem; margin-bottom: 0.75rem;"><i class="fas fa-phone-alt" style="color: var(--color-primary); margin-right: 6px;"></i> +৮৮০ ১৭০০-০০০০০০</p>
+          <p class="footer-info-item" style="color: var(--color-text-secondary); font-size: 0.95rem; margin-bottom: 0.5rem;"><i class="fas fa-map-marker-alt" style="color: var(--color-primary); margin-right: 6px;"></i> <span id="footerAddress" class="footer-address-display">Evergain Avenue, Birdal, Sonapur 3180</span></p>
+          <p class="footer-info-item" style="color: var(--color-text-secondary); font-size: 0.95rem; margin-bottom: 0.75rem;"><i class="fas fa-phone-alt" style="color: var(--color-primary); margin-right: 6px;"></i> <a href="tel:+8801700000000" id="footerPhoneLink" class="footer-phone-link" style="color: inherit; text-decoration: none;"><span id="footerPhone" class="footer-phone-display">+৮৮০ ১৭০০-০০০০০০</span></a></p>
           <div>
-            <a href="https://wa.me/8801700000000" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-sm">
+            <a href="https://wa.me/8801700000000" id="footerWhatsappBtn" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-sm footer-wa-link">
               <i class="fab fa-whatsapp"></i> <span data-i18n="messageUs">হোয়াটসঅ্যাপ চ্যাট</span>
             </a>
           </div>
@@ -255,7 +255,7 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
 
   <!-- App Scripts -->
-  <script src="firebase-config.js"></script>
+  <script src="firebase-config.js?v=2.3"></script>
   <script src="rules.js"></script>
 </body>
 </html>

@@ -351,10 +351,10 @@
             <a href="https://facebook.com" id="footerSocialFacebook" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" aria-label="Facebook">
               <i class="fab fa-facebook-f"></i>
             </a>
-            <a href="https://wa.me/8801700000000" id="footerSocialWhatsapp" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm" aria-label="WhatsApp">
+            <a href="https://wa.me/8801700000000" id="footerSocialWhatsapp" target="_blank" rel="noopener noreferrer" class="btn btn-secondary btn-sm footer-wa-link" aria-label="WhatsApp">
               <i class="fab fa-whatsapp"></i>
             </a>
-            <a href="tel:+8801700000000" class="btn btn-secondary btn-sm" aria-label="Phone">
+            <a href="tel:+8801700000000" id="footerSocialPhone" class="btn btn-secondary btn-sm footer-phone-link" aria-label="Phone">
               <i class="fas fa-phone"></i>
             </a>
           </div>
@@ -376,10 +376,10 @@
         <div class="footer-col">
           <h4 class="footer-heading" data-i18n="hoursPricing" style="color: var(--color-text-primary); font-size: 1.15rem; font-weight: 600; margin-bottom: 1rem; border-left: 3px solid var(--color-primary); padding-left: 0.5rem;">গ্রাউন্ড তথ্য</h4>
           <p class="footer-info-item" style="margin-bottom: 0.75rem;"><span class="badge-live-247"><span class="beacon-dot"></span> <span class="open-hours-text" data-i18n="openHours">২৪/৭ খোলা (সার্বক্ষণিক উন্মুক্ত)</span></span></p>
-          <p class="footer-info-item" style="color: var(--color-text-secondary); font-size: 0.95rem; margin-bottom: 0.5rem;"><i class="fas fa-map-marker-alt" style="color: var(--color-primary); margin-right: 6px;"></i> <span id="footerAddressText">বাংলাদেশ</span></p>
-          <p class="footer-info-item" style="color: var(--color-text-secondary); font-size: 0.95rem; margin-bottom: 0.75rem;"><i class="fas fa-phone-alt" style="color: var(--color-primary); margin-right: 6px;"></i> <span id="footerPhoneText">+৮৮০ ১৭০০-০০০০০০</span></p>
+          <p class="footer-info-item" style="color: var(--color-text-secondary); font-size: 0.95rem; margin-bottom: 0.5rem;"><i class="fas fa-map-marker-alt" style="color: var(--color-primary); margin-right: 6px;"></i> <span id="footerAddressText" class="footer-address-display">Evergain Avenue, Birdal, Sonapur 3180</span></p>
+          <p class="footer-info-item" style="color: var(--color-text-secondary); font-size: 0.95rem; margin-bottom: 0.75rem;"><i class="fas fa-phone-alt" style="color: var(--color-primary); margin-right: 6px;"></i> <a href="tel:+8801700000000" id="footerPhoneLink" class="footer-phone-link" style="color: inherit; text-decoration: none;"><span id="footerPhoneText" class="footer-phone-display">+৮৮০ ১৭০০-০০০০০০</span></a></p>
           <div>
-            <a href="https://wa.me/8801700000000" id="footerWhatsappBtn" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-sm">
+            <a href="https://wa.me/8801700000000" id="footerWhatsappBtn" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-sm footer-wa-link">
               <i class="fab fa-whatsapp"></i> <span data-i18n="messageUs">হোয়াটসঅ্যাপ চ্যাট</span>
             </a>
           </div>
@@ -396,7 +396,7 @@
   <!-- Scripts -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
-  <script src="firebase-config.js"></script>
+  <script src="firebase-config.js?v=2.3"></script>
   <script src="contact.js"></script>
 </body>
 </html>

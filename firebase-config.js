@@ -1326,6 +1326,149 @@
   }
 
   // ==========================================================================
+  // Global Settings Synchronization (Footers, WhatsApp, Phone, Address across all pages)
+  // ==========================================================================
+
+  let cachedSettingsData = null;
+
+  function applyGlobalSettingsToDOM(settings) {
+    if (!settings || typeof settings !== 'object') return;
+    cachedSettingsData = settings;
+    try {
+      localStorage.setItem('evergain_cached_settings', JSON.stringify(settings));
+    } catch (e) {}
+
+    const phone = settings.phone || settings.contactPhone || settings.phoneNumber || '';
+    const whatsapp = settings.whatsapp || settings.whatsappNumber || phone || '';
+    const address = settings.address || settings.location || settings.groundAddress || 'Evergain Avenue, Birdal, Sonapur 3180';
+    const mapLink = settings.mapLink || settings.googleMapLink || settings.mapUrl || 'https://maps.app.goo.gl/wP7QLcu8zdaeKqDt8?g_st=ac';
+    const facebook = settings.socialFacebook || settings.facebook || settings.fbUrl || settings.facebookPage || '';
+
+    const isBn = getLanguage() === 'bn';
+
+    // 1. Phone number & Call links
+    if (phone) {
+      let cleanDigits = String(phone).replace(/\D/g, '');
+      if (cleanDigits.startsWith('01')) cleanDigits = '880' + cleanDigits.substring(1);
+      const telHref = 'tel:' + (phone.startsWith('+') ? phone : '+' + cleanDigits);
+
+      const formatted = formatPhone(phone);
+      const displayPhone = isBn ? toBengaliNum(formatted) : formatted;
+
+      // Update all phone text displays
+      const phoneDisplays = document.querySelectorAll('#footerPhone, #footerPhoneText, .footer-phone-display, #contactPhoneDisplay, #mobileContactPhone, .phone-display');
+      phoneDisplays.forEach(function (el) {
+        el.textContent = displayPhone;
+      });
+
+      // Update all call/tel links
+      const phoneLinks = document.querySelectorAll('#footerPhoneLink, #contactPhoneLink, #contactPhoneBtn, #footerSocialPhone, #quickCallBtn, .footer-phone-link, a.phone-link');
+      phoneLinks.forEach(function (el) {
+        el.setAttribute('href', telHref);
+      });
+    }
+
+    // 2. WhatsApp links and displays
+    if (whatsapp) {
+      let cleanWa = String(whatsapp).replace(/\D/g, '');
+      if (cleanWa.startsWith('01')) cleanWa = '880' + cleanWa.substring(1);
+      if (!cleanWa.startsWith('880') && cleanWa.length > 0) cleanWa = '88' + cleanWa;
+      const waHref = cleanWa ? ('https://wa.me/' + cleanWa) : '';
+
+      const formattedWa = formatPhone(whatsapp);
+      const displayWa = isBn ? toBengaliNum(formattedWa) : formattedWa;
+
+      // WhatsApp text displays
+      const waDisplays = document.querySelectorAll('#contactWhatsappDisplay, .whatsapp-display');
+      waDisplays.forEach(function (el) {
+        el.textContent = displayWa;
+      });
+
+      // WhatsApp links
+      const waLinks = document.querySelectorAll('#footerWhatsappBtn, #footerWaLink, #footerSocialWhatsapp, #floatingWaBtn, #contactWhatsappBtn, #quickWaBtn, #rulesWaBtn, .footer-wa-link, a[href*="wa.me"]');
+      waLinks.forEach(function (el) {
+        el.setAttribute('href', waHref);
+      });
+    }
+
+    // 3. Address
+    if (address) {
+      const addressDisplays = document.querySelectorAll('#footerAddress, #footerAddressText, .footer-address-display, #contactAddressDisplay, .address-display');
+      addressDisplays.forEach(function (el) {
+        if (el.id === 'contactAddressDisplay') {
+          el.innerHTML = address.replace(/\n/g, '<br>');
+        } else {
+          el.textContent = address;
+        }
+      });
+    }
+
+    // 4. Google Maps Link
+    if (mapLink) {
+      const mapLinks = document.querySelectorAll('#contactMapLink, #footerMapLink, .map-link');
+      mapLinks.forEach(function (el) {
+        el.setAttribute('href', mapLink);
+      });
+    }
+
+    // 5. Facebook Link
+    if (facebook) {
+      const fbLinks = document.querySelectorAll('#footerSocialFacebook, #footerFbLink, a[aria-label="Facebook"]');
+      fbLinks.forEach(function (el) {
+        el.setAttribute('href', facebook);
+      });
+    }
+
+    if (window.EverGain) {
+      window.EverGain.settings = settings;
+    }
+    window.dispatchEvent(new CustomEvent('evergain:settingsLoaded', { detail: settings }));
+  }
+
+  function initGlobalSettingsSync() {
+    // 1. Immediate render from localStorage cache
+    try {
+      const cached = localStorage.getItem('evergain_cached_settings');
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (parsed && typeof parsed === 'object') {
+          applyGlobalSettingsToDOM(parsed);
+        }
+      }
+    } catch (e) {}
+
+    // 2. Re-apply formatting if language changes
+    window.addEventListener('evergain:languageChanged', function () {
+      if (cachedSettingsData) {
+        applyGlobalSettingsToDOM(cachedSettingsData);
+      }
+    });
+
+    // 3. Realtime sync from Firebase Database
+    function attachFirebaseSettingsListener() {
+      const firebaseDb = window.db || (typeof firebase !== 'undefined' && firebase.database ? firebase.database() : null);
+      if (!firebaseDb) {
+        setTimeout(attachFirebaseSettingsListener, 300);
+        return;
+      }
+      try {
+        firebaseDb.ref('settings').on('value', function (snapshot) {
+          const val = snapshot.val();
+          if (val) {
+            applyGlobalSettingsToDOM(val);
+          }
+        }, function (err) {
+          console.warn('[EverGain] /settings realtime sync note:', err.message);
+        });
+      } catch (err) {
+        console.warn('[EverGain] /settings attach error:', err);
+      }
+    }
+
+    attachFirebaseSettingsListener();
+  }
+
+  // ==========================================================================
   // 5. Expose Functions on EverGain Namespace & Window
   // ==========================================================================
 
@@ -1333,6 +1476,8 @@
   EverGain.setLanguage = setLanguage;
   EverGain.toggleLanguage = toggleLanguage;
   EverGain.applyTranslations = applyTranslations;
+  EverGain.applyGlobalSettingsToDOM = applyGlobalSettingsToDOM;
+  EverGain.initGlobalSettingsSync = initGlobalSettingsSync;
 
   EverGain.showToast = showToast;
   EverGain.formatDate = formatDate;
@@ -1366,6 +1511,7 @@
     initParticles('particleCanvas');
     applyTranslations();
     updateLangToggleUI();
+    initGlobalSettingsSync();
   }
 
   if (document.readyState === 'loading') {
