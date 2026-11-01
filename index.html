@@ -31,8 +31,14 @@
   <nav class="navbar" id="navbar">
     <div class="container">
       <a href="index.html" class="navbar-brand">
-        <img src="assets/logo/logo.jpg" alt="EVER GAIN Logo" class="navbar-logo">
-        <span class="navbar-logo-text">EVER GAIN</span>
+        <div class="brand-crest-wrapper">
+          <img src="assets/logo/logo.jpg" alt="EVER GAIN Logo" class="navbar-logo">
+          <span class="brand-glow-ring"></span>
+        </div>
+        <div class="brand-text-group">
+          <span class="navbar-logo-text">EVER GAIN</span>
+          <span class="navbar-sub-text">PREMIER ARENA</span>
+        </div>
       </a>
       <div class="nav-links">
         <a href="index.html" class="nav-link active"><span data-i18n="navHome">হোম</span></a>
@@ -42,6 +48,10 @@
         <a href="contact.html" class="nav-link"><span data-i18n="navContact">যোগাযোগ</span></a>
       </div>
       <div class="navbar-right">
+        <!-- Luxury Quick Slot Booking Button on Desktop -->
+        <a href="booking.html" class="btn btn-luxury-nav hide-mobile-only">
+          <i class="fas fa-futbol"></i> <span>স্লট বুকিং</span>
+        </a>
         <button type="button" class="lang-toggle-btn" id="langToggleBtn" onclick="EverGain.toggleLanguage()" aria-label="Language Switcher">
           <span class="lang-text lang-bn active">বাং</span>
           <span class="lang-divider">/</span>
@@ -58,8 +68,14 @@
   <div class="mobile-menu" id="mobileMenu" aria-label="Mobile Navigation">
     <div class="mobile-menu-header">
       <a href="index.html" class="navbar-brand">
-        <img src="assets/logo/logo.jpg" alt="EVER GAIN Logo" class="navbar-logo">
-        <span class="navbar-logo-text">EVER GAIN</span>
+        <div class="brand-crest-wrapper">
+          <img src="assets/logo/logo.jpg" alt="EVER GAIN Logo" class="navbar-logo">
+          <span class="brand-glow-ring"></span>
+        </div>
+        <div class="brand-text-group">
+          <span class="navbar-logo-text">EVER GAIN</span>
+          <span class="navbar-sub-text">PREMIER ARENA</span>
+        </div>
       </a>
       <button class="modal-close mobile-menu-close" id="mobileMenuClose" aria-label="মেনু বন্ধ করুন">
         <i class="fas fa-times"></i>
@@ -99,91 +115,154 @@
   </div>
 
   <main>
-    <!-- 4. Hero Section - Ultra-Premium Luxury Presentation -->
-    <header class="hero" id="hero">
+    <!-- 4. Hero Section - Ultra-Premium Luxury Football Arena -->
+    <header class="hero hero-luxury" id="hero">
+      <!-- Stadium Volumetric Floodlights & Pitch Tactical Overlay -->
+      <div class="stadium-lighting" aria-hidden="true">
+        <div class="stadium-beam beam-left"></div>
+        <div class="stadium-beam beam-center"></div>
+        <div class="stadium-beam beam-right"></div>
+        <div class="pitch-turf-glow"></div>
+        <svg class="pitch-lines-overlay" viewBox="0 0 1000 600" preserveAspectRatio="none" aria-hidden="true">
+          <rect x="50" y="30" width="900" height="540" fill="none" stroke="rgba(16, 185, 129, 0.12)" stroke-width="2" rx="16"/>
+          <line x1="500" y1="30" x2="500" y2="570" stroke="rgba(16, 185, 129, 0.15)" stroke-width="2" stroke-dasharray="6 6"/>
+          <circle cx="500" cy="300" r="90" fill="none" stroke="rgba(16, 185, 129, 0.15)" stroke-width="2"/>
+          <circle cx="500" cy="300" r="4" fill="rgba(16, 185, 129, 0.3)"/>
+          <rect x="50" y="170" width="140" height="260" fill="none" stroke="rgba(16, 185, 129, 0.1)" stroke-width="1.5"/>
+          <rect x="810" y="170" width="140" height="260" fill="none" stroke="rgba(16, 185, 129, 0.1)" stroke-width="1.5"/>
+        </svg>
+      </div>
+
       <div class="hero-overlay"></div>
+
       <div class="container hero-content">
-        <!-- Live Status Pill with Beacon Ping -->
-        <div class="hero-live-pill animate-in stagger-1">
-          <span class="beacon-dot-live"></span>
-          <span data-i18n="heroLivePill">🟢 লাইভ এরেনা: ২৪/৭ খোলা • প্রিমিয়াম কৃত্রিম টার্ফ • ইনস্ট্যান্ট অনলাইন কনফার্মেশন</span>
+        <!-- Prestige Top Crown Badge -->
+        <div class="hero-prestige-badge animate-in stagger-1">
+          <div class="badge-crown-icon"><i class="fas fa-crown"></i></div>
+          <span class="badge-title-txt">PREMIER INDOOR TURF ARENA</span>
+          <span class="badge-divider">|</span>
+          <span class="badge-status-dot"><span class="beacon-dot-live"></span> ২৪/৭ উন্মুক্ত</span>
         </div>
 
-        <h1 class="hero-title animate-in stagger-2">
-          <span class="text-accent">EVER</span> GAIN
+        <!-- Luxury Hero Headline with Gold & Emerald Metallic Shimmer -->
+        <h1 class="hero-title hero-title-luxury animate-in stagger-2">
+          <span class="hero-title-prefix">THE ULTIMATE INDOOR FOOTBALL EXPERIENCE</span>
+          <span class="hero-brand-glamour">
+            <span class="text-brand-glow">EVER</span> <span class="text-brand-accent">GAIN</span>
+          </span>
+          <span class="hero-turf-subtitle">ARENA</span>
         </h1>
 
-        <p class="hero-subtitle text-bengali animate-in stagger-3" data-i18n="heroHeadline">
-          আপনার ইনডোর ফুটবলের সেরা গন্তব্য
+        <p class="hero-tagline-luxury text-bengali animate-in stagger-3" data-i18n="heroHeadline">
+          আপনার ইনডোর ফুটবলের সেরা গন্তব্য • আধুনিক সিন্থেটিক টার্ফে বিশ্বমানের খেলা
         </p>
 
-        <p class="card-text animate-in stagger-4" style="max-width: 680px; margin: 0 auto 1.25rem; font-size: 1.12rem; line-height: 1.65;" data-i18n="heroDesc">
+        <p class="hero-desc-luxury animate-in stagger-4" data-i18n="heroDesc">
           বৃষ্টি, কাদা কিংবা প্রখর রোদের চিন্তা ছেড়ে দিন! বিশ্বমানের সিন্থেটিক টার্ফ, শক্তিশালী ফ্লিকার-ফ্রি লাইটিং ও বন্ধুসুলভ পরিবেশে দিন ও রাতে বন্ধুদের নিয়ে উপভোগ করুন ইনডোর ফুটবলের আসল উন্মাদনা।
         </p>
 
-        <!-- 3 Floating Interactive Glass Badges -->
-        <div class="hero-floating-badges animate-in stagger-4">
-          <div class="hero-float-badge">
-            <i class="fas fa-star" style="color: #fbbf24;"></i>
-            <span data-i18n="badgeRating">৪.৯/৫ রেটিং (৫০০+ সন্তুষ্ট দল)</span>
+        <!-- 4 Luxury Football Feature Highlights Matrix (Glassmorphism & Interactive Hover) -->
+        <div class="hero-luxury-matrix animate-in stagger-4">
+          <div class="luxury-feature-card">
+            <div class="feature-icon-box">
+              <i class="fas fa-futbol"></i>
+            </div>
+            <div class="feature-info">
+              <span class="feature-label">FIFA-Standard</span>
+              <strong class="feature-title">৫০ মি.মি. সিন্থেটিক টার্ফ</strong>
+              <small class="feature-desc">উন্নত শক-প্যাড • জিরো ইনজুরি</small>
+            </div>
           </div>
-          <div class="hero-float-badge">
-            <i class="fas fa-shield-halved" style="color: var(--color-primary);"></i>
-            <span data-i18n="badgeTurf">উন্নত মানের শক-প্যাড কৃত্রিম টার্ফ (জিরো ইনজুরি)</span>
+
+          <div class="luxury-feature-card">
+            <div class="feature-icon-box" style="color: #60a5fa; border-color: rgba(96, 165, 250, 0.35); background: rgba(96, 165, 250, 0.1);">
+              <i class="fas fa-bolt"></i>
+            </div>
+            <div class="feature-info">
+              <span class="feature-label">4K Ultra HD</span>
+              <strong class="feature-title">ফ্লিকার-ফ্রি ফ্লাডলাইট</strong>
+              <small class="feature-desc">ডে ও নাইট ক্রিস্টাল ক্লিয়ার ভিশন</small>
+            </div>
           </div>
-          <div class="hero-float-badge">
-            <i class="fas fa-bolt" style="color: #60a5fa;"></i>
-            <span data-i18n="badgeLight">৪K আল্ট্রা এইচডি ফ্লাডলাইট (ফ্লিকার-ফ্রি)</span>
+
+          <div class="luxury-feature-card">
+            <div class="feature-icon-box" style="color: #fbbf24; border-color: rgba(251, 191, 36, 0.35); background: rgba(251, 191, 36, 0.1);">
+              <i class="fas fa-shield-halved"></i>
+            </div>
+            <div class="feature-info">
+              <span class="feature-label">Instant Booking</span>
+              <strong class="feature-title">তাৎক্ষণিক অনলাইন স্লট</strong>
+              <small class="feature-desc">অনলাইনে সহজ ৩ ক্লিকে বুকিং</small>
+            </div>
+          </div>
+
+          <div class="luxury-feature-card">
+            <div class="feature-icon-box" style="color: #34d399; border-color: rgba(52, 211, 153, 0.35); background: rgba(52, 211, 153, 0.1);">
+              <i class="fas fa-star"></i>
+            </div>
+            <div class="feature-info">
+              <span class="feature-label">VIP Amenities</span>
+              <strong class="feature-title">লাউঞ্জ ও পার্কিং এরিয়া</strong>
+              <small class="feature-desc">ড্রেসিং রুম • নিরাপদ জোন</small>
+            </div>
           </div>
         </div>
 
-        <!-- Magnetic Hero CTA Buttons -->
+        <!-- Luxury Magnetic Action Buttons -->
         <div class="hero-cta animate-in stagger-5">
-          <a href="booking.html" class="btn btn-primary btn-lg" style="box-shadow: 0 0 25px rgba(16, 185, 129, 0.45);">
-            <i class="fas fa-calendar-check"></i> <span data-i18n="bookNow">এখনই বুকিং দিন</span>
+          <a href="booking.html" class="btn btn-luxury-primary btn-lg">
+            <span class="btn-beam-shine"></span>
+            <i class="fas fa-calendar-check"></i> <span data-i18n="bookNow">এখনই স্লট বুকিং দিন</span>
+            <i class="fas fa-chevron-right btn-arrow-icon"></i>
           </a>
-          <a href="gallery.html" class="btn btn-secondary btn-lg">
+          <a href="gallery.html" class="btn btn-luxury-secondary btn-lg">
             <i class="fas fa-play-circle text-accent"></i> <span data-i18n="heroTourBtn">গ্রাউন্ড লাইভ ট্যুর</span>
+          </a>
+          <a href="https://maps.app.goo.gl/wP7QLcu8zdaeKqDt8?g_st=ac" target="_blank" rel="noopener noreferrer" class="btn btn-luxury-map btn-lg" id="heroMapBtn">
+            <i class="fas fa-map-location-dot" style="color: #fbbf24;"></i> <span>গুগল ম্যাপে লোকেশন</span>
           </a>
         </div>
       </div>
     </header>
 
     <!-- Infinite Live Broadcast Marquee Ticker -->
-    <aside class="ticker-section" aria-label="Announcement Ticker">
+    <aside class="ticker-section ticker-luxury" aria-label="Announcement Ticker">
       <div class="ticker-track">
         <!-- Set 1 -->
-        <div class="ticker-item"><i class="fas fa-bolt"></i> <span>আজকের ডে ও নাইট স্লট দ্রুত বুকিং হচ্ছে!</span><span class="ticker-bullet"></span></div>
-        <div class="ticker-item"><i class="fas fa-crown"></i> <span>স্থায়ী সাপ্তাহিক বুকিংয়ে প্রতি ঘণ্টায় ৳৫০ নিশ্চিত ছাড়!</span><span class="ticker-bullet"></span></div>
-        <div class="ticker-item"><i class="fas fa-futbol"></i> <span>উন্নত মানের শক-প্যাড সবুজ টার্ফ — নিরাপদ ও আরামদায়ক খেলা</span><span class="ticker-bullet"></span></div>
-        <div class="ticker-item"><i class="fas fa-mobile-screen"></i> <span>অনলাইনে মাত্র ৩ ক্লিকে ইনস্ট্যান্ট স্লট বুকিং রিকোয়েস্ট</span><span class="ticker-bullet"></span></div>
-        <div class="ticker-item"><i class="fas fa-lightbulb"></i> <span>ফ্লিকার-ফ্রি আন্তর্জাতিক মানের এলইডি ফ্লাডলাইট সিস্টেম</span><span class="ticker-bullet"></span></div>
-        <div class="ticker-item"><i class="fas fa-shower"></i> <span>আধুনিক ড্রেসিং রুম, প্লেয়ার্স লাউঞ্জ ও নিরাপদ পার্কিং জোন</span><span class="ticker-bullet"></span></div>
+        <div class="ticker-item"><i class="fas fa-bolt text-gold"></i> <span>আজকের ডে ও নাইট স্লট দ্রুত বুকিং হচ্ছে!</span><span class="ticker-bullet-football">⚽</span></div>
+        <div class="ticker-item"><i class="fas fa-crown text-gold"></i> <span>স্থায়ী সাপ্তাহিক বুকিংয়ে প্রতি ঘণ্টায় ৳৫০ নিশ্চিত ছাড়!</span><span class="ticker-bullet-football">⚽</span></div>
+        <div class="ticker-item"><i class="fas fa-futbol text-accent"></i> <span>উন্নত মানের শক-প্যাড সবুজ টার্ফ — নিরাপদ ও আরামদায়ক খেলা</span><span class="ticker-bullet-football">⚽</span></div>
+        <div class="ticker-item"><i class="fas fa-mobile-screen text-blue"></i> <span>অনলাইনে মাত্র ৩ ক্লিকে ইনস্ট্যান্ট স্লট বুকিং রিকোয়েস্ট</span><span class="ticker-bullet-football">⚽</span></div>
+        <div class="ticker-item"><i class="fas fa-lightbulb text-gold"></i> <span>ফ্লিকার-ফ্রি আন্তর্জাতিক মানের এলইডি ফ্লাডলাইট সিস্টেম</span><span class="ticker-bullet-football">⚽</span></div>
+        <div class="ticker-item"><i class="fas fa-shower text-accent"></i> <span>আধুনিক ড্রেসিং রুম, প্লেয়ার্স লাউঞ্জ ও নিরাপদ পার্কিং জোন</span><span class="ticker-bullet-football">⚽</span></div>
         <!-- Set 2 for seamless infinite looping -->
-        <div class="ticker-item"><i class="fas fa-bolt"></i> <span>আজকের ডে ও নাইট স্লট দ্রুত বুকিং হচ্ছে!</span><span class="ticker-bullet"></span></div>
-        <div class="ticker-item"><i class="fas fa-crown"></i> <span>স্থায়ী সাপ্তাহিক বুকিংয়ে প্রতি ঘণ্টায় ৳৫০ নিশ্চিত ছাড়!</span><span class="ticker-bullet"></span></div>
-        <div class="ticker-item"><i class="fas fa-futbol"></i> <span>উন্নত মানের শক-প্যাড সবুজ টার্ফ — নিরাপদ ও আরামদায়ক খেলা</span><span class="ticker-bullet"></span></div>
-        <div class="ticker-item"><i class="fas fa-mobile-screen"></i> <span>অনলাইনে মাত্র ৩ ক্লিকে ইনস্ট্যান্ট স্লট বুকিং রিকোয়েস্ট</span><span class="ticker-bullet"></span></div>
-        <div class="ticker-item"><i class="fas fa-lightbulb"></i> <span>ফ্লিকার-ফ্রি আন্তর্জাতিক মানের এলইডি ফ্লাডলাইট সিস্টেম</span><span class="ticker-bullet"></span></div>
-        <div class="ticker-item"><i class="fas fa-shower"></i> <span>আধুনিক ড্রেসিং রুম, প্লেয়ার্স লাউঞ্জ ও নিরাপদ পার্কিং জোন</span><span class="ticker-bullet"></span></div>
+        <div class="ticker-item"><i class="fas fa-bolt text-gold"></i> <span>আজকের ডে ও নাইট স্লট দ্রুত বুকিং হচ্ছে!</span><span class="ticker-bullet-football">⚽</span></div>
+        <div class="ticker-item"><i class="fas fa-crown text-gold"></i> <span>স্থায়ী সাপ্তাহিক বুকিংয়ে প্রতি ঘণ্টায় ৳৫০ নিশ্চিত ছাড়!</span><span class="ticker-bullet-football">⚽</span></div>
+        <div class="ticker-item"><i class="fas fa-futbol text-accent"></i> <span>উন্নত মানের শক-প্যাড সবুজ টার্ফ — নিরাপদ ও আরামদায়ক খেলা</span><span class="ticker-bullet-football">⚽</span></div>
+        <div class="ticker-item"><i class="fas fa-mobile-screen text-blue"></i> <span>অনলাইনে মাত্র ৩ ক্লিকে ইনস্ট্যান্ট স্লট বুকিং রিকোয়েস্ট</span><span class="ticker-bullet-football">⚽</span></div>
+        <div class="ticker-item"><i class="fas fa-lightbulb text-gold"></i> <span>ফ্লিকার-ফ্রি আন্তর্জাতিক মানের এলইডি ফ্লাডলাইট সিস্টেম</span><span class="ticker-bullet-football">⚽</span></div>
+        <div class="ticker-item"><i class="fas fa-shower text-accent"></i> <span>আধুনিক ড্রেসিং রুম, প্লেয়ার্স লাউঞ্জ ও নিরাপদ পার্কিং জোন</span><span class="ticker-bullet-football">⚽</span></div>
       </div>
     </aside>
 
     <!-- Live Arena Status Bar & Stats Counter Grid -->
     <div class="container mt-4">
-      <!-- Live Pulse Card -->
-      <div class="live-pulse-card animate-in">
+      <!-- Live Pulse Card - Broadcast Scoreboard Design -->
+      <div class="live-pulse-card live-pulse-luxury animate-in">
         <div class="live-pulse-status">
-          <span class="beacon-dot-live"></span>
+          <div class="broadcast-badge">
+            <span class="beacon-dot-live"></span>
+            <span class="broadcast-label">MATCH READY</span>
+          </div>
           <div>
-            <strong style="display: block; color: var(--color-text-primary);" data-i18n="livePulseTitle">আজকের এরেনা স্ট্যাটাস ও লাইভ পালস</strong>
-            <small style="color: var(--color-text-muted);">
+            <strong class="live-pulse-heading" data-i18n="livePulseTitle">এরেনা লাইভ স্ট্যাটাস ও শিডিউল</strong>
+            <small class="live-pulse-sub">
               <span data-i18n="livePulseDay">☀️ ডে সেশন: স্লট খোলা</span> • <span data-i18n="livePulseNight">🌙 নাইট সেশন: বুকিং চলছে</span>
             </small>
           </div>
         </div>
-        <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-          <div class="live-clock-badge">
+        <div class="live-pulse-actions">
+          <div class="live-clock-badge live-clock-luxury">
             <i class="far fa-clock text-accent"></i>
             <span id="liveClockDisplay">বাংলাদেশ সময়: ০২:০০ PM</span>
           </div>
@@ -194,24 +273,32 @@
       </div>
 
       <!-- 4 Key Stats Counters with requestAnimationFrame Number Ticker -->
-      <div class="stats-counter-grid animate-in" id="statsCounterGrid">
+      <div class="stats-counter-grid stats-counter-luxury animate-in" id="statsCounterGrid">
         <div class="stat-counter-card">
-          <i class="fas fa-trophy stat-counter-icon"></i>
+          <div class="stat-counter-icon-wrap" style="color: #fbbf24; background: rgba(251, 191, 36, 0.12); border-color: rgba(251, 191, 36, 0.3);">
+            <i class="fas fa-trophy stat-counter-icon"></i>
+          </div>
           <div class="stat-counter-value" data-target="500">০</div>
           <div class="stat-counter-label" data-i18n="statMatches">সফল ম্যাচ অনুষ্ঠিত</div>
         </div>
         <div class="stat-counter-card">
-          <i class="fas fa-clock stat-counter-icon" style="color: #60a5fa;"></i>
+          <div class="stat-counter-icon-wrap" style="color: #60a5fa; background: rgba(96, 165, 250, 0.12); border-color: rgba(96, 165, 250, 0.3);">
+            <i class="fas fa-clock stat-counter-icon"></i>
+          </div>
           <div class="stat-counter-value" data-text="২৪/৭">২৪/৭</div>
           <div class="stat-counter-label" data-i18n="statOpen">সার্বক্ষণিক খোলা</div>
         </div>
         <div class="stat-counter-card">
-          <i class="fas fa-users stat-counter-icon" style="color: #f59e0b;"></i>
+          <div class="stat-counter-icon-wrap" style="color: #10b981; background: rgba(16, 185, 129, 0.12); border-color: rgba(16, 185, 129, 0.3);">
+            <i class="fas fa-users stat-counter-icon"></i>
+          </div>
           <div class="stat-counter-value" data-target="50">০</div>
           <div class="stat-counter-label" data-i18n="statTeams">নিবন্ধিত নিয়মিত দল</div>
         </div>
         <div class="stat-counter-card">
-          <i class="fas fa-heart stat-counter-icon" style="color: #ec4899;"></i>
+          <div class="stat-counter-icon-wrap" style="color: #ec4899; background: rgba(236, 72, 153, 0.12); border-color: rgba(236, 72, 153, 0.3);">
+            <i class="fas fa-heart stat-counter-icon"></i>
+          </div>
           <div class="stat-counter-value" data-target="100">০</div>
           <div class="stat-counter-label" data-i18n="statSatisfied">গ্রাহক সন্তুষ্টি</div>
         </div>
@@ -743,10 +830,10 @@
             </div>
             <h3 class="card-title" data-i18n="locCardTitle">গ্রাউন্ডের ঠিকানা</h3>
             <p class="card-text" id="contactAddressDisplay">
-              EVER GAIN ইনডোর ফুটবল গ্রাউন্ড<br>বগুড়া সদর, বাংলাদেশ
+              Evergain Avenue, Birdal, Sonapur 3180<br>এভারগেইন এভিনিউ, বীরদল, সোনাপুর ৩১৮০
             </p>
             <div class="mt-3">
-              <a href="https://maps.google.com" target="_blank" rel="noopener noreferrer" id="homeMapLink" class="btn btn-secondary btn-block">
+              <a href="https://maps.app.goo.gl/wP7QLcu8zdaeKqDt8?g_st=ac" target="_blank" rel="noopener noreferrer" id="homeMapLink" class="btn btn-secondary btn-block">
                 <i class="fas fa-map-location-dot"></i> <span data-i18n="viewMap">গুগল ম্যাপে দেখুন</span>
               </a>
             </div>
@@ -828,7 +915,7 @@
           <ul style="list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem; color: var(--color-text-secondary); font-size: 0.95rem;">
             <li style="display: flex; align-items: flex-start; gap: 8px;">
               <i class="fas fa-location-dot" style="color: var(--color-primary); margin-top: 4px;"></i>
-              <span id="footerAddress">EVER GAIN গ্রাউন্ড, বাংলাদেশ</span>
+              <span id="footerAddress">Evergain Avenue, Birdal, Sonapur 3180</span>
             </li>
             <li style="display: flex; align-items: flex-start; gap: 8px;">
               <i class="fas fa-phone" style="color: var(--color-primary); margin-top: 4px;"></i>

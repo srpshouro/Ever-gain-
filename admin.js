@@ -3273,8 +3273,8 @@
           const defaultSettings = {
             phone: '+8801700000000',
             whatsapp: '+8801700000000',
-            address: 'EVER GAIN Indoor Football Arena, Bangladesh',
-            mapLink: 'https://maps.google.com',
+            address: 'Evergain Avenue, Birdal, Sonapur 3180',
+            mapLink: 'https://maps.app.goo.gl/wP7QLcu8zdaeKqDt8?g_st=ac',
             hours: '24/7 Open',
             heroTitle: 'Your Ultimate Indoor Football Destination',
             heroSubtitle: 'Premium indoor football turf - book your game easily',

@@ -18,9 +18,9 @@
     phoneRaw: '+8801700000000',
     whatsapp: '০১৭০০-০০০০০০',
     whatsappRaw: '8801700000000',
-    address: 'মিরপুর, ঢাকা - ১২১৬, বাংলাদেশ',
-    hours: 'সকাল ৮:০০ - রাত ১২:০০',
-    mapLink: 'https://maps.google.com/?q=Mirpur,Dhaka',
+    address: 'Evergain Avenue, Birdal, Sonapur 3180',
+    hours: '২৪/৭ সার্বক্ষণিক খোলা',
+    mapLink: 'https://maps.app.goo.gl/wP7QLcu8zdaeKqDt8?g_st=ac',
     socialFacebook: 'https://facebook.com',
     socialInstagram: 'https://instagram.com'
   };

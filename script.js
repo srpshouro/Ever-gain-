@@ -264,6 +264,9 @@
 
       const contactMapLink = document.getElementById('contactMapLink');
       if (contactMapLink) contactMapLink.setAttribute('href', mapLink);
+
+      const heroMapBtn = document.getElementById('heroMapBtn');
+      if (heroMapBtn) heroMapBtn.setAttribute('href', mapLink);
     }
 
     // Update Facebook URL
@@ -639,7 +642,7 @@
 
   function setupCardHoverEffects() {
     if (window.matchMedia && window.matchMedia('(hover: hover)').matches) {
-      const cards = document.querySelectorAll('.card, .stat-counter-card, .pricing-card');
+      const cards = document.querySelectorAll('.card, .stat-counter-card, .pricing-card, .luxury-feature-card');
       cards.forEach(function (card) {
         card.addEventListener('mousemove', function (e) {
           const rect = card.getBoundingClientRect();

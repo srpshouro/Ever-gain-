@@ -5288,99 +5288,475 @@ header.section.section-header,
    27.5. HOMEPAGE ULTRA-PREMIUM COMPONENTS & ANIMATIONS
    ========================================================================== */
 
-/* Hero Live Pill & Pulsing Beacon */
-.hero-live-pill {
+/* ==========================================================================
+   LUXURY FOOTBALL THEME & UPPER HOMEPAGE ELEVATION (120 FPS ACCELERATED)
+   ========================================================================== */
+
+/* Brand Crest & Header Luxury Additions */
+.brand-crest-wrapper {
+  position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 9px;
-  padding: 6px 16px;
-  border-radius: var(--radius-full);
-  background: rgba(10, 24, 15, 0.90);
-  border: 1px solid rgba(16, 185, 129, 0.45);
-  box-shadow: 0 0 24px rgba(16, 185, 129, 0.22);
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #6ee7b7;
-  margin-bottom: 1.25rem;
-  letter-spacing: 0.03em;
-  transform: translateZ(0);
-}
-
-.beacon-dot-live {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: #10b981;
-  position: relative;
-  display: inline-block;
-  box-shadow: 0 0 10px #10b981;
-}
-
-.beacon-dot-live::after {
-  content: '';
-  position: absolute;
-  inset: -4px;
-  border-radius: 50%;
-  border: 2px solid #10b981;
-  animation: beaconPing 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
-  will-change: transform, opacity;
-}
-
-@keyframes beaconPing {
-  0% { transform: scale(0.8); opacity: 1; }
-  100% { transform: scale(2.4); opacity: 0; }
-}
-
-/* Hero Floating Interactive Badges */
-.hero-floating-badges {
-  display: flex;
-  flex-wrap: wrap;
   justify-content: center;
-  gap: 12px;
-  margin: 1.5rem 0 2rem;
 }
 
-.hero-float-badge {
+.brand-glow-ring {
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 1px solid rgba(16, 185, 129, 0.45);
+  box-shadow: 0 0 14px rgba(16, 185, 129, 0.35);
+  pointer-events: none;
+  animation: crestPulse 3s ease-in-out infinite alternate;
+}
+
+@keyframes crestPulse {
+  0% { transform: scale(0.96); opacity: 0.6; }
+  100% { transform: scale(1.05); opacity: 1; border-color: rgba(251, 191, 36, 0.6); }
+}
+
+.brand-text-group {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.navbar-sub-text {
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  color: #34d399;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+/* Quick Slot Booking Button on Desktop Navbar */
+.btn-luxury-nav {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 18px;
+  padding: 7px 18px;
   border-radius: var(--radius-full);
-  background: rgba(14, 25, 17, 0.92);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  font-size: 0.88rem;
-  font-weight: 500;
-  color: var(--color-text-primary);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.22) 0%, rgba(5, 150, 105, 0.22) 100%);
+  border: 1px solid rgba(16, 185, 129, 0.55);
+  color: #6ee7b7 !important;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.25);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  animation: floatBadgeSlow 4s ease-in-out infinite alternate;
+  margin-right: 6px;
   transform: translateZ(0);
+}
+
+.btn-luxury-nav:hover {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff !important;
+  box-shadow: 0 0 25px rgba(16, 185, 129, 0.55);
+  transform: translateY(-2px);
+  border-color: #a7f3d0;
+}
+
+/* Stadium Volumetric Floodlights & Atmosphere */
+.hero-luxury {
+  position: relative;
+  min-height: 92vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: calc(var(--navbar-height) + 2.5rem) var(--space-lg) 3.5rem var(--space-lg);
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 20%, rgba(10, 24, 15, 0.82) 0%, rgba(6, 12, 8, 0.94) 70%, var(--color-bg-primary) 100%),
+              url('assets/logo/Home.png') center top / cover no-repeat;
+}
+
+.stadium-lighting {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.stadium-beam {
+  position: absolute;
+  top: -80px;
+  width: 480px;
+  height: 125%;
+  opacity: 0.18;
+  filter: blur(45px);
+  pointer-events: none;
+  transform-origin: top center;
+  will-change: transform, opacity;
+}
+
+.beam-left {
+  left: 3%;
+  background: conic-gradient(from 150deg at 50% 0%, rgba(16, 185, 129, 0.45) 0deg, rgba(251, 191, 36, 0.2) 30deg, transparent 65deg);
+  transform: rotate(22deg);
+  animation: beamSwayLeft 9s ease-in-out infinite alternate;
+}
+
+.beam-right {
+  right: 3%;
+  background: conic-gradient(from 210deg at 50% 0%, transparent 0deg, rgba(251, 191, 36, 0.2) 30deg, rgba(16, 185, 129, 0.45) 65deg);
+  transform: rotate(-22deg);
+  animation: beamSwayRight 9s ease-in-out infinite alternate;
+}
+
+.beam-center {
+  left: 50%;
+  transform: translateX(-50%);
+  width: 700px;
+  background: radial-gradient(ellipse at 50% 0%, rgba(16, 185, 129, 0.32) 0%, rgba(10, 22, 14, 0.08) 55%, transparent 80%);
+  animation: beamPulse 6s ease-in-out infinite alternate;
+}
+
+.pitch-turf-glow {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 380px;
+  background: radial-gradient(ellipse at 50% 100%, rgba(16, 185, 129, 0.28) 0%, rgba(6, 78, 59, 0.15) 50%, transparent 80%);
+  pointer-events: none;
+}
+
+.pitch-lines-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -42%) perspective(750px) rotateX(24deg);
+  width: 92%;
+  max-width: 1080px;
+  height: auto;
+  opacity: 0.18;
+  pointer-events: none;
+  filter: drop-shadow(0 0 10px rgba(16, 185, 129, 0.35));
+}
+
+@keyframes beamSwayLeft {
+  0% { transform: rotate(18deg); opacity: 0.14; }
+  100% { transform: rotate(26deg); opacity: 0.22; }
+}
+
+@keyframes beamSwayRight {
+  0% { transform: rotate(-18deg); opacity: 0.14; }
+  100% { transform: rotate(-26deg); opacity: 0.22; }
+}
+
+@keyframes beamPulse {
+  0% { opacity: 0.20; transform: translateX(-50%) scaleX(0.95); }
+  100% { opacity: 0.32; transform: translateX(-50%) scaleX(1.05); }
+}
+
+/* Prestige Top Crown Badge */
+.hero-prestige-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 20px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, rgba(14, 32, 20, 0.94) 0%, rgba(8, 18, 12, 0.96) 100%);
+  border: 1px solid rgba(251, 191, 36, 0.45);
+  box-shadow: 0 0 25px rgba(251, 191, 36, 0.2), inset 0 0 14px rgba(16, 185, 129, 0.2);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  margin-bottom: 1.35rem;
+  transform: translateZ(0);
+}
+
+.badge-crown-icon {
+  color: #fbbf24;
+  font-size: 0.95rem;
+  filter: drop-shadow(0 0 8px #fbbf24);
+  animation: crownPulse 3s ease-in-out infinite alternate;
+}
+
+@keyframes crownPulse {
+  0% { transform: scale(0.92); filter: drop-shadow(0 0 4px #fbbf24); }
+  100% { transform: scale(1.12); filter: drop-shadow(0 0 12px #fbbf24); }
+}
+
+.badge-title-txt {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #f9fafb;
+  text-transform: uppercase;
+}
+
+.badge-divider {
+  color: rgba(255, 255, 255, 0.3);
+  font-weight: 300;
+}
+
+.badge-status-dot {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #6ee7b7;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+/* Luxury Hero Headline Typography */
+.hero-title-luxury {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 0.9rem;
+}
+
+.hero-title-prefix {
+  font-size: clamp(0.72rem, 1.4vw, 0.92rem);
+  font-weight: 800;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: #34d399;
+  margin-bottom: 0.35rem;
+  text-shadow: 0 0 14px rgba(16, 185, 129, 0.45);
+}
+
+.hero-brand-glamour {
+  font-size: clamp(2.8rem, 7.2vw, 5.2rem);
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  line-height: 1.05;
+  background: linear-gradient(135deg, #ffffff 0%, #a7f3d0 32%, #fbbf24 62%, #34d399 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: textShimmerSweep 7s linear infinite;
+  filter: drop-shadow(0 4px 18px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 32px rgba(16, 185, 129, 0.4));
+}
+
+@keyframes textShimmerSweep {
+  0% { background-position: 0% center; }
+  100% { background-position: 200% center; }
+}
+
+.text-brand-glow {
+  text-shadow: 0 0 25px rgba(16, 185, 129, 0.5);
+}
+
+.text-brand-accent {
+  text-shadow: 0 0 25px rgba(251, 191, 36, 0.5);
+}
+
+.hero-turf-subtitle {
+  font-size: clamp(1rem, 2.2vw, 1.6rem);
+  font-weight: 800;
+  letter-spacing: 0.38em;
+  color: #ffffff;
+  text-transform: uppercase;
+  margin-top: 0.25rem;
+  opacity: 0.92;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+}
+
+.hero-tagline-luxury {
+  font-size: clamp(1.08rem, 2.2vw, 1.35rem);
+  color: #a7f3d0;
+  font-weight: 600;
+  line-height: 1.6;
+  max-width: 720px;
+  margin-bottom: 0.75rem;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+}
+
+.hero-desc-luxury {
+  color: var(--color-text-secondary);
+  font-size: 1.05rem;
+  line-height: 1.65;
+  max-width: 680px;
+  margin: 0 auto 1.5rem;
+}
+
+/* 4 Luxury Football Feature Matrix Cards */
+.hero-luxury-matrix {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  width: 100%;
+  max-width: 1020px;
+  margin: 1.5rem auto 2.25rem;
+}
+
+@media (max-width: 920px) {
+  .hero-luxury-matrix {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 520px) {
+  .hero-luxury-matrix {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
+
+.luxury-feature-card {
+  position: relative;
+  background: rgba(10, 24, 15, 0.78);
+  border: 1px solid rgba(16, 185, 129, 0.24);
+  border-radius: var(--radius-lg);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  text-align: left;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  overflow: hidden;
   will-change: transform;
 }
 
-.hero-float-badge:nth-child(2) {
-  animation-delay: 1.3s;
-  border-color: rgba(16, 185, 129, 0.35);
+.luxury-feature-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(16, 185, 129, 0.65);
+  box-shadow: 0 14px 32px rgba(16, 185, 129, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 
-.hero-float-badge:nth-child(3) {
-  animation-delay: 2.6s;
-  border-color: rgba(59, 130, 246, 0.35);
+.feature-icon-box {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
 }
 
-.hero-float-badge:hover {
-  transform: translateY(-4px) scale(1.03);
-  border-color: var(--color-primary);
-  box-shadow: 0 12px 28px rgba(16, 185, 129, 0.25);
+.luxury-feature-card:hover .feature-icon-box {
+  transform: scale(1.1) rotate(6deg);
+}
+
+.feature-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.feature-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #10b981;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.feature-title {
+  font-size: 0.95rem;
+  font-weight: 700;
   color: #ffffff;
+  line-height: 1.25;
+  margin: 2px 0;
 }
 
-@keyframes floatBadgeSlow {
-  0% { transform: translateY(0px); }
-  100% { transform: translateY(-7px); }
+.feature-desc {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  line-height: 1.3;
 }
 
-/* Infinite Live Broadcast Marquee Ticker */
+/* Luxury Action CTA Buttons */
+.btn-luxury-primary {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff !important;
+  font-weight: 700;
+  padding: 14px 30px;
+  border-radius: var(--radius-full);
+  box-shadow: 0 0 32px rgba(16, 185, 129, 0.5), 0 4px 16px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(110, 231, 183, 0.45);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-luxury-primary:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 0 48px rgba(16, 185, 129, 0.7), 0 8px 25px rgba(0, 0, 0, 0.5);
+  border-color: #a7f3d0;
+}
+
+.btn-beam-shine {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.38), transparent);
+  transform: skewX(-25deg);
+  animation: btnBeamShine 3.5s infinite;
+}
+
+@keyframes btnBeamShine {
+  0% { left: -100%; }
+  32%, 100% { left: 200%; }
+}
+
+.btn-arrow-icon {
+  font-size: 0.85rem;
+  transition: transform 0.3s ease;
+}
+
+.btn-luxury-primary:hover .btn-arrow-icon {
+  transform: translateX(4px);
+}
+
+.btn-luxury-secondary {
+  background: rgba(14, 28, 18, 0.85);
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(12px);
+  padding: 14px 26px;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-luxury-secondary:hover {
+  background: rgba(16, 185, 129, 0.16);
+  border-color: rgba(16, 185, 129, 0.55);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.btn-luxury-map {
+  background: rgba(24, 28, 14, 0.88);
+  color: #ffffff !important;
+  border: 1px solid rgba(251, 191, 36, 0.4);
+  backdrop-filter: blur(12px);
+  padding: 14px 24px;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-luxury-map:hover {
+  background: rgba(251, 191, 36, 0.18);
+  border-color: #fbbf24;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(251, 191, 36, 0.25);
+}
+
+/* Luxury Ticker Enhancement */
 .ticker-section {
   width: 100%;
   background: rgba(8, 16, 10, 0.92);
@@ -5419,14 +5795,24 @@ header.section.section-header,
   color: var(--color-primary-light);
 }
 
-.ticker-bullet {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--color-primary);
-  display: inline-block;
-  box-shadow: 0 0 8px var(--color-primary);
-  margin-left: 14px;
+.ticker-luxury {
+  border-top: 1px solid rgba(251, 191, 36, 0.25);
+  border-bottom: 1px solid rgba(16, 185, 129, 0.3);
+  background: linear-gradient(90deg, rgba(6, 14, 8, 0.95) 0%, rgba(10, 24, 15, 0.92) 50%, rgba(6, 14, 8, 0.95) 100%);
+}
+
+.ticker-bullet-football {
+  margin-left: 18px;
+  font-size: 0.9rem;
+  filter: drop-shadow(0 0 6px rgba(16, 185, 129, 0.5));
+}
+
+.text-gold {
+  color: #fbbf24 !important;
+}
+
+.text-blue {
+  color: #60a5fa !important;
 }
 
 @keyframes tickerSlide {
@@ -5434,7 +5820,7 @@ header.section.section-header,
   100% { transform: translateX(-50%); }
 }
 
-/* Live Arena Status Bar / Match Day Pulse */
+/* Luxury Match-Ready Live Pulse Card */
 .live-pulse-card {
   background: linear-gradient(135deg, rgba(16, 30, 20, 0.85) 0%, rgba(8, 16, 10, 0.95) 100%);
   border: 1px solid rgba(16, 185, 129, 0.32);
@@ -5467,6 +5853,73 @@ header.section.section-header,
   gap: 12px;
 }
 
+.live-pulse-luxury {
+  background: linear-gradient(135deg, rgba(14, 30, 20, 0.9) 0%, rgba(6, 16, 10, 0.95) 100%);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.5), 0 0 25px rgba(16, 185, 129, 0.15);
+}
+
+.broadcast-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.4);
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+}
+
+.beacon-dot-live {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #10b981;
+  position: relative;
+  display: inline-block;
+  box-shadow: 0 0 10px #10b981;
+}
+
+.beacon-dot-live::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px solid #10b981;
+  animation: beaconPing 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
+  will-change: transform, opacity;
+}
+
+@keyframes beaconPing {
+  0% { transform: scale(0.8); opacity: 1; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+
+.broadcast-label {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: #34d399;
+}
+
+.live-pulse-heading {
+  display: block;
+  font-size: 1.05rem;
+  color: var(--color-white);
+  font-weight: 700;
+}
+
+.live-pulse-sub {
+  color: var(--color-text-muted);
+  font-size: 0.88rem;
+}
+
+.live-pulse-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
 .live-clock-badge {
   display: inline-flex;
   align-items: center;
@@ -5477,6 +5930,14 @@ header.section.section-header,
   border: 1px solid var(--color-border);
   font-size: 0.82rem;
   color: var(--color-text-secondary);
+}
+
+.live-clock-luxury {
+  background: rgba(16, 28, 18, 0.85);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  color: #f3f4f6;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 /* Key Stats Animated Counter Grid */
@@ -5509,7 +5970,6 @@ header.section.section-header,
 .stat-counter-icon {
   font-size: 1.75rem;
   color: var(--color-primary-light);
-  margin-bottom: 0.75rem;
   display: inline-block;
 }
 
@@ -5528,6 +5988,30 @@ header.section.section-header,
   font-size: 0.88rem;
   color: var(--color-text-secondary);
   font-weight: 500;
+}
+
+.stats-counter-luxury .stat-counter-card {
+  background: rgba(12, 24, 16, 0.75);
+  border: 1px solid rgba(16, 185, 129, 0.22);
+  border-radius: var(--radius-xl);
+}
+
+.stat-counter-icon-wrap {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid;
+  margin-bottom: 0.85rem;
+  font-size: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease;
+}
+
+.stat-counter-card:hover .stat-counter-icon-wrap {
+  transform: scale(1.12) rotate(6deg);
 }
 
 /* Interactive Match Duration & Cost Estimator (Turf Calculator) */
