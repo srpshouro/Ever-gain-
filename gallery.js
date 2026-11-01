@@ -569,6 +569,10 @@ function initNavigation() {
 function initParticles() {
   const canvas = document.getElementById('particleCanvas');
   if (!canvas) return;
+  if (window.innerWidth <= 768) {
+    canvas.style.display = 'none';
+    return;
+  }
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
 

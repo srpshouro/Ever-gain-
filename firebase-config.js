@@ -346,8 +346,9 @@
     const canvas = document.getElementById(canvasId);
     if (!canvas) return;
 
-    // Respect reduced motion preference
-    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    // Disable canvas loop on mobile (<= 768px) and for reduced-motion to ensure 120 FPS zero-lag scrolling
+    if (window.innerWidth <= 768 || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) {
+      canvas.style.display = 'none';
       return;
     }
 
@@ -357,17 +358,34 @@
     let width = 0;
     let height = 0;
     let animationFrameId = null;
+    let isScrolling = false;
+    let scrollTimer = null;
 
     function resize() {
+      if (window.innerWidth <= 768) {
+        canvas.style.display = 'none';
+        if (animationFrameId) cancelAnimationFrame(animationFrameId);
+        return;
+      }
+      canvas.style.display = 'block';
       width = canvas.width = window.innerWidth;
       height = canvas.height = window.innerHeight;
     }
 
     resize();
-    window.addEventListener('resize', debounce(resize, 200));
+    window.addEventListener('resize', debounce(resize, 200), { passive: true });
 
-    // Particle pool: max 30 particles for smooth mobile performance
-    const MAX_PARTICLES = 30;
+    // Pause particle rendering during active scroll to reserve 100% GPU for 120 FPS scroll response
+    window.addEventListener('scroll', function () {
+      isScrolling = true;
+      if (scrollTimer) clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(function () {
+        isScrolling = false;
+      }, 150);
+    }, { passive: true });
+
+    // Particle pool: 24 lightweight particles
+    const MAX_PARTICLES = 24;
     const particles = [];
     const colors = [
       'rgba(16, 185, 129, ', // Primary emerald
@@ -379,15 +397,21 @@
       particles.push({
         x: Math.random() * width,
         y: Math.random() * height,
-        radius: Math.random() * 1.5 + 1.2,
+        radius: Math.random() * 1.4 + 1.0,
         colorBase: colors[Math.floor(Math.random() * colors.length)],
-        alpha: Math.random() * 0.25 + 0.15,
-        vx: (Math.random() - 0.5) * 0.4,
-        vy: (Math.random() - 0.5) * 0.4
+        alpha: Math.random() * 0.22 + 0.12,
+        vx: (Math.random() - 0.5) * 0.35,
+        vy: (Math.random() - 0.5) * 0.35
       });
     }
 
     function render() {
+      // If user is actively scrolling, skip drawing this frame
+      if (isScrolling) {
+        animationFrameId = requestAnimationFrame(render);
+        return;
+      }
+
       ctx.clearRect(0, 0, width, height);
 
       // Draw faint connections between nearby particles
@@ -397,11 +421,11 @@
           const dy = particles[i].y - particles[j].y;
           const dist = Math.sqrt(dx * dx + dy * dy);
 
-          if (dist < 90) {
-            const lineAlpha = (1 - dist / 90) * 0.12;
+          if (dist < 85) {
+            const lineAlpha = (1 - dist / 85) * 0.10;
             ctx.beginPath();
             ctx.strokeStyle = 'rgba(16, 185, 129, ' + lineAlpha + ')';
-            ctx.lineWidth = 0.8;
+            ctx.lineWidth = 0.7;
             ctx.moveTo(particles[i].x, particles[i].y);
             ctx.lineTo(particles[j].x, particles[j].y);
             ctx.stroke();
@@ -432,6 +456,16 @@
     }
 
     render();
+
+    // Pause animation when tab is inactive to save battery
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden && animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = null;
+      } else if (!document.hidden && !animationFrameId && window.innerWidth > 768) {
+        animationFrameId = requestAnimationFrame(render);
+      }
+    });
 
     // Clean up on page unload
     window.addEventListener('beforeunload', function () {
