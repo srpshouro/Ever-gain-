@@ -335,22 +335,26 @@
   // 3. UI Background & Interactive Systems
   // ==========================================================================
 
+  let particlesInitialized = false;
+
   /**
-   * Initializes the particle background system.
    * Subtle floating green dots with faint linking lines.
    * Performance-optimized: max 30 particles.
    * @param {string} [canvasId='particleCanvas']
    */
   function initParticles(canvasId) {
+    if (particlesInitialized) return;
     canvasId = canvasId || 'particleCanvas';
     const canvas = document.getElementById(canvasId);
     if (!canvas) return;
 
-    // Disable canvas loop on mobile (<= 768px) and for reduced-motion to ensure 120 FPS zero-lag scrolling
-    if (window.innerWidth <= 768 || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) {
+    // Disable canvas loop on mobile (<= 800px), touch devices, and for reduced-motion to ensure 120 FPS zero-lag scrolling
+    const isTouchOrMobile = (window.innerWidth <= 800) || ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    if (isTouchOrMobile || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) {
       canvas.style.display = 'none';
       return;
     }
+    particlesInitialized = true;
 
     const ctx = canvas.getContext('2d');
     if (!ctx) return;

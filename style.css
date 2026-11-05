@@ -568,11 +568,10 @@ small, .text-sm {
   width: 100%;
   height: 100%;
   z-index: 3;
-  opacity: 0.035;
+  opacity: 0.025;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='97' viewBox='0 0 56 97'%3E%3Cpath fill='%2310b981' fill-opacity='1' d='M28 66L0 50L0 16L28 0L56 16L56 50L28 66ZM28 69L56 85L56 119L28 135L0 119L0 85L28 69Z'/%3E%3C/svg%3E");
   background-repeat: repeat;
   background-size: 56px 97px;
-  mix-blend-mode: overlay;
 }
 
 /* Ambient Lighting Glowing Spheres (Optimized for 120 FPS) */
@@ -629,6 +628,24 @@ small, .text-sm {
   0% { transform: translate(0, 0) scale(0.9); }
   50% { transform: translate(30px, 60px) scale(1.2); }
   100% { transform: translate(-40px, -20px) scale(1); }
+}
+
+/* Mobile Lag Killer: Static hardware-accelerated background on touch/small devices */
+@media (max-width: 768px) {
+  .bg-gradient {
+    animation: none !important;
+    width: 100% !important;
+    height: 100% !important;
+    top: 0 !important;
+    left: 0 !important;
+    transform: none !important;
+  }
+  .ambient-light {
+    display: none !important;
+  }
+  .bg-particles {
+    display: none !important;
+  }
 }
 
 /* ==========================================================================
@@ -1365,8 +1382,8 @@ header.section.section-header,
   font-size: 0.95rem;
   font-weight: var(--fw-semibold);
   line-height: 1;
-  padding: 0.85rem 1.65rem;
-  border-radius: var(--radius-md);
+  padding: 0.85rem 1.75rem;
+  border-radius: 9999px;
   border: 1px solid transparent;
   cursor: pointer;
   text-decoration: none;
@@ -1374,8 +1391,11 @@ header.section.section-header,
   user-select: none;
   position: relative;
   overflow: hidden;
-  transition: all var(--transition-normal);
+  transition: all 0.26s cubic-bezier(0.34, 1.56, 0.64, 1);
   vertical-align: middle;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transform: translateZ(0);
 }
 
 .btn:focus-visible {
@@ -1384,7 +1404,7 @@ header.section.section-header,
 }
 
 .btn:active {
-  transform: translateY(1px) scale(0.98);
+  transform: scale(0.96) !important;
 }
 
 .btn:disabled,
@@ -1395,36 +1415,45 @@ header.section.section-header,
   box-shadow: none !important;
 }
 
-/* Primary Button */
+/* Primary Liquid Glass Button */
 .btn-primary {
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  color: #ffffff;
-  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
-  border-color: rgba(255, 255, 255, 0.1);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.04) 50%, rgba(0, 0, 0, 0.05) 100%),
+              linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.7),
+              inset 0 -1.5px 2px rgba(0, 0, 0, 0.2),
+              0 8px 24px rgba(16, 185, 129, 0.38) !important;
+  font-weight: 700;
 }
 
-.btn-primary:hover {
-  background: linear-gradient(135deg, #34d399 0%, #10b981 100%);
-  box-shadow: 0 6px 24px rgba(16, 185, 129, 0.5), 0 0 12px rgba(52, 211, 153, 0.4);
-  color: #ffffff;
-  transform: translateY(-2px);
+.btn-primary:hover:not(:disabled) {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.38) 0%, rgba(255, 255, 255, 0.08) 50%, rgba(0, 0, 0, 0.05) 100%),
+              linear-gradient(135deg, #34d399 0%, #10b981 100%) !important;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.85),
+              0 12px 30px rgba(16, 185, 129, 0.5) !important;
+  color: #ffffff !important;
+  transform: translateY(-2px) scale(1.02);
 }
 
-/* Secondary Button (Glass / Outline) */
+/* Secondary Liquid Glass Button */
 .btn-secondary {
-  background: rgba(16, 185, 129, 0.08);
-  border: 1px solid rgba(16, 185, 129, 0.4);
-  color: var(--color-primary-light);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.02) 100%),
+              rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.22) !important;
+  color: #ffffff !important;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.35),
+              0 4px 16px rgba(0, 0, 0, 0.15) !important;
+  font-weight: 600;
 }
 
-.btn-secondary:hover {
-  background: rgba(16, 185, 129, 0.18);
-  border-color: var(--color-primary);
-  color: #ffffff;
-  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.25);
-  transform: translateY(-2px);
+.btn-secondary:hover:not(:disabled) {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.06) 100%),
+              rgba(16, 185, 129, 0.2) !important;
+  border-color: rgba(16, 185, 129, 0.5) !important;
+  color: #34d399 !important;
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.25) !important;
+  transform: translateY(-2px) scale(1.02);
 }
 
 /* Danger Button */
@@ -6965,16 +6994,98 @@ html {
   background: linear-gradient(135deg, #fbbf24 0%, #b45309 100%);
 }
 
-/* --- B. Complete Light Mode Component Theme Overrides --- */
+/* ==========================================================================
+   31. iPhone Style Booking Cards Architecture & Liquid Glass System
+   ========================================================================== */
+
+/* iPhone Style Rounded Squircle Cards ("gol not square") */
+.booking-category-card {
+  border-radius: 34px !important;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.pricing-card {
+  border-radius: 28px !important;
+}
+
+.booking-date {
+  border-radius: 24px !important; /* iPhone smooth squircle */
+  min-height: 86px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.14);
+}
+
+.booking-slot {
+  border-radius: 22px !important; /* iPhone smooth rounded slot */
+  background: rgba(255, 255, 255, 0.06);
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+}
+
+#slotsSectionCard {
+  border-radius: 36px !important;
+}
+
+.booking-form {
+  border-radius: 34px !important;
+}
+
+.booking-summary {
+  border-radius: 34px !important;
+}
+
+#bookingStatusCheckSection .card-premium {
+  border-radius: 34px !important;
+}
+
+.condition-box {
+  border-radius: 22px !important;
+}
+
+.calc-card {
+  border-radius: 34px !important;
+}
+
+.calc-pill-btn {
+  border-radius: 9999px !important; /* Pill shaped liquid button */
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  transition: all 0.24s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.calc-pill-btn:active {
+  transform: scale(0.96) !important;
+}
+
+.calc-result-box {
+  border-radius: 28px !important;
+}
+
+.category-select-btn {
+  border-radius: 9999px !important; /* Liquid glass pill */
+}
+
+/* ==========================================================================
+   32. Complete Light Theme High-Contrast Overrides (All Pages & Screenshots)
+   Fixes all dark-on-dark, washed-out, and unreadable text issues
+   ========================================================================== */
 
 [data-theme="light"] body {
-  background-color: var(--color-bg-primary);
-  color: var(--color-text-primary);
+  background-color: #f8fafc;
+  color: #0f172a;
 }
 
 [data-theme="light"] .bg-animated .bg-gradient {
-  background: radial-gradient(circle at 50% 5%, rgba(16, 185, 129, 0.08) 0%, transparent 60%),
-              radial-gradient(circle at 80% 25%, rgba(56, 189, 248, 0.06) 0%, transparent 50%),
+  background: radial-gradient(circle at 50% 5%, rgba(16, 185, 129, 0.07) 0%, transparent 60%),
+              radial-gradient(circle at 80% 25%, rgba(56, 189, 248, 0.05) 0%, transparent 50%),
               #f8fafc;
 }
 
@@ -6982,274 +7093,412 @@ html {
   opacity: 0.02;
 }
 
+/* 1. Global Cards & Headings (Fixes Feature Cards, Why Choose Us, Rules, Reviews) */
+[data-theme="light"] .card {
+  background: #ffffff !important;
+  border: 1.5px solid rgba(15, 23, 42, 0.08) !important;
+  box-shadow: 0 8px 26px rgba(15, 23, 42, 0.05) !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .card-premium {
+  background: #ffffff !important;
+  border: 1.5px solid rgba(16, 185, 129, 0.3) !important;
+  box-shadow: 0 10px 32px rgba(16, 185, 129, 0.09) !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .card-premium::before {
+  background: linear-gradient(90deg, #10b981, #059669) !important;
+}
+
+[data-theme="light"] .card-title,
+[data-theme="light"] .section-title,
+[data-theme="light"] h1,
+[data-theme="light"] h2,
+[data-theme="light"] h3,
+[data-theme="light"] h4,
+[data-theme="light"] h5,
+[data-theme="light"] h6 {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .card-text,
+[data-theme="light"] p {
+  color: #334155;
+}
+
+[data-theme="light"] .card-text.text-secondary,
+[data-theme="light"] .section-subtitle,
+[data-theme="light"] .text-secondary {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .text-muted {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .card-icon {
+  background: #ecfdf5 !important;
+  border-color: rgba(16, 185, 129, 0.25) !important;
+  color: #059669 !important;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.12) !important;
+}
+
+/* 2. Top Navigation Bar */
 [data-theme="light"] .navbar {
-  background: rgba(255, 255, 255, 0.88);
-  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
-  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04);
+  background: rgba(255, 255, 255, 0.94) !important;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08) !important;
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04) !important;
 }
 
 [data-theme="light"] .navbar.scrolled {
-  background: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
+  background: rgba(255, 255, 255, 0.98) !important;
+  box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08) !important;
 }
 
 [data-theme="light"] .navbar-logo-text {
-  color: #0f172a;
+  color: #0f172a !important;
 }
 
 [data-theme="light"] .nav-link {
-  color: #334155;
+  color: #334155 !important;
 }
 
 [data-theme="light"] .nav-link:hover,
 [data-theme="light"] .nav-link.active {
-  color: #059669;
+  color: #059669 !important;
+}
+
+[data-theme="light"] .lang-toggle-btn {
+  background: #f1f5f9 !important;
+  border: 1.5px solid #cbd5e1 !important;
+  color: #334155 !important;
+}
+
+[data-theme="light"] .lang-toggle-btn .lang-text.active {
+  color: #059669 !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="light"] .theme-toggle-btn {
+  background: #f1f5f9 !important;
+  border: 1.5px solid #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .theme-toggle-btn:hover {
+  background: #e2e8f0 !important;
+  border-color: #10b981 !important;
+  color: #059669 !important;
+}
+
+[data-theme="light"] .mobile-menu-btn {
+  background: #f1f5f9 !important;
+  border: 1.5px solid #cbd5e1 !important;
+  color: #0f172a !important;
+}
+
+/* 3. Hero Section (Screenshot 1 & 5 Fix) */
+[data-theme="light"] .hero-prestige-badge {
+  background: #ffffff !important;
+  border: 1.5px solid rgba(16, 185, 129, 0.35) !important;
+  box-shadow: 0 4px 18px rgba(16, 185, 129, 0.12) !important;
+}
+
+[data-theme="light"] .badge-title-txt {
+  color: #065f46 !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="light"] .badge-crown-icon {
+  color: #d97706 !important;
+  filter: drop-shadow(0 0 6px rgba(217, 119, 6, 0.4)) !important;
+}
+
+[data-theme="light"] .badge-status-dot {
+  color: #059669 !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] .badge-divider {
+  color: #cbd5e1 !important;
 }
 
 [data-theme="light"] .hero-title-prefix {
-  color: #059669;
+  color: #059669 !important;
+  text-shadow: none !important;
 }
 
-[data-theme="light"] .hero-brand-glamour {
-  color: #0f172a;
+[data-theme="light"] .hero-brand-nowrap {
+  background: linear-gradient(135deg, #065f46 0%, #059669 45%, #047857 75%, #059669 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  filter: drop-shadow(0 2px 10px rgba(5, 150, 105, 0.2)) !important;
+}
+
+[data-theme="light"] .hero-avenue-title {
+  background: linear-gradient(135deg, #d97706 0%, #b45309 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  filter: drop-shadow(0 2px 8px rgba(217, 119, 6, 0.25)) !important;
+}
+
+[data-theme="light"] .hero-tagline-luxury {
+  color: #059669 !important;
+  font-weight: 700 !important;
 }
 
 [data-theme="light"] .hero-desc-luxury {
-  color: #475569;
+  color: #475569 !important;
 }
 
 [data-theme="light"] .stadium-lighting {
-  opacity: 0.3;
+  opacity: 0.15;
 }
 
 [data-theme="light"] .hero-overlay {
   background: linear-gradient(180deg, rgba(248, 250, 252, 0.4) 0%, #f8fafc 100%);
 }
 
-[data-theme="light"] .hero-prestige-badge {
-  background: rgba(255, 255, 255, 0.85);
-  border-color: rgba(16, 185, 129, 0.3);
-  color: #0f172a;
-}
-
 [data-theme="light"] .luxury-feature-card {
-  background: rgba(255, 255, 255, 0.85);
-  border-color: rgba(15, 23, 42, 0.08);
-  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
+  background: #ffffff !important;
+  border: 1.5px solid rgba(15, 23, 42, 0.08) !important;
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.05) !important;
 }
 
 [data-theme="light"] .luxury-feature-card:hover {
-  background: #ffffff;
-  border-color: rgba(16, 185, 129, 0.35);
-  box-shadow: 0 12px 28px rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.35) !important;
+  box-shadow: 0 12px 28px rgba(16, 185, 129, 0.12) !important;
+}
+
+[data-theme="light"] .luxury-feature-card .feature-label {
+  color: #059669 !important;
+  font-weight: 700 !important;
 }
 
 [data-theme="light"] .luxury-feature-card .feature-title {
-  color: #0f172a;
+  color: #0f172a !important;
+  font-weight: 700 !important;
 }
 
-[data-theme="light"] .ticker-luxury {
-  background: rgba(255, 255, 255, 0.9);
-  border-top-color: rgba(15, 23, 42, 0.08);
-  border-bottom-color: rgba(15, 23, 42, 0.08);
-  color: #334155;
+[data-theme="light"] .luxury-feature-card .feature-desc {
+  color: #64748b !important;
 }
 
-[data-theme="light"] .live-pulse-luxury {
-  background: #ffffff;
-  border-color: rgba(15, 23, 42, 0.08);
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+[data-theme="light"] .luxury-feature-card .feature-icon-box {
+  background: #ecfdf5 !important;
+  border-color: rgba(16, 185, 129, 0.25) !important;
+  color: #059669 !important;
 }
 
-[data-theme="light"] .stat-counter-card {
-  background: #ffffff;
-  border-color: rgba(15, 23, 42, 0.08);
-  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+/* 4. Search Booking Status Card (Screenshot 2 Fix) */
+[data-theme="light"] #bookingStatusCheckSection .card-premium {
+  background: #ffffff !important;
+  border: 1.5px solid rgba(15, 23, 42, 0.08) !important;
+  box-shadow: 0 10px 32px rgba(15, 23, 42, 0.06) !important;
 }
 
-[data-theme="light"] .stat-counter-card:hover {
-  border-color: rgba(16, 185, 129, 0.35);
-  box-shadow: 0 10px 24px rgba(16, 185, 129, 0.1);
+[data-theme="light"] #bookingStatusCheckSection .card-title {
+  color: #0f172a !important;
 }
 
-[data-theme="light"] .calculator-card {
-  background: #ffffff;
-  border-color: rgba(15, 23, 42, 0.08);
-  box-shadow: 0 12px 36px rgba(15, 23, 42, 0.07);
+[data-theme="light"] #bookingStatusCheckSection .card-text {
+  color: #64748b !important;
 }
 
-[data-theme="light"] .calc-cost-display {
-  background: #f1f5f9;
-  border-color: rgba(15, 23, 42, 0.08);
+[data-theme="light"] #bookingStatusCheckSection .card-icon {
+  background: #ecfdf5 !important;
+  color: #059669 !important;
 }
 
-[data-theme="light"] .calc-result-number {
-  color: #0f172a;
+[data-theme="light"] .status-result-card {
+  background: #f8fafc !important;
+  border: 1.5px solid #e2e8f0 !important;
+  color: #0f172a !important;
 }
 
-[data-theme="light"] .feature-card {
-  background: #ffffff;
-  border-color: rgba(15, 23, 42, 0.08);
-  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.05);
+/* 5. Booking Page Dates & Slots (Screenshot 3 & 4 Fix - iPhone Style) */
+[data-theme="light"] .booking-calendar {
+  background: transparent !important;
 }
 
-[data-theme="light"] .feature-card:hover {
-  background: #ffffff;
-  border-color: rgba(16, 185, 129, 0.35);
-  box-shadow: 0 12px 32px rgba(16, 185, 129, 0.12);
+[data-theme="light"] .booking-date {
+  background: #ffffff !important;
+  border: 1.5px solid rgba(15, 23, 42, 0.1) !important;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04) !important;
+  color: #0f172a !important;
 }
 
-[data-theme="light"] .testimonial-card {
-  background: #ffffff;
-  border-color: rgba(15, 23, 42, 0.08);
-  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.05);
+[data-theme="light"] .booking-date-weekday {
+  color: #64748b !important;
+  font-weight: 600 !important;
 }
 
-[data-theme="light"] .testimonial-text {
-  color: #334155;
+[data-theme="light"] .booking-date-day {
+  color: #0f172a !important;
+  font-weight: 800 !important;
 }
 
-[data-theme="light"] .footer {
-  background: #f1f5f9;
-  border-top-color: rgba(15, 23, 42, 0.08);
-  color: #334155;
+[data-theme="light"] .booking-date-month {
+  color: #64748b !important;
 }
 
-[data-theme="light"] .footer-logo-text {
-  color: #0f172a;
+[data-theme="light"] .booking-date:hover:not(.unavailable) {
+  background: #ecfdf5 !important;
+  border-color: #10b981 !important;
+  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.18) !important;
 }
 
-[data-theme="light"] .footer-links a,
-[data-theme="light"] .footer-contact-item a {
-  color: #475569;
-}
-
-[data-theme="light"] .footer-links a:hover,
-[data-theme="light"] .footer-contact-item a:hover {
-  color: #059669;
-}
-
-[data-theme="light"] .bottom-nav {
-  background: rgba(255, 255, 255, 0.94);
-  border-top: 1px solid rgba(15, 23, 42, 0.08);
-  box-shadow: 0 -4px 20px rgba(15, 23, 42, 0.06);
-}
-
-[data-theme="light"] .bottom-nav-item {
-  color: #64748b;
-}
-
-[data-theme="light"] .bottom-nav-item.active {
-  color: #059669;
-}
-
-[data-theme="light"] .mobile-menu {
-  background: #ffffff;
-  color: #0f172a;
-}
-
-[data-theme="light"] .mobile-nav-link {
-  color: #334155;
-}
-
-[data-theme="light"] .mobile-nav-link.active {
-  background: #ecfdf5;
-  color: #059669;
-}
-
-[data-theme="light"] .modal-card {
-  background: #ffffff;
-  color: #0f172a;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.18);
-  border-color: rgba(15, 23, 42, 0.1);
-}
-
-[data-theme="light"] .form-input,
-[data-theme="light"] .form-textarea,
-[data-theme="light"] .form-select {
-  background: #f8fafc;
-  color: #0f172a;
-  border-color: #cbd5e1;
-}
-
-[data-theme="light"] .form-input:focus,
-[data-theme="light"] .form-textarea:focus,
-[data-theme="light"] .form-select:focus {
-  background: #ffffff;
-  border-color: #10b981;
-  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18);
-}
-
-[data-theme="light"] .condition-box {
-  background: #fffbeb;
-  border-color: #fcd34d;
-  color: #92400e;
-}
-
-[data-theme="light"] .slot-item {
-  background: #ffffff;
-  border-color: rgba(15, 23, 42, 0.1);
-  color: #0f172a;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-}
-
-[data-theme="light"] .slot-item:hover:not(.booked) {
-  border-color: #10b981;
-  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.2);
-}
-
-[data-theme="light"] .slot-item.selected {
+[data-theme="light"] .booking-date.selected {
   background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
-  color: #ffffff !important;
   border-color: #059669 !important;
-  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.4) !important;
-}
-
-[data-theme="light"] .slot-item.booked {
-  background: #f1f5f9;
-  border-color: #e2e8f0;
-  color: #94a3b8;
-}
-
-[data-theme="light"] .booking-step-num {
-  background: #f1f5f9;
-  border-color: #cbd5e1;
-  color: #64748b;
-}
-
-[data-theme="light"] .booking-step.active .booking-step-num {
-  background: #10b981;
-  border-color: #10b981;
-  color: #ffffff;
-  box-shadow: 0 0 16px rgba(16, 185, 129, 0.35);
-}
-
-[data-theme="light"] .booking-step.completed .booking-step-num {
-  background: #059669;
-  border-color: #059669;
-  color: #ffffff;
-}
-
-[data-theme="light"] .date-picker-day {
-  background: #ffffff;
-  border-color: rgba(15, 23, 42, 0.1);
-  color: #0f172a;
-}
-
-[data-theme="light"] .date-picker-day:hover {
-  border-color: #10b981;
-}
-
-[data-theme="light"] .date-picker-day.selected {
-  background: #10b981 !important;
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4) !important;
   color: #ffffff !important;
-  border-color: #059669 !important;
-  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35) !important;
 }
 
+[data-theme="light"] .booking-date.selected .booking-date-day,
+[data-theme="light"] .booking-date.selected .booking-date-weekday,
+[data-theme="light"] .booking-date.selected .booking-date-month {
+  color: #ffffff !important;
+  text-shadow: none !important;
+}
+
+[data-theme="light"] #slotsSectionCard {
+  background: #ffffff !important;
+  border: 1.5px solid rgba(15, 23, 42, 0.08) !important;
+  box-shadow: 0 10px 32px rgba(15, 23, 42, 0.05) !important;
+}
+
+[data-theme="light"] .booking-slot {
+  background: #ffffff !important;
+  border: 1.5px solid rgba(15, 23, 42, 0.1) !important;
+  box-shadow: 0 3px 12px rgba(15, 23, 42, 0.04) !important;
+}
+
+[data-theme="light"] .booking-slot-time {
+  color: #0f172a !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] .booking-slot-price {
+  color: #059669 !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] .booking-slot-status {
+  color: #059669 !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="light"] .booking-slot:hover:not(.booked) {
+  background: #ecfdf5 !important;
+  border-color: #10b981 !important;
+  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.2) !important;
+}
+
+[data-theme="light"] .booking-slot.selected {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  border-color: #059669 !important;
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4) !important;
+}
+
+[data-theme="light"] .booking-slot.selected .booking-slot-time,
+[data-theme="light"] .booking-slot.selected .booking-slot-price,
+[data-theme="light"] .booking-slot.selected .booking-slot-status {
+  color: #ffffff !important;
+  text-shadow: none !important;
+}
+
+[data-theme="light"] .booking-slot.booked {
+  background: #f1f5f9 !important;
+  border-color: #e2e8f0 !important;
+  opacity: 0.65 !important;
+}
+
+[data-theme="light"] .booking-slot.booked .booking-slot-time,
+[data-theme="light"] .booking-slot.booked .booking-slot-price,
+[data-theme="light"] .booking-slot.booked .booking-slot-status {
+  color: #94a3b8 !important;
+}
+
+/* 6. Turf Match Calculator (Screenshot 6 Fix) */
+[data-theme="light"] .calc-card {
+  background: #ffffff !important;
+  border: 1.5px solid rgba(15, 23, 42, 0.08) !important;
+  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.07) !important;
+}
+
+[data-theme="light"] .calc-group-title {
+  color: #0f172a !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] .calc-pill-btn {
+  background: #f8fafc !important;
+  border: 1.5px solid #e2e8f0 !important;
+  color: #334155 !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02) !important;
+}
+
+[data-theme="light"] .calc-pill-btn:hover {
+  background: #f1f5f9 !important;
+  border-color: #10b981 !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .calc-pill-btn.active {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  border-color: #059669 !important;
+  color: #ffffff !important;
+  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.35) !important;
+}
+
+[data-theme="light"] .calc-result-box {
+  background: linear-gradient(145deg, #f0fdf4 0%, #e8f8f0 100%) !important;
+  border: 1.5px solid rgba(16, 185, 129, 0.35) !important;
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.12) !important;
+}
+
+[data-theme="light"] .calc-result-title {
+  color: #065f46 !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] .calc-price-display {
+  color: #059669 !important;
+  text-shadow: none !important;
+}
+
+[data-theme="light"] #calcSummaryText {
+  color: #475569 !important;
+}
+
+/* 7. Why Choose EVER GAIN Feature Cards (Screenshot 7 Fix) */
+[data-theme="light"] #why-choose .card {
+  background: #ffffff !important;
+  border: 1.5px solid rgba(15, 23, 42, 0.08) !important;
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.04) !important;
+}
+
+[data-theme="light"] #why-choose .card:hover {
+  border-color: rgba(16, 185, 129, 0.4) !important;
+  box-shadow: 0 12px 32px rgba(16, 185, 129, 0.12) !important;
+}
+
+[data-theme="light"] #why-choose .card-title {
+  color: #0f172a !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] #why-choose .card-text {
+  color: #475569 !important;
+}
+
+/* 8. Booking Step 1 Pricing Subgrid in Light Theme */
 [data-theme="light"] .pricing-card {
-  background: #ffffff;
-  border-color: rgba(15, 23, 42, 0.1);
+  background: #ffffff !important;
+  border-color: rgba(15, 23, 42, 0.1) !important;
 }
 
 [data-theme="light"] .pricing-card-day {
@@ -7260,7 +7509,7 @@ html {
 [data-theme="light"] .pricing-card-day .card-icon {
   background: #ffffff !important;
   color: #059669 !important;
-  box-shadow: 0 4px 10px rgba(16, 185, 129, 0.15);
+  box-shadow: 0 4px 10px rgba(16, 185, 129, 0.15) !important;
 }
 
 [data-theme="light"] .pricing-card-night {
@@ -7271,7 +7520,7 @@ html {
 [data-theme="light"] .pricing-card-night .card-icon {
   background: #ffffff !important;
   color: #2563eb !important;
-  box-shadow: 0 4px 10px rgba(59, 130, 246, 0.15);
+  box-shadow: 0 4px 10px rgba(59, 130, 246, 0.15) !important;
 }
 
 [data-theme="light"] .pricing-card-night .price-amount {
@@ -7285,7 +7534,221 @@ html {
   box-shadow: 0 8px 24px rgba(16, 185, 129, 0.28), 0 0 0 3px rgba(16, 185, 129, 0.2) !important;
 }
 
-/* Admin Light Theme Overrides */
+/* 9. Booking Steps, Summary & Form Fields */
+[data-theme="light"] .booking-form {
+  background: #ffffff !important;
+  border: 1.5px solid rgba(15, 23, 42, 0.08) !important;
+  box-shadow: 0 10px 32px rgba(15, 23, 42, 0.06) !important;
+}
+
+[data-theme="light"] .booking-summary {
+  background: #ffffff !important;
+  border: 1.5px solid rgba(15, 23, 42, 0.08) !important;
+  box-shadow: 0 10px 32px rgba(15, 23, 42, 0.06) !important;
+}
+
+[data-theme="light"] .summary-row {
+  color: #334155 !important;
+  border-bottom: 1px solid #f1f5f9 !important;
+}
+
+[data-theme="light"] .summary-label {
+  color: #64748b !important;
+  font-weight: 500 !important;
+}
+
+[data-theme="light"] .summary-value {
+  color: #0f172a !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] .summary-row.summary-total {
+  border-top: 2px solid #e2e8f0 !important;
+}
+
+[data-theme="light"] .summary-row.summary-total .summary-label {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .summary-row.summary-total .summary-value {
+  color: #059669 !important;
+}
+
+[data-theme="light"] .condition-box {
+  background: #fffbeb !important;
+  border: 1.5px solid #fde68a !important;
+  color: #92400e !important;
+}
+
+[data-theme="light"] .form-input,
+[data-theme="light"] .form-textarea,
+[data-theme="light"] .form-select {
+  background: #ffffff !important;
+  border: 1.5px solid #cbd5e1 !important;
+  color: #0f172a !important;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+}
+
+[data-theme="light"] .form-input:focus,
+[data-theme="light"] .form-textarea:focus,
+[data-theme="light"] .form-select:focus {
+  background: #ffffff !important;
+  border-color: #10b981 !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2) !important;
+}
+
+[data-theme="light"] .form-label {
+  color: #0f172a !important;
+  font-weight: 600 !important;
+}
+
+[data-theme="light"] .form-hint {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .input-icon-wrapper i {
+  color: #64748b !important;
+}
+
+/* 10. Liquid Glass Secondary Button in Light Theme */
+[data-theme="light"] .btn-secondary,
+[data-theme="light"] .category-select-btn.btn-secondary {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(241, 245, 249, 0.85) 100%) !important;
+  border: 1.5px solid rgba(15, 23, 42, 0.12) !important;
+  color: #0f172a !important;
+  box-shadow: inset 0 1px 1px #ffffff,
+              0 3px 12px rgba(15, 23, 42, 0.05) !important;
+}
+
+[data-theme="light"] .btn-secondary:hover:not(:disabled),
+[data-theme="light"] .category-select-btn.btn-secondary:hover:not(:disabled) {
+  background: #ffffff !important;
+  border-color: #10b981 !important;
+  color: #059669 !important;
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.2) !important;
+}
+
+/* 11. Step Indicator Numbers */
+[data-theme="light"] .booking-step-num {
+  background: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+  color: #64748b !important;
+}
+
+[data-theme="light"] .booking-step.active .booking-step-num {
+  background: #10b981 !important;
+  border-color: #10b981 !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.35) !important;
+}
+
+[data-theme="light"] .booking-step.completed .booking-step-num {
+  background: #059669 !important;
+  border-color: #059669 !important;
+  color: #ffffff !important;
+}
+
+/* 12. Rules, Gallery, Contact & Modals */
+[data-theme="light"] .rule-card,
+[data-theme="light"] .rules-item,
+[data-theme="light"] .contact-info-card,
+[data-theme="light"] .contact-form-card,
+[data-theme="light"] .gallery-item-card {
+  background: #ffffff !important;
+  border: 1.5px solid rgba(15, 23, 42, 0.08) !important;
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.04) !important;
+}
+
+[data-theme="light"] .modal {
+  background: #ffffff !important;
+  border: 1.5px solid rgba(15, 23, 42, 0.08) !important;
+  box-shadow: 0 25px 60px rgba(15, 23, 42, 0.15) !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .modal-header {
+  border-bottom-color: #f1f5f9 !important;
+}
+
+[data-theme="light"] .modal-footer {
+  border-top-color: #f1f5f9 !important;
+}
+
+[data-theme="light"] .modal-title {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .modal-close {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .gallery-filter-btn {
+  background: #f1f5f9 !important;
+  border: 1.5px solid #cbd5e1 !important;
+  color: #475569 !important;
+}
+
+[data-theme="light"] .gallery-filter-btn.active {
+  background: #10b981 !important;
+  color: #ffffff !important;
+  border-color: #10b981 !important;
+}
+
+[data-theme="light"] .gallery-filter-btn:hover:not(.active) {
+  background: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+/* 13. Footer & Mobile Navigation */
+[data-theme="light"] .footer {
+  background: #f1f5f9 !important;
+  border-top-color: rgba(15, 23, 42, 0.08) !important;
+  color: #334155 !important;
+}
+
+[data-theme="light"] .footer-logo-text {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .footer-links a,
+[data-theme="light"] .footer-contact-item a {
+  color: #475569 !important;
+}
+
+[data-theme="light"] .footer-links a:hover,
+[data-theme="light"] .footer-contact-item a:hover {
+  color: #059669 !important;
+}
+
+[data-theme="light"] .bottom-nav {
+  background: rgba(255, 255, 255, 0.94) !important;
+  border-top: 1px solid rgba(15, 23, 42, 0.08) !important;
+  box-shadow: 0 -4px 20px rgba(15, 23, 42, 0.06) !important;
+}
+
+[data-theme="light"] .bottom-nav-item {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .bottom-nav-item.active {
+  color: #059669 !important;
+}
+
+[data-theme="light"] .mobile-menu {
+  background: #ffffff !important;
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .mobile-nav-link {
+  color: #334155 !important;
+}
+
+[data-theme="light"] .mobile-nav-link.active {
+  background: #ecfdf5 !important;
+  color: #059669 !important;
+}
+
+/* 14. Admin Light Theme Overrides */
 [data-theme="light"] .admin-header {
   background: rgba(255, 255, 255, 0.95);
   border-bottom-color: rgba(15, 23, 42, 0.08);
@@ -7332,5 +7795,60 @@ html {
 [data-theme="light"] .table td {
   border-bottom-color: #f1f5f9;
   color: #1e293b;
+}
+
+/* 15. Badges & Progress Connectors in Light Theme */
+[data-theme="light"] .booking-steps::before {
+  background: #e2e8f0 !important;
+}
+
+[data-theme="light"] .booking-step-progress-bar {
+  background: #10b981 !important;
+}
+
+[data-theme="light"] .booking-step-label {
+  color: #64748b !important;
+}
+
+[data-theme="light"] .booking-step.active .booking-step-label {
+  color: #059669 !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] .booking-step.completed .booking-step-label {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .badge-available,
+[data-theme="light"] .badge-confirmed,
+[data-theme="light"] .badge-success {
+  background: #dcfce7 !important;
+  color: #166534 !important;
+  border-color: #86efac !important;
+}
+
+[data-theme="light"] .badge-pending,
+[data-theme="light"] .badge-warning {
+  background: #fef3c7 !important;
+  color: #92400e !important;
+  border-color: #fcd34d !important;
+}
+
+[data-theme="light"] .badge-info {
+  background: #e0f2fe !important;
+  color: #075985 !important;
+  border-color: #7dd3fc !important;
+}
+
+[data-theme="light"] .badge-live-247 {
+  background: #ecfdf5 !important;
+  border-color: rgba(16, 185, 129, 0.4) !important;
+  color: #059669 !important;
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.15) !important;
+}
+
+[data-theme="light"] .beacon-dot {
+  background: #16a34a !important;
+  box-shadow: 0 0 8px #16a34a !important;
 }
 

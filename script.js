@@ -641,21 +641,7 @@
   // ==========================================================================
 
   function setupCardHoverEffects() {
-    if (window.matchMedia && window.matchMedia('(hover: hover)').matches) {
-      const cards = document.querySelectorAll('.card, .stat-counter-card, .pricing-card, .luxury-feature-card');
-      cards.forEach(function (card) {
-        card.addEventListener('mousemove', function (e) {
-          const rect = card.getBoundingClientRect();
-          const x = e.clientX - rect.left - (rect.width / 2);
-          const y = e.clientY - rect.top - (rect.height / 2);
-          const mult = 0.03;
-          card.style.transform = 'perspective(800px) rotateX(' + (-y * mult) + 'deg) rotateY(' + (x * mult) + 'deg) translateY(-4px)';
-        });
-        card.addEventListener('mouseleave', function () {
-          card.style.transform = '';
-        });
-      });
-    }
+    // Pure CSS handles 60-120 FPS hardware-accelerated transforms without JS layout recalculations
   }
 
   // ==========================================================================
