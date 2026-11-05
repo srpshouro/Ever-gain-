@@ -5825,6 +5825,47 @@ header.section.section-header,
   letter-spacing: 0.08em;
 }
 
+/* Distinct Color Identities for 4 Feature Cards in Dark Mode */
+.feature-card-fifa .feature-icon-box {
+  color: #34d399 !important;
+  background: rgba(16, 185, 129, 0.16) !important;
+  border-color: rgba(52, 211, 153, 0.4) !important;
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.25) !important;
+}
+.feature-card-fifa .feature-label {
+  color: #34d399 !important;
+}
+
+.feature-card-4k .feature-icon-box {
+  color: #60a5fa !important;
+  background: rgba(59, 130, 246, 0.16) !important;
+  border-color: rgba(96, 165, 250, 0.45) !important;
+  box-shadow: 0 0 16px rgba(59, 130, 246, 0.3) !important;
+}
+.feature-card-4k .feature-label {
+  color: #60a5fa !important;
+}
+
+.feature-card-booking .feature-icon-box {
+  color: #fbbf24 !important;
+  background: rgba(245, 158, 11, 0.16) !important;
+  border-color: rgba(251, 191, 36, 0.45) !important;
+  box-shadow: 0 0 16px rgba(245, 158, 11, 0.3) !important;
+}
+.feature-card-booking .feature-label {
+  color: #fbbf24 !important;
+}
+
+.feature-card-vip .feature-icon-box {
+  color: #2dd4bf !important;
+  background: rgba(20, 184, 166, 0.16) !important;
+  border-color: rgba(45, 212, 191, 0.45) !important;
+  box-shadow: 0 0 16px rgba(20, 184, 166, 0.25) !important;
+}
+.feature-card-vip .feature-label {
+  color: #2dd4bf !important;
+}
+
 .feature-title {
   font-size: 0.95rem;
   font-weight: 700;
@@ -5888,45 +5929,57 @@ header.section.section-header,
 }
 
 .btn-luxury-secondary {
-  background: rgba(14, 28, 18, 0.85);
+  background: linear-gradient(180deg, rgba(20, 38, 26, 0.8) 0%, rgba(10, 20, 14, 0.9) 100%);
   color: #ffffff !important;
   border: 1px solid rgba(255, 255, 255, 0.18);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
   padding: 14px 26px;
   border-radius: var(--radius-full);
   font-weight: 600;
-  transition: all 0.3s ease;
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.25), 0 8px 24px rgba(0, 0, 0, 0.35);
+  transition: all 0.24s cubic-bezier(0.16, 1, 0.3, 1);
   display: inline-flex;
   align-items: center;
   gap: 8px;
 }
 
 .btn-luxury-secondary:hover {
-  background: rgba(16, 185, 129, 0.16);
-  border-color: rgba(16, 185, 129, 0.55);
-  transform: translateY(-3px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  background: linear-gradient(180deg, rgba(16, 185, 129, 0.3) 0%, rgba(5, 150, 105, 0.4) 100%);
+  border-color: rgba(52, 211, 153, 0.6);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.4), 0 12px 28px rgba(16, 185, 129, 0.3);
+}
+
+.btn-luxury-secondary:active {
+  transform: scale(0.96) !important;
 }
 
 .btn-luxury-map {
-  background: rgba(24, 28, 14, 0.88);
+  background: linear-gradient(180deg, rgba(34, 30, 14, 0.8) 0%, rgba(18, 16, 8, 0.9) 100%);
   color: #ffffff !important;
-  border: 1px solid rgba(251, 191, 36, 0.4);
-  backdrop-filter: blur(12px);
+  border: 1px solid rgba(251, 191, 36, 0.35);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
   padding: 14px 24px;
   border-radius: var(--radius-full);
   font-weight: 600;
-  transition: all 0.3s ease;
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.25), 0 8px 24px rgba(0, 0, 0, 0.35);
+  transition: all 0.24s cubic-bezier(0.16, 1, 0.3, 1);
   display: inline-flex;
   align-items: center;
   gap: 8px;
 }
 
 .btn-luxury-map:hover {
-  background: rgba(251, 191, 36, 0.18);
+  background: linear-gradient(180deg, rgba(245, 158, 11, 0.3) 0%, rgba(217, 119, 6, 0.4) 100%);
   border-color: #fbbf24;
-  transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(251, 191, 36, 0.25);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.4), 0 12px 28px rgba(245, 158, 11, 0.3);
+}
+
+.btn-luxury-map:active {
+  transform: scale(0.96) !important;
 }
 
 /* Luxury Ticker Enhancement */
@@ -7293,7 +7346,12 @@ html {
 
 /* 3. Hero Section (Screenshot 1 Fix: Radiant Apple Glass & Crisp Typography) */
 [data-theme="light"] .hero-luxury {
-  background: linear-gradient(180deg, #ffffff 0%, #f0fdf4 65%, #e8f8f0 100%) !important;
+  background: 
+    radial-gradient(ellipse 650px 420px at 15% 25%, rgba(16, 185, 129, 0.16) 0%, transparent 70%),
+    radial-gradient(ellipse 550px 380px at 85% 35%, rgba(56, 189, 248, 0.15) 0%, transparent 65%),
+    radial-gradient(ellipse 700px 450px at 50% 85%, rgba(16, 185, 129, 0.14) 0%, transparent 75%),
+    radial-gradient(circle 380px at 50% 12%, rgba(251, 191, 36, 0.10) 0%, transparent 60%),
+    linear-gradient(180deg, #ffffff 0%, #f0fdf4 55%, #e6f9f0 100%) !important;
 }
 
 [data-theme="light"] .hero-luxury::before {
@@ -7365,20 +7423,59 @@ html {
   font-weight: 500 !important;
 }
 
-/* 3.5. Stat Counter Cards in Light Mode (Fixes Screenshot 2 Dark Card Bug) */
-[data-theme="light"] .stats-counter-luxury .stat-counter-card,
-[data-theme="light"] .stat-counter-card {
-  background: rgba(255, 255, 255, 0.88) !important;
+/* Light Theme Hero Action Buttons (Eliminates Pitch Black Buttons) */
+[data-theme="light"] .btn-luxury-secondary {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 253, 244, 0.88) 100%) !important;
+  color: #065f46 !important;
+  border: 1.5px solid rgba(16, 185, 129, 0.35) !important;
   backdrop-filter: blur(20px) saturate(180%) !important;
   -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
-  border: 1px solid rgba(16, 185, 129, 0.22) !important;
-  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.95), 0 10px 30px rgba(15, 23, 42, 0.06) !important;
+  box-shadow: inset 0 1.5px 1.5px rgba(255, 255, 255, 1), 0 8px 24px rgba(16, 185, 129, 0.15) !important;
+}
+
+[data-theme="light"] .btn-luxury-secondary:hover {
+  background: #ffffff !important;
+  border-color: #10b981 !important;
+  color: #059669 !important;
+  box-shadow: inset 0 1.5px 1.5px rgba(255, 255, 255, 1), 0 12px 30px rgba(16, 185, 129, 0.25) !important;
+}
+
+[data-theme="light"] .btn-luxury-map {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(254, 252, 232, 0.88) 100%) !important;
+  color: #92400e !important;
+  border: 1.5px solid rgba(245, 158, 11, 0.35) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  box-shadow: inset 0 1.5px 1.5px rgba(255, 255, 255, 1), 0 8px 24px rgba(245, 158, 11, 0.15) !important;
+}
+
+[data-theme="light"] .btn-luxury-map:hover {
+  background: #ffffff !important;
+  border-color: #f59e0b !important;
+  color: #b45309 !important;
+  box-shadow: inset 0 1.5px 1.5px rgba(255, 255, 255, 1), 0 12px 30px rgba(245, 158, 11, 0.25) !important;
+}
+
+/* 3.5. Stat Counter Cards in Light Mode (Apple Liquid Glass) */
+[data-theme="light"] .stats-counter-luxury .stat-counter-card,
+[data-theme="light"] .stat-counter-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.80) 0%, rgba(240, 253, 244, 0.65) 100%) !important;
+  backdrop-filter: blur(28px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 
+    inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 1),
+    inset 0 -1.5px 2px 0 rgba(16, 185, 129, 0.06),
+    0 12px 30px -4px rgba(16, 185, 129, 0.12),
+    0 4px 16px rgba(15, 23, 42, 0.04) !important;
 }
 
 [data-theme="light"] .stat-counter-card:hover {
-  background: #ffffff !important;
+  background: rgba(255, 255, 255, 0.95) !important;
   border-color: #10b981 !important;
-  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.95), 0 16px 36px rgba(16, 185, 129, 0.16) !important;
+  box-shadow: 
+    inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 1),
+    0 18px 36px rgba(16, 185, 129, 0.18) !important;
 }
 
 [data-theme="light"] .stat-counter-value {
@@ -7394,19 +7491,25 @@ html {
   font-weight: 600 !important;
 }
 
-/* 3.6. Testimonials & Player Review Cards in Light Mode (Fixes Screenshot 3 Dark Card Bug) */
+/* 3.6. Testimonials & Player Review Cards in Light Mode (Apple Liquid Glass) */
 [data-theme="light"] .testimonial-card {
-  background: rgba(255, 255, 255, 0.88) !important;
-  backdrop-filter: blur(20px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
-  border: 1px solid rgba(16, 185, 129, 0.2) !important;
-  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.95), 0 10px 28px rgba(15, 23, 42, 0.05) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.80) 0%, rgba(240, 253, 244, 0.65) 100%) !important;
+  backdrop-filter: blur(28px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 
+    inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 1),
+    inset 0 -1.5px 2px 0 rgba(16, 185, 129, 0.06),
+    0 12px 30px -4px rgba(16, 185, 129, 0.12),
+    0 4px 16px rgba(15, 23, 42, 0.04) !important;
 }
 
 [data-theme="light"] .testimonial-card:hover {
-  background: #ffffff !important;
+  background: rgba(255, 255, 255, 0.95) !important;
   border-color: #10b981 !important;
-  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.95), 0 16px 36px rgba(16, 185, 129, 0.14) !important;
+  box-shadow: 
+    inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 1),
+    0 18px 36px rgba(16, 185, 129, 0.18) !important;
 }
 
 [data-theme="light"] .testimonial-quote {
@@ -7428,25 +7531,33 @@ html {
   color: #f59e0b !important;
 }
 
-/* 3.7. Booking Category Selection Cards in Light Mode */
+/* 3.7. Booking Category Selection Cards in Light Mode (Apple Liquid Glass) */
 [data-theme="light"] .booking-category-card {
-  background: rgba(255, 255, 255, 0.88) !important;
-  backdrop-filter: blur(20px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
-  border: 1px solid rgba(16, 185, 129, 0.18) !important;
-  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.95), 0 8px 24px rgba(15, 23, 42, 0.04) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.80) 0%, rgba(240, 253, 244, 0.65) 100%) !important;
+  backdrop-filter: blur(28px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 
+    inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 1),
+    inset 0 -1.5px 2px 0 rgba(16, 185, 129, 0.06),
+    0 12px 30px -4px rgba(16, 185, 129, 0.12),
+    0 4px 16px rgba(15, 23, 42, 0.04) !important;
 }
 
 [data-theme="light"] .booking-category-card:hover {
-  background: #ffffff !important;
-  border-color: rgba(16, 185, 129, 0.45) !important;
-  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.95), 0 12px 28px rgba(16, 185, 129, 0.12) !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-color: rgba(16, 185, 129, 0.5) !important;
+  box-shadow: 
+    inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 1),
+    0 18px 36px rgba(16, 185, 129, 0.18) !important;
 }
 
 [data-theme="light"] .booking-category-card.selected {
   background: linear-gradient(145deg, #ecfdf5 0%, #d1fae5 100%) !important;
   border-color: #10b981 !important;
-  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.95), 0 12px 30px rgba(16, 185, 129, 0.22) !important;
+  box-shadow: 
+    inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 1),
+    0 14px 34px rgba(16, 185, 129, 0.25) !important;
 }
 
 [data-theme="light"] .booking-category-name {
@@ -7470,49 +7581,93 @@ html {
   box-shadow: 0 4px 12px rgba(16, 185, 129, 0.12) !important;
 }
 
-/* 3.8 Luxury Features Grid */
+/* 3.8 Luxury Features Grid (Apple Liquid Glass & Distinct Color Identities) */
 [data-theme="light"] .luxury-feature-card {
-  background: rgba(255, 255, 255, 0.88) !important;
-  backdrop-filter: blur(20px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
-  border: 1px solid rgba(16, 185, 129, 0.18) !important;
-  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.95), 0 8px 24px rgba(15, 23, 42, 0.05) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.78) 0%, rgba(240, 253, 244, 0.62) 100%) !important;
+  backdrop-filter: blur(28px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 
+    inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 1),
+    inset 0 -1.5px 2px 0 rgba(16, 185, 129, 0.06),
+    0 12px 30px -4px rgba(16, 185, 129, 0.12),
+    0 4px 16px rgba(15, 23, 42, 0.04) !important;
 }
 
 [data-theme="light"] .luxury-feature-card:hover {
-  background: #ffffff !important;
-  border-color: rgba(16, 185, 129, 0.45) !important;
-  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.95), 0 14px 32px rgba(16, 185, 129, 0.15) !important;
-}
-
-[data-theme="light"] .luxury-feature-card .feature-label {
-  color: #059669 !important;
-  font-weight: 700 !important;
+  background: rgba(255, 255, 255, 0.92) !important;
+  border-color: rgba(16, 185, 129, 0.5) !important;
+  box-shadow: 
+    inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 1),
+    0 18px 38px rgba(16, 185, 129, 0.18) !important;
 }
 
 [data-theme="light"] .luxury-feature-card .feature-title {
   color: #0f172a !important;
-  font-weight: 700 !important;
+  font-weight: 800 !important;
 }
 
 [data-theme="light"] .luxury-feature-card .feature-desc {
-  color: #64748b !important;
+  color: #475569 !important;
 }
 
-[data-theme="light"] .luxury-feature-card .feature-icon-box {
-  background: #ecfdf5 !important;
-  border-color: rgba(16, 185, 129, 0.25) !important;
+/* Light Mode Feature Card Color Identities (Restores distinct Emerald, Blue, Gold, Teal) */
+[data-theme="light"] .feature-card-fifa .feature-icon-box {
+  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%) !important;
+  border: 1.5px solid rgba(16, 185, 129, 0.45) !important;
   color: #059669 !important;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.22) !important;
+}
+[data-theme="light"] .feature-card-fifa .feature-label {
+  color: #059669 !important;
+  font-weight: 800 !important;
 }
 
-/* 4. Search Booking Status Card (Screenshot 2 Fix) */
+[data-theme="light"] .feature-card-4k .feature-icon-box {
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%) !important;
+  border: 1.5px solid rgba(59, 130, 246, 0.45) !important;
+  color: #2563eb !important;
+  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.22) !important;
+}
+[data-theme="light"] .feature-card-4k .feature-label {
+  color: #2563eb !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="light"] .feature-card-booking .feature-icon-box {
+  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%) !important;
+  border: 1.5px solid rgba(245, 158, 11, 0.45) !important;
+  color: #d97706 !important;
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.22) !important;
+}
+[data-theme="light"] .feature-card-booking .feature-label {
+  color: #d97706 !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="light"] .feature-card-vip .feature-icon-box {
+  background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%) !important;
+  border: 1.5px solid rgba(13, 148, 136, 0.45) !important;
+  color: #0d9488 !important;
+  box-shadow: 0 4px 14px rgba(13, 148, 136, 0.22) !important;
+}
+[data-theme="light"] .feature-card-vip .feature-label {
+  color: #0d9488 !important;
+  font-weight: 800 !important;
+}
+
+/* 4. Search Booking Status Card (Apple Liquid Glass) */
 [data-theme="light"] #bookingStatusCheckSection .card-premium {
   border-radius: 34px !important;
-  background: rgba(255, 255, 255, 0.88) !important;
-  backdrop-filter: blur(20px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
-  border: 1px solid rgba(16, 185, 129, 0.18) !important;
-  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.95), 0 10px 32px rgba(15, 23, 42, 0.06) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.82) 0%, rgba(240, 253, 244, 0.65) 100%) !important;
+  backdrop-filter: blur(28px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 
+    inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 1),
+    inset 0 -1.5px 2px 0 rgba(16, 185, 129, 0.06),
+    0 14px 40px -4px rgba(16, 185, 129, 0.12),
+    0 6px 20px rgba(15, 23, 42, 0.04) !important;
 }
 
 [data-theme="light"] #bookingStatusCheckSection .card-title {
@@ -7535,18 +7690,18 @@ html {
   color: #0f172a !important;
 }
 
-/* 5. Booking Page Dates & Slots (Fixes Screenshot White-on-White Bug) */
+/* 5. Booking Page Dates & Slots (Apple Liquid Glass) */
 [data-theme="light"] .booking-calendar {
   background: transparent !important;
 }
 
 [data-theme="light"] .booking-date {
   border-radius: 24px !important;
-  background: rgba(255, 255, 255, 0.88) !important;
-  border: 1px solid rgba(16, 185, 129, 0.18) !important;
-  backdrop-filter: blur(16px) !important;
-  -webkit-backdrop-filter: blur(16px) !important;
-  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.95), 0 6px 18px rgba(15, 23, 42, 0.04) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(240, 253, 244, 0.70) 100%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  box-shadow: inset 0 1.5px 1.5px rgba(255, 255, 255, 1), 0 8px 22px rgba(15, 23, 42, 0.05) !important;
   color: #0f172a !important;
 }
 
@@ -7567,14 +7722,14 @@ html {
 [data-theme="light"] .booking-date:hover:not(.unavailable) {
   background: #ecfdf5 !important;
   border-color: #10b981 !important;
-  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.95), 0 8px 22px rgba(16, 185, 129, 0.2) !important;
+  box-shadow: inset 0 1.5px 1.5px rgba(255, 255, 255, 1), 0 10px 26px rgba(16, 185, 129, 0.22) !important;
 }
 
 /* Light Theme Selected Date (Vibrant Apple Emerald Pill with Crisp Pure White Text) */
 [data-theme="light"] .booking-date.selected {
   background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
   border: 1.5px solid #34d399 !important;
-  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.7), 0 10px 28px rgba(16, 185, 129, 0.45) !important;
+  box-shadow: inset 0 1.5px 1.5px rgba(255, 255, 255, 0.7), 0 10px 28px rgba(16, 185, 129, 0.45) !important;
   color: #ffffff !important;
 }
 
@@ -7593,20 +7748,24 @@ html {
 
 [data-theme="light"] #slotsSectionCard {
   border-radius: 34px !important;
-  background: rgba(255, 255, 255, 0.88) !important;
-  backdrop-filter: blur(24px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
-  border: 1px solid rgba(16, 185, 129, 0.2) !important;
-  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.95), 0 14px 40px rgba(15, 23, 42, 0.06) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.82) 0%, rgba(240, 253, 244, 0.65) 100%) !important;
+  backdrop-filter: blur(28px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 
+    inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 1),
+    inset 0 -1.5px 2px 0 rgba(16, 185, 129, 0.06),
+    0 16px 44px -4px rgba(16, 185, 129, 0.14),
+    0 6px 22px rgba(15, 23, 42, 0.05) !important;
 }
 
 [data-theme="light"] .booking-slot {
   border-radius: 22px !important;
-  background: rgba(255, 255, 255, 0.88) !important;
-  backdrop-filter: blur(16px) !important;
-  -webkit-backdrop-filter: blur(16px) !important;
-  border: 1px solid rgba(16, 185, 129, 0.18) !important;
-  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.95), 0 4px 14px rgba(15, 23, 42, 0.04) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(240, 253, 244, 0.70) 100%) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  box-shadow: inset 0 1.5px 1.5px rgba(255, 255, 255, 1), 0 6px 18px rgba(15, 23, 42, 0.05) !important;
 }
 
 [data-theme="light"] .booking-slot-time {
@@ -7653,11 +7812,17 @@ html {
   color: #94a3b8 !important;
 }
 
-/* 6. Turf Match Calculator (Screenshot 6 Fix) */
+/* 6. Turf Match Calculator (Apple Liquid Glass) */
 [data-theme="light"] .calc-card {
-  background: #ffffff !important;
-  border: 1.5px solid rgba(15, 23, 42, 0.08) !important;
-  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.07) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.82) 0%, rgba(240, 253, 244, 0.65) 100%) !important;
+  backdrop-filter: blur(28px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 
+    inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 1),
+    inset 0 -1.5px 2px 0 rgba(16, 185, 129, 0.06),
+    0 16px 44px -4px rgba(16, 185, 129, 0.12),
+    0 6px 20px rgba(15, 23, 42, 0.04) !important;
 }
 
 [data-theme="light"] .calc-group-title {
@@ -7705,16 +7870,25 @@ html {
   color: #475569 !important;
 }
 
-/* 7. Why Choose EVER GAIN Feature Cards (Screenshot 7 Fix) */
+/* 7. Why Choose EVER GAIN Feature Cards (Apple Liquid Glass) */
 [data-theme="light"] #why-choose .card {
-  background: #ffffff !important;
-  border: 1.5px solid rgba(15, 23, 42, 0.08) !important;
-  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.04) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.80) 0%, rgba(240, 253, 244, 0.65) 100%) !important;
+  backdrop-filter: blur(28px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 
+    inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 1),
+    inset 0 -1.5px 2px 0 rgba(16, 185, 129, 0.06),
+    0 12px 32px -4px rgba(16, 185, 129, 0.12),
+    0 4px 16px rgba(15, 23, 42, 0.04) !important;
 }
 
 [data-theme="light"] #why-choose .card:hover {
-  border-color: rgba(16, 185, 129, 0.4) !important;
-  box-shadow: 0 12px 32px rgba(16, 185, 129, 0.12) !important;
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-color: rgba(16, 185, 129, 0.5) !important;
+  box-shadow: 
+    inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 1),
+    0 18px 38px rgba(16, 185, 129, 0.18) !important;
 }
 
 [data-theme="light"] #why-choose .card-title {
@@ -7726,15 +7900,21 @@ html {
   color: #475569 !important;
 }
 
-/* 8. Booking Step 1 Pricing Subgrid in Light Theme */
+/* 8. Booking Step 1 Pricing Subgrid in Light Theme (Apple Liquid Glass) */
 [data-theme="light"] .pricing-card {
-  background: #ffffff !important;
-  border-color: rgba(15, 23, 42, 0.1) !important;
+  background: rgba(255, 255, 255, 0.85) !important;
+  backdrop-filter: blur(24px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(190%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 
+    inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 1),
+    0 10px 28px rgba(15, 23, 42, 0.05) !important;
 }
 
 [data-theme="light"] .pricing-card-day {
-  background: linear-gradient(180deg, #f0fdf4 0%, #dcfce7 100%) !important;
+  background: linear-gradient(180deg, rgba(240, 253, 244, 0.9) 0%, rgba(220, 252, 231, 0.75) 100%) !important;
   border-color: rgba(16, 185, 129, 0.35) !important;
+  box-shadow: inset 0 1.5px 1.5px rgba(255, 255, 255, 0.9), 0 10px 28px rgba(16, 185, 129, 0.08) !important;
 }
 
 [data-theme="light"] .pricing-card-day .card-icon {
@@ -7744,8 +7924,9 @@ html {
 }
 
 [data-theme="light"] .pricing-card-night {
-  background: linear-gradient(180deg, #eff6ff 0%, #dbeafe 100%) !important;
+  background: linear-gradient(180deg, rgba(239, 246, 255, 0.9) 0%, rgba(219, 234, 254, 0.75) 100%) !important;
   border-color: rgba(59, 130, 246, 0.35) !important;
+  box-shadow: inset 0 1.5px 1.5px rgba(255, 255, 255, 0.9), 0 10px 28px rgba(59, 130, 246, 0.08) !important;
 }
 
 [data-theme="light"] .pricing-card-night .card-icon {
@@ -7773,17 +7954,25 @@ html {
   box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35) !important;
 }
 
-/* 9. Booking Steps, Summary & Form Fields */
+/* 9. Booking Steps, Summary & Form Fields (Apple Liquid Glass) */
 [data-theme="light"] .booking-form {
-  background: #ffffff !important;
-  border: 1.5px solid rgba(15, 23, 42, 0.08) !important;
-  box-shadow: 0 10px 32px rgba(15, 23, 42, 0.06) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(240, 253, 244, 0.65) 100%) !important;
+  backdrop-filter: blur(28px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 
+    inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 1),
+    0 14px 40px rgba(15, 23, 42, 0.06) !important;
 }
 
 [data-theme="light"] .booking-summary {
-  background: #ffffff !important;
-  border: 1.5px solid rgba(15, 23, 42, 0.08) !important;
-  box-shadow: 0 10px 32px rgba(15, 23, 42, 0.06) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(240, 253, 244, 0.65) 100%) !important;
+  backdrop-filter: blur(28px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 
+    inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 1),
+    0 14px 40px rgba(15, 23, 42, 0.06) !important;
 }
 
 [data-theme="light"] .summary-row {
@@ -7887,16 +8076,20 @@ html {
   color: #ffffff !important;
 }
 
-/* 12. Rules, Gallery, Contact & Modals */
+/* 12. Rules, Gallery, Contact & Modals (Apple Liquid Glass) */
 [data-theme="light"] .rule-card,
 [data-theme="light"] .rules-item,
 [data-theme="light"] .contact-info-card,
 [data-theme="light"] .contact-form-card,
 [data-theme="light"] .gallery-item,
 [data-theme="light"] .gallery-item-card {
-  background: #ffffff !important;
-  border: 1.5px solid rgba(15, 23, 42, 0.08) !important;
-  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.04) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(240, 253, 244, 0.65) 100%) !important;
+  backdrop-filter: blur(28px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 
+    inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 1),
+    0 10px 28px rgba(15, 23, 42, 0.05) !important;
 }
 
 [data-theme="light"] .modal {
