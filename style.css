@@ -169,6 +169,83 @@
 }
 
 /* ==========================================================================
+   1.1. LIGHT THEME TOKENS (RupantorPay Clean Modern Aesthetic)
+   ========================================================================== */
+[data-theme="light"] {
+  --color-bg-primary: #f8fafc;
+  --color-bg-secondary: #ffffff;
+  --color-bg-card: #ffffff;
+  --color-bg-card-hover: #ffffff;
+  --color-bg-glass: rgba(255, 255, 255, 0.9);
+  --color-surface: #f1f5f9;
+  --color-surface-hover: #e2e8f0;
+  --color-bg-elevated: #ffffff;
+  --color-bg-input: #ffffff;
+  --color-bg-input-focus: #ffffff;
+
+  /* Primary Emerald Green */
+  --color-primary: #10b981;
+  --color-primary-dark: #059669;
+  --color-primary-light: #059669;
+  --color-primary-glow: rgba(16, 185, 129, 0.16);
+
+  /* Accent Lime */
+  --color-accent: #65a30d;
+  --color-accent-light: #4d7c0f;
+  --color-accent-glow: rgba(101, 163, 13, 0.16);
+
+  /* Day / Night Shift Themes (RupantorPay Card Hues) */
+  --color-day-accent: #059669;
+  --color-day-card: #e6fcf5;
+  --color-day-glow: rgba(16, 185, 129, 0.14);
+  --color-night-accent: #0284c7;
+  --color-night-accent-light: #0369a1;
+  --color-night-card: #e0f2fe;
+  --color-night-glow: rgba(2, 132, 199, 0.14);
+
+  /* Functional Status Colors */
+  --color-success: #16a34a;
+  --color-success-bg: rgba(22, 163, 74, 0.1);
+  --color-success-border: rgba(22, 163, 74, 0.25);
+  --color-warning: #d97706;
+  --color-warning-bg: rgba(217, 119, 6, 0.1);
+  --color-warning-border: rgba(217, 119, 6, 0.25);
+  --color-danger: #dc2626;
+  --color-danger-bg: rgba(220, 38, 38, 0.1);
+  --color-danger-border: rgba(220, 38, 38, 0.25);
+  --color-info: #0284c7;
+  --color-info-bg: rgba(2, 132, 199, 0.1);
+  --color-info-border: rgba(2, 132, 199, 0.25);
+
+  /* Neutral Text Shades */
+  --color-text-primary: #0f172a;
+  --color-text-secondary: #334155;
+  --color-text-muted: #64748b;
+  --color-text-inverse: #ffffff;
+  --color-white: #ffffff;
+
+  /* Borders & Dividers */
+  --color-border: rgba(15, 23, 42, 0.08);
+  --color-border-hover: rgba(16, 185, 129, 0.4);
+  --color-glass-border: rgba(15, 23, 42, 0.06);
+  --color-border-focus: rgba(16, 185, 129, 0.6);
+  --color-divider: rgba(15, 23, 42, 0.06);
+
+  /* Overlays & Shadows */
+  --color-overlay: rgba(15, 23, 42, 0.6);
+  --color-overlay-heavy: rgba(15, 23, 42, 0.85);
+  --color-shadow: rgba(15, 23, 42, 0.08);
+  --shadow-sm: 0 2px 8px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 6px 20px rgba(15, 23, 42, 0.06);
+  --shadow-lg: 0 12px 32px rgba(15, 23, 42, 0.09);
+  --shadow-xl: 0 20px 48px rgba(15, 23, 42, 0.12);
+  --shadow-glow: 0 0 20px rgba(16, 185, 129, 0.12);
+  --shadow-glow-strong: 0 0 28px rgba(16, 185, 129, 0.2);
+  --shadow-glow-night: 0 0 25px rgba(2, 132, 199, 0.2);
+  --shadow-glow-danger: 0 0 20px rgba(220, 38, 38, 0.18);
+}
+
+/* ==========================================================================
    2. CSS RESET & BASE STYLES
    ========================================================================== */
 *,
@@ -966,6 +1043,50 @@ header.section.section-header,
 .lang-toggle-btn .lang-divider {
   opacity: 0.4;
   font-size: 0.75rem;
+}
+
+/* Theme Toggle Button (RupantorPay Sun/Moon Toggle) */
+.theme-toggle-btn {
+  background: rgba(18, 34, 22, 0.75);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  width: 42px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #fbbf24;
+  font-size: 1.15rem;
+  transition: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+  box-shadow: var(--shadow-sm);
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.theme-toggle-btn:hover {
+  border-color: #fbbf24;
+  background: rgba(251, 191, 36, 0.15);
+  transform: rotate(25deg) scale(1.1);
+  box-shadow: 0 0 16px rgba(251, 191, 36, 0.4);
+}
+
+.theme-toggle-btn:active {
+  transform: scale(0.92);
+}
+
+[data-theme="light"] .theme-toggle-btn {
+  background: #ffffff;
+  border-color: rgba(15, 23, 42, 0.12);
+  color: #0284c7;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .theme-toggle-btn:hover {
+  background: #f0f9ff;
+  border-color: #0284c7;
+  color: #0369a1;
+  box-shadow: 0 0 16px rgba(2, 132, 199, 0.25);
 }
 
 /* Hamburger Toggle Button */
@@ -6591,3 +6712,625 @@ html {
 .mobile-menu {
   -webkit-overflow-scrolling: touch;
 }
+
+/* ==========================================================================
+   31. RUPANTORPAY PLAN CARDS & LIGHT THEME COMPLETE SYSTEM
+   ========================================================================== */
+
+/* --- A. RupantorPay Card Architecture --- */
+.rupantor-card {
+  border-radius: 28px !important;
+  padding: 2.25rem 1.75rem !important;
+  display: flex !important;
+  flex-direction: column !important;
+  position: relative !important;
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.28s ease, border-color 0.28s ease !important;
+  will-change: transform;
+  text-align: left !important;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.rupantor-card:hover {
+  transform: translateY(-6px) !important;
+}
+
+/* Day Plan - Soft Mint Pastel */
+.rupantor-day {
+  background: linear-gradient(180deg, rgba(16, 185, 129, 0.16) 0%, rgba(10, 20, 12, 0.92) 100%) !important;
+  border: 1.5px solid rgba(16, 185, 129, 0.35) !important;
+}
+[data-theme="light"] .rupantor-day {
+  background: linear-gradient(180deg, #ecfdf5 0%, #d1fae5 100%) !important;
+  border: 1.5px solid rgba(16, 185, 129, 0.3) !important;
+  box-shadow: 0 10px 30px rgba(16, 185, 129, 0.08) !important;
+}
+.rupantor-day:hover {
+  border-color: #10b981 !important;
+  box-shadow: 0 18px 45px rgba(16, 185, 129, 0.25) !important;
+}
+
+/* Night Plan - Soft Sky Blue Pastel (RupantorPay screenshot 2) */
+.rupantor-night {
+  background: linear-gradient(180deg, rgba(56, 189, 248, 0.18) 0%, rgba(10, 18, 28, 0.94) 100%) !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.35) !important;
+}
+[data-theme="light"] .rupantor-night {
+  background: linear-gradient(180deg, #f0f9ff 0%, #bae6fd 100%) !important;
+  border: 1.5px solid rgba(56, 189, 248, 0.35) !important;
+  box-shadow: 0 10px 30px rgba(56, 189, 248, 0.12) !important;
+}
+.rupantor-night:hover {
+  border-color: #0284c7 !important;
+  box-shadow: 0 18px 45px rgba(56, 189, 248, 0.28) !important;
+}
+
+/* Permanent Plan - Soft Amber / Gold Pastel */
+.rupantor-permanent {
+  background: linear-gradient(180deg, rgba(234, 179, 8, 0.18) 0%, rgba(20, 18, 10, 0.94) 100%) !important;
+  border: 1.5px solid rgba(234, 179, 8, 0.4) !important;
+}
+[data-theme="light"] .rupantor-permanent {
+  background: linear-gradient(180deg, #fefce8 0%, #fef08a 100%) !important;
+  border: 1.5px solid rgba(234, 179, 8, 0.35) !important;
+  box-shadow: 0 10px 30px rgba(234, 179, 8, 0.1) !important;
+}
+.rupantor-permanent:hover {
+  border-color: #eab308 !important;
+  box-shadow: 0 18px 45px rgba(234, 179, 8, 0.28) !important;
+}
+
+/* Rupantor Top Header */
+.rupantor-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 1.25rem;
+}
+
+/* 3D-style White Rounded Square Icon Box */
+.rupantor-icon-box {
+  width: 62px;
+  height: 62px;
+  border-radius: 20px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  flex-shrink: 0;
+  font-size: 1.75rem;
+  transition: transform 0.3s ease;
+}
+[data-theme="dark"] .rupantor-icon-box {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+}
+.rupantor-card:hover .rupantor-icon-box {
+  transform: scale(1.08) rotate(4deg);
+}
+
+.rupantor-day .rupantor-icon-box {
+  color: #10b981;
+}
+.rupantor-night .rupantor-icon-box {
+  color: #0284c7;
+}
+.rupantor-permanent .rupantor-icon-box {
+  color: #d97706;
+}
+
+.rupantor-title-wrap {
+  display: flex;
+  flex-direction: column;
+}
+.rupantor-plan-name {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0;
+}
+.rupantor-duration {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--color-text-primary);
+  line-height: 1.2;
+}
+
+.rupantor-sub-duration {
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  margin-bottom: 1.25rem;
+  font-weight: 500;
+}
+
+/* Price Box */
+.rupantor-price-box {
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.rupantor-price-val {
+  font-size: 2.4rem;
+  font-weight: 800;
+  font-family: var(--font-display), 'Inter', sans-serif;
+  color: var(--color-text-primary);
+  line-height: 1;
+}
+.rupantor-price-period {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+.rupantor-original-price {
+  text-decoration: line-through;
+  color: var(--color-text-muted);
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin-right: 6px;
+}
+
+/* "What's Included" Section */
+.rupantor-features-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: 1rem;
+}
+
+.rupantor-features-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.75rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.rupantor-feature-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.rupantor-check-icon {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+.rupantor-day .rupantor-check-icon {
+  color: #10b981;
+}
+.rupantor-night .rupantor-check-icon {
+  color: #0284c7;
+}
+.rupantor-permanent .rupantor-check-icon {
+  color: #f59e0b;
+}
+
+/* Full Width Pill Action Button (Buy Plan style) */
+.rupantor-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  border-radius: 9999px !important;
+  padding: 1rem 1.75rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  margin-top: auto;
+  transition: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+  will-change: transform, box-shadow;
+}
+
+.rupantor-day .rupantor-btn {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff !important;
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.35);
+}
+.rupantor-day .rupantor-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(16, 185, 129, 0.5);
+  background: linear-gradient(135deg, #34d399 0%, #059669 100%);
+}
+
+.rupantor-night .rupantor-btn {
+  background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+  color: #ffffff !important;
+  box-shadow: 0 6px 20px rgba(2, 132, 199, 0.35);
+}
+.rupantor-night .rupantor-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(2, 132, 199, 0.5);
+  background: linear-gradient(135deg, #38bdf8 0%, #1d4ed8 100%);
+}
+
+.rupantor-permanent .rupantor-btn {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: #ffffff !important;
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.35);
+}
+.rupantor-permanent .rupantor-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(245, 158, 11, 0.5);
+  background: linear-gradient(135deg, #fbbf24 0%, #b45309 100%);
+}
+
+/* --- B. Complete Light Mode Component Theme Overrides --- */
+
+[data-theme="light"] body {
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+}
+
+[data-theme="light"] .bg-animated .bg-gradient {
+  background: radial-gradient(circle at 50% 5%, rgba(16, 185, 129, 0.08) 0%, transparent 60%),
+              radial-gradient(circle at 80% 25%, rgba(56, 189, 248, 0.06) 0%, transparent 50%),
+              #f8fafc;
+}
+
+[data-theme="light"] .bg-pattern {
+  opacity: 0.02;
+}
+
+[data-theme="light"] .navbar {
+  background: rgba(255, 255, 255, 0.88);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 4px 20px rgba(15, 23, 42, 0.04);
+}
+
+[data-theme="light"] .navbar.scrolled {
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
+}
+
+[data-theme="light"] .navbar-logo-text {
+  color: #0f172a;
+}
+
+[data-theme="light"] .nav-link {
+  color: #334155;
+}
+
+[data-theme="light"] .nav-link:hover,
+[data-theme="light"] .nav-link.active {
+  color: #059669;
+}
+
+[data-theme="light"] .hero-title-prefix {
+  color: #059669;
+}
+
+[data-theme="light"] .hero-brand-glamour {
+  color: #0f172a;
+}
+
+[data-theme="light"] .hero-desc-luxury {
+  color: #475569;
+}
+
+[data-theme="light"] .stadium-lighting {
+  opacity: 0.3;
+}
+
+[data-theme="light"] .hero-overlay {
+  background: linear-gradient(180deg, rgba(248, 250, 252, 0.4) 0%, #f8fafc 100%);
+}
+
+[data-theme="light"] .hero-prestige-badge {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(16, 185, 129, 0.3);
+  color: #0f172a;
+}
+
+[data-theme="light"] .luxury-feature-card {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(15, 23, 42, 0.08);
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.05);
+}
+
+[data-theme="light"] .luxury-feature-card:hover {
+  background: #ffffff;
+  border-color: rgba(16, 185, 129, 0.35);
+  box-shadow: 0 12px 28px rgba(16, 185, 129, 0.12);
+}
+
+[data-theme="light"] .luxury-feature-card .feature-title {
+  color: #0f172a;
+}
+
+[data-theme="light"] .ticker-luxury {
+  background: rgba(255, 255, 255, 0.9);
+  border-top-color: rgba(15, 23, 42, 0.08);
+  border-bottom-color: rgba(15, 23, 42, 0.08);
+  color: #334155;
+}
+
+[data-theme="light"] .live-pulse-luxury {
+  background: #ffffff;
+  border-color: rgba(15, 23, 42, 0.08);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+}
+
+[data-theme="light"] .stat-counter-card {
+  background: #ffffff;
+  border-color: rgba(15, 23, 42, 0.08);
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+}
+
+[data-theme="light"] .stat-counter-card:hover {
+  border-color: rgba(16, 185, 129, 0.35);
+  box-shadow: 0 10px 24px rgba(16, 185, 129, 0.1);
+}
+
+[data-theme="light"] .calculator-card {
+  background: #ffffff;
+  border-color: rgba(15, 23, 42, 0.08);
+  box-shadow: 0 12px 36px rgba(15, 23, 42, 0.07);
+}
+
+[data-theme="light"] .calc-cost-display {
+  background: #f1f5f9;
+  border-color: rgba(15, 23, 42, 0.08);
+}
+
+[data-theme="light"] .calc-result-number {
+  color: #0f172a;
+}
+
+[data-theme="light"] .feature-card {
+  background: #ffffff;
+  border-color: rgba(15, 23, 42, 0.08);
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.05);
+}
+
+[data-theme="light"] .feature-card:hover {
+  background: #ffffff;
+  border-color: rgba(16, 185, 129, 0.35);
+  box-shadow: 0 12px 32px rgba(16, 185, 129, 0.12);
+}
+
+[data-theme="light"] .testimonial-card {
+  background: #ffffff;
+  border-color: rgba(15, 23, 42, 0.08);
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.05);
+}
+
+[data-theme="light"] .testimonial-text {
+  color: #334155;
+}
+
+[data-theme="light"] .footer {
+  background: #f1f5f9;
+  border-top-color: rgba(15, 23, 42, 0.08);
+  color: #334155;
+}
+
+[data-theme="light"] .footer-logo-text {
+  color: #0f172a;
+}
+
+[data-theme="light"] .footer-links a,
+[data-theme="light"] .footer-contact-item a {
+  color: #475569;
+}
+
+[data-theme="light"] .footer-links a:hover,
+[data-theme="light"] .footer-contact-item a:hover {
+  color: #059669;
+}
+
+[data-theme="light"] .bottom-nav {
+  background: rgba(255, 255, 255, 0.94);
+  border-top: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 -4px 20px rgba(15, 23, 42, 0.06);
+}
+
+[data-theme="light"] .bottom-nav-item {
+  color: #64748b;
+}
+
+[data-theme="light"] .bottom-nav-item.active {
+  color: #059669;
+}
+
+[data-theme="light"] .mobile-menu {
+  background: #ffffff;
+  color: #0f172a;
+}
+
+[data-theme="light"] .mobile-nav-link {
+  color: #334155;
+}
+
+[data-theme="light"] .mobile-nav-link.active {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+[data-theme="light"] .modal-card {
+  background: #ffffff;
+  color: #0f172a;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.18);
+  border-color: rgba(15, 23, 42, 0.1);
+}
+
+[data-theme="light"] .form-input,
+[data-theme="light"] .form-textarea,
+[data-theme="light"] .form-select {
+  background: #f8fafc;
+  color: #0f172a;
+  border-color: #cbd5e1;
+}
+
+[data-theme="light"] .form-input:focus,
+[data-theme="light"] .form-textarea:focus,
+[data-theme="light"] .form-select:focus {
+  background: #ffffff;
+  border-color: #10b981;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18);
+}
+
+[data-theme="light"] .condition-box {
+  background: #fffbeb;
+  border-color: #fcd34d;
+  color: #92400e;
+}
+
+[data-theme="light"] .slot-item {
+  background: #ffffff;
+  border-color: rgba(15, 23, 42, 0.1);
+  color: #0f172a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="light"] .slot-item:hover:not(.booked) {
+  border-color: #10b981;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.2);
+}
+
+[data-theme="light"] .slot-item.selected {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  color: #ffffff !important;
+  border-color: #059669 !important;
+  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.4) !important;
+}
+
+[data-theme="light"] .slot-item.booked {
+  background: #f1f5f9;
+  border-color: #e2e8f0;
+  color: #94a3b8;
+}
+
+[data-theme="light"] .booking-step-num {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #64748b;
+}
+
+[data-theme="light"] .booking-step.active .booking-step-num {
+  background: #10b981;
+  border-color: #10b981;
+  color: #ffffff;
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.35);
+}
+
+[data-theme="light"] .booking-step.completed .booking-step-num {
+  background: #059669;
+  border-color: #059669;
+  color: #ffffff;
+}
+
+[data-theme="light"] .date-picker-day {
+  background: #ffffff;
+  border-color: rgba(15, 23, 42, 0.1);
+  color: #0f172a;
+}
+
+[data-theme="light"] .date-picker-day:hover {
+  border-color: #10b981;
+}
+
+[data-theme="light"] .date-picker-day.selected {
+  background: #10b981 !important;
+  color: #ffffff !important;
+  border-color: #059669 !important;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35) !important;
+}
+
+[data-theme="light"] .pricing-card {
+  background: #ffffff;
+  border-color: rgba(15, 23, 42, 0.1);
+}
+
+[data-theme="light"] .pricing-card-day {
+  background: linear-gradient(180deg, #f0fdf4 0%, #dcfce7 100%) !important;
+  border-color: rgba(16, 185, 129, 0.35) !important;
+}
+
+[data-theme="light"] .pricing-card-day .card-icon {
+  background: #ffffff !important;
+  color: #059669 !important;
+  box-shadow: 0 4px 10px rgba(16, 185, 129, 0.15);
+}
+
+[data-theme="light"] .pricing-card-night {
+  background: linear-gradient(180deg, #eff6ff 0%, #dbeafe 100%) !important;
+  border-color: rgba(59, 130, 246, 0.35) !important;
+}
+
+[data-theme="light"] .pricing-card-night .card-icon {
+  background: #ffffff !important;
+  color: #2563eb !important;
+  box-shadow: 0 4px 10px rgba(59, 130, 246, 0.15);
+}
+
+[data-theme="light"] .pricing-card-night .price-amount {
+  color: #1e40af !important;
+  text-shadow: none !important;
+}
+
+[data-theme="light"] .pricing-card.selected,
+[data-theme="light"] .pricing-card.active-plan {
+  border-color: #10b981 !important;
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.28), 0 0 0 3px rgba(16, 185, 129, 0.2) !important;
+}
+
+/* Admin Light Theme Overrides */
+[data-theme="light"] .admin-header {
+  background: rgba(255, 255, 255, 0.95);
+  border-bottom-color: rgba(15, 23, 42, 0.08);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .admin-sidebar {
+  background: #ffffff;
+  border-right-color: rgba(15, 23, 42, 0.08);
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.02);
+}
+
+[data-theme="light"] .admin-user-badge {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+  color: #334155;
+}
+
+[data-theme="light"] .admin-sidebar-link {
+  color: #64748b;
+}
+
+[data-theme="light"] .admin-sidebar-link:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+[data-theme="light"] .admin-sidebar-link.active {
+  background: #ecfdf5;
+  color: #059669;
+  border-left-color: #10b981;
+}
+
+[data-theme="light"] .admin-sidebar-link i {
+  color: #10b981;
+}
+
+[data-theme="light"] .table th {
+  background: #f8fafc;
+  color: #475569;
+  border-bottom-color: #e2e8f0;
+}
+
+[data-theme="light"] .table td {
+  border-bottom-color: #f1f5f9;
+  color: #1e293b;
+}
+

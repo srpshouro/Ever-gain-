@@ -38,6 +38,10 @@
         <a href="contact.html" class="nav-link"><span data-i18n="navContact">যোগাযোগ</span></a>
       </div>
       <div class="navbar-right">
+        <!-- Theme Toggle Switcher (RupantorPay style) -->
+        <button type="button" class="theme-toggle-btn" id="themeToggleBtn" onclick="EverGain.toggleTheme()" aria-label="Theme Switcher" title="Toggle Light/Dark Theme">
+          <i class="fas fa-sun"></i>
+        </button>
         <button type="button" class="lang-toggle-btn" id="langToggleBtn" onclick="EverGain.toggleLanguage()" aria-label="Language Switcher">
           <span class="lang-text lang-bn active">বাং</span>
           <span class="lang-divider">/</span>
@@ -61,9 +65,12 @@
         <i class="fas fa-times"></i>
       </button>
     </div>
-    <div class="mobile-lang-wrapper" style="padding: 0 var(--space-lg); margin-top: 0.75rem; margin-bottom: 0.5rem;">
-      <button type="button" class="btn btn-secondary btn-sm btn-block" id="langToggleBtnMobile" onclick="EverGain.toggleLanguage()">
-        <i class="fas fa-globe"></i> <span>Language: বাংলা / English</span>
+    <div class="mobile-lang-wrapper" style="padding: 0 var(--space-lg); margin-top: 0.75rem; margin-bottom: 0.5rem; display: flex; gap: 0.5rem;">
+      <button type="button" class="btn btn-secondary btn-sm" id="themeToggleBtnMobile" onclick="EverGain.toggleTheme()" style="flex: 1;" aria-label="Toggle Theme">
+        <i class="fas fa-sun"></i> <span class="theme-text">Theme</span>
+      </button>
+      <button type="button" class="btn btn-secondary btn-sm" id="langToggleBtnMobile" onclick="EverGain.toggleLanguage()" style="flex: 1;">
+        <i class="fas fa-globe"></i> <span>Language</span>
       </button>
     </div>
     <div class="mobile-nav-links">

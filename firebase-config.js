@@ -1234,6 +1234,76 @@
     });
   }
 
+  // ==========================================================================
+  // 4.6. Theme Management (RupantorPay Dark & Light Mode)
+  // ==========================================================================
+  let currentTheme = 'dark';
+  try {
+    currentTheme = localStorage.getItem('evergain_theme') || 'dark';
+  } catch (e) {
+    currentTheme = 'dark';
+  }
+
+  function getTheme() {
+    return currentTheme;
+  }
+
+  function applyTheme(theme) {
+    if (theme !== 'light' && theme !== 'dark') theme = 'dark';
+    currentTheme = theme;
+    document.documentElement.setAttribute('data-theme', theme);
+    try {
+      localStorage.setItem('evergain_theme', theme);
+    } catch (e) {}
+
+    updateThemeToggleUI();
+    window.dispatchEvent(new CustomEvent('evergain:themeChanged', { detail: { theme: currentTheme } }));
+  }
+
+  function toggleTheme() {
+    const nextTheme = (currentTheme === 'dark') ? 'light' : 'dark';
+    applyTheme(nextTheme);
+    const isBn = getLanguage() === 'bn';
+    const msg = nextTheme === 'light'
+      ? (isBn ? 'লাইট থিম চালু করা হয়েছে ☀️' : 'Light Theme Activated ☀️')
+      : (isBn ? 'ডার্ক থিম চালু করা হয়েছে 🌙' : 'Dark Theme Activated 🌙');
+    showToast(msg, 'info');
+  }
+
+  function updateThemeToggleUI() {
+    const themeBtns = document.querySelectorAll('.theme-toggle-btn');
+    themeBtns.forEach(btn => {
+      const icon = btn.querySelector('i');
+      if (icon) {
+        if (currentTheme === 'light') {
+          icon.className = 'fas fa-moon';
+          btn.setAttribute('title', getLanguage() === 'bn' ? 'ডার্ক মোড' : 'Switch to Dark Mode');
+          btn.setAttribute('aria-label', 'Switch to Dark Mode');
+        } else {
+          icon.className = 'fas fa-sun';
+          btn.setAttribute('title', getLanguage() === 'bn' ? 'লাইট মোড' : 'Switch to Light Mode');
+          btn.setAttribute('aria-label', 'Switch to Light Mode');
+        }
+      }
+    });
+
+    const mobileThemeToggles = document.querySelectorAll('#themeToggleBtnMobile');
+    mobileThemeToggles.forEach(btn => {
+      const span = btn.querySelector('span');
+      const icon = btn.querySelector('i');
+      if (currentTheme === 'light') {
+        if (icon) icon.className = 'fas fa-moon';
+        if (span) span.textContent = (getLanguage() === 'bn') ? 'থিম: ডার্ক মোডে পরিবর্তন করুন 🌙' : 'Theme: Switch to Dark Mode 🌙';
+      } else {
+        if (icon) icon.className = 'fas fa-sun';
+        if (span) span.textContent = (getLanguage() === 'bn') ? 'থিম: লাইট মোডে পরিবর্তন করুন ☀️' : 'Theme: Switch to Light Mode ☀️';
+      }
+    });
+  }
+
+  // Pre-apply theme immediately on document element
+  document.documentElement.setAttribute('data-theme', currentTheme);
+
   function applyTranslations() {
     const t = TRANSLATIONS[currentLang] || TRANSLATIONS.bn;
 
@@ -1475,6 +1545,9 @@
   EverGain.getLanguage = getLanguage;
   EverGain.setLanguage = setLanguage;
   EverGain.toggleLanguage = toggleLanguage;
+  EverGain.getTheme = getTheme;
+  EverGain.setTheme = applyTheme;
+  EverGain.toggleTheme = toggleTheme;
   EverGain.applyTranslations = applyTranslations;
   EverGain.applyGlobalSettingsToDOM = applyGlobalSettingsToDOM;
   EverGain.initGlobalSettingsSync = initGlobalSettingsSync;
@@ -1503,14 +1576,17 @@
   window.formatPhone = formatPhone;
   window.generateId = generateId;
   window.toBengaliNum = toBengaliNum;
+  window.toggleTheme = toggleTheme;
 
   // Auto-initialize standard DOM behaviors once ready
   function initCommon() {
+    applyTheme(currentTheme);
     initNavigation();
     initScrollAnimations();
     initParticles('particleCanvas');
     applyTranslations();
     updateLangToggleUI();
+    updateThemeToggleUI();
     initGlobalSettingsSync();
   }
 

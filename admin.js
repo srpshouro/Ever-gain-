@@ -3294,12 +3294,12 @@
           };
 
           const defaultGallery = {
-            item_1: { title: 'EVER GAIN Turf Arena', description: 'FIFA-standard high-performance artificial grass surface under daylight', type: 'image', url: 'assets/images/1793521507642_1000025672.jpg', thumbnail: 'assets/images/1793521507642_1000025672.jpg', order: 1, createdAt: Date.now() },
-            item_2: { title: 'Night Match Atmosphere', description: 'High-lux LED floodlights delivering daytime clarity for midnight football', type: 'image', url: 'assets/images/1793521696187_1000025671.jpg', thumbnail: 'assets/images/1793521696187_1000025671.jpg', order: 2, createdAt: Date.now() },
-            item_3: { title: 'Pro Perimeter & Goalpost', description: 'Safety nets, padded sideboards, and heavy-duty goalposts', type: 'image', url: 'assets/images/1793521712602_1000025661.jpg', thumbnail: 'assets/images/1793521712602_1000025661.jpg', order: 3, createdAt: Date.now() },
-            item_4: { title: 'Championship Pitch', description: 'Smooth, shock-absorbent infill preventing ankle injuries', type: 'image', url: 'assets/images/1793521726714_1000025663.jpg', thumbnail: 'assets/images/1793521726714_1000025663.jpg', order: 4, createdAt: Date.now() },
-            item_5: { title: 'Spectator Lounge & Sideview', description: 'Clear viewing gallery with dugout seating for teams', type: 'image', url: 'assets/images/1793521738771_1000025662.jpg', thumbnail: 'assets/images/1793521738771_1000025662.jpg', order: 5, createdAt: Date.now() },
-            item_6: { title: 'Arena Aerial & Perspective', description: 'Full pitch dimensions crafted for high-tempo 5-a-side and 7-a-side matches', type: 'image', url: 'assets/images/1793521749075_1000025664.jpg', thumbnail: 'assets/images/1793521749075_1000025664.jpg', order: 6, createdAt: Date.now() }
+            item_1: { title: 'EVER GAIN Turf Arena', description: 'FIFA-standard high-performance artificial grass surface under daylight', type: 'image', url: 'assets/images/1793539206852_1000025672.jpg', thumbnail: 'assets/images/1793539206852_1000025672.jpg', order: 1, createdAt: Date.now() },
+            item_2: { title: 'Night Match Atmosphere', description: 'High-lux LED floodlights delivering daytime clarity for midnight football', type: 'image', url: 'assets/images/1793539216901_1000025671.jpg', thumbnail: 'assets/images/1793539216901_1000025671.jpg', order: 2, createdAt: Date.now() },
+            item_3: { title: 'Pro Perimeter & Goalpost', description: 'Safety nets, padded sideboards, and heavy-duty goalposts', type: 'image', url: 'assets/images/1793539242375_1000025661.jpg', thumbnail: 'assets/images/1793539242375_1000025661.jpg', order: 3, createdAt: Date.now() },
+            item_4: { title: 'Championship Pitch', description: 'Smooth, shock-absorbent infill preventing ankle injuries', type: 'image', url: 'assets/images/1793539255106_1000025663.jpg', thumbnail: 'assets/images/1793539255106_1000025663.jpg', order: 4, createdAt: Date.now() },
+            item_5: { title: 'Spectator Lounge & Sideview', description: 'Clear viewing gallery with dugout seating for teams', type: 'image', url: 'assets/images/1793539266821_1000025662.jpg', thumbnail: 'assets/images/1793539266821_1000025662.jpg', order: 5, createdAt: Date.now() },
+            item_6: { title: 'Arena Aerial & Perspective', description: 'Full pitch dimensions crafted for high-tempo 5-a-side and 7-a-side matches', type: 'image', url: 'assets/images/1793539275408_1000025664.jpg', thumbnail: 'assets/images/1793539275408_1000025664.jpg', order: 6, createdAt: Date.now() }
           };
 
           const updates = {

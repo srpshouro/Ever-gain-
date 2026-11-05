@@ -57,6 +57,9 @@
           <span class="lang-divider">/</span>
           <span class="lang-text lang-en">EN</span>
         </button>
+        <button type="button" class="theme-toggle-btn" id="themeToggleBtn" onclick="EverGain.toggleTheme()" aria-label="Theme Switcher" title="Toggle Light/Dark Theme">
+          <i class="fas fa-sun"></i>
+        </button>
         <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Menu" aria-expanded="false" aria-controls="mobileMenu">
           <i class="fas fa-bars"></i>
         </button>
@@ -81,9 +84,12 @@
         <i class="fas fa-times"></i>
       </button>
     </div>
-    <div class="mobile-lang-wrapper" style="padding: 0 var(--space-lg); margin-top: 0.75rem; margin-bottom: 0.5rem;">
+    <div class="mobile-lang-wrapper" style="padding: 0 var(--space-lg); margin-top: 0.75rem; margin-bottom: 0.5rem; display: flex; flex-direction: column; gap: 0.5rem;">
       <button type="button" class="btn btn-secondary btn-sm btn-block" id="langToggleBtnMobile" onclick="EverGain.toggleLanguage()">
         <i class="fas fa-globe"></i> <span>Language: বাংলা / English</span>
+      </button>
+      <button type="button" class="btn btn-secondary btn-sm btn-block" id="themeToggleBtnMobile" onclick="EverGain.toggleTheme()">
+        <i class="fas fa-sun"></i> <span>থিম: লাইট / ডার্ক মোড</span>
       </button>
     </div>
     <div class="mobile-nav-links">
@@ -312,42 +318,96 @@
           <p class="section-subtitle" data-i18n="quickBookingSubtitle">আপনার সুবিধাজনক সময়ে ইনডোর ফুটবলের অনন্য অভিজ্ঞতা উপভোগ করুন</p>
         </div>
         <div class="grid-2">
-          <!-- Day Booking Card -->
-          <article class="card pricing-card pricing-card-day animate-in stagger-1">
-            <div class="card-icon">
-              <i class="fas fa-sun"></i>
+          <!-- Day Booking Plan Card (RupantorPay Mint Style) -->
+          <article class="rupantor-card rupantor-day animate-in stagger-1">
+            <div class="rupantor-header">
+              <div class="rupantor-icon-box">
+                <i class="fas fa-sun"></i>
+              </div>
+              <div class="rupantor-title-wrap">
+                <span class="rupantor-plan-name" data-i18n="dayBooking">ডে বুকিং প্যাকেজ</span>
+                <strong class="rupantor-duration">সকাল ৬:০০ — বিকাল ৫:০০</strong>
+              </div>
             </div>
-            <div class="price-save" data-i18n="daySaveBadge">৳৫০ বিশেষ ছাড়</div>
-            <h3 class="card-title" data-i18n="dayBooking">ডে বুকিং</h3>
-            <p class="card-text" data-i18n="dayBookingDesc">
-              সকাল ৬:০০ টা থেকে বিকেল ৫:০০ টা পর্যন্ত। খোলামেলা মনোরম পরিবেশ ও প্রাকৃতিক আলোয় প্রাণবন্ত ফুটবল ম্যাচ খেলুন বন্ধুদের সাথে।
-            </p>
-            <div class="price-current">
-              <span class="price-original" id="quickDayOriginalPrice">৳৬০০</span>
-              <span class="price-amount" id="quickDayPrice">৳৫৫০</span>
-              <span class="price-label" data-i18n="perHour">/ ঘণ্টা</span>
+            <div class="rupantor-sub-duration">
+              <span class="price-save" style="display: inline-block; padding: 2px 10px; border-radius: 9999px; margin-right: 6px;" data-i18n="daySaveBadge">৳৫০ বিশেষ ছাড়</span>
+              <span>খোলামেলা মনোরম প্রাকৃতিক পরিবেশ</span>
             </div>
-            <a href="booking.html?type=day" class="btn btn-primary btn-block">
-              <i class="fas fa-ticket-alt"></i> <span data-i18n="bookDaySlot">স্লট বুক করুন</span>
+
+            <div class="rupantor-price-box">
+              <span class="rupantor-original-price" id="quickDayOriginalPrice">৳৬০০</span>
+              <span class="rupantor-price-val" id="quickDayPrice">৳৫৫০</span>
+              <span class="rupantor-price-period" data-i18n="perHour">/ ঘণ্টা</span>
+            </div>
+
+            <div class="rupantor-features-title">কী কী সুবিধা অন্তর্ভুক্ত</div>
+            <ul class="rupantor-features-list">
+              <li class="rupantor-feature-item">
+                <i class="fas fa-circle-check rupantor-check-icon"></i>
+                <span>৫০ মি.মি. আন্তর্জাতিক শক-প্যাড সিন্থেটিক টার্ফ</span>
+              </li>
+              <li class="rupantor-feature-item">
+                <i class="fas fa-circle-check rupantor-check-icon"></i>
+                <span>ম্যাচ বল ও রঙিন টিম বিবস গ্রাউন্ড থেকে ফ্রি</span>
+              </li>
+              <li class="rupantor-feature-item">
+                <i class="fas fa-circle-check rupantor-check-icon"></i>
+                <span>পরবর্তী ১৪ দিনের যেকোনো ডে স্লট নির্বাচনের স্বাধীনতা</span>
+              </li>
+              <li class="rupantor-feature-item">
+                <i class="fas fa-circle-check rupantor-check-icon"></i>
+                <span>প্লেয়ার্স লাউঞ্জ, ড্রেসিং রুম ও নিরাপদ পার্কিং জোন</span>
+              </li>
+            </ul>
+
+            <a href="booking.html?type=day" class="rupantor-btn">
+              <i class="fas fa-calendar-check"></i> <span data-i18n="bookDaySlot">স্লট বুক করুন</span>
             </a>
           </article>
 
-          <!-- Night Booking Card -->
-          <article class="card pricing-card pricing-card-night animate-in stagger-2">
-            <div class="card-icon">
-              <i class="fas fa-moon"></i>
+          <!-- Night Booking Plan Card (RupantorPay Sky Blue Style) -->
+          <article class="rupantor-card rupantor-night animate-in stagger-2">
+            <div class="rupantor-header">
+              <div class="rupantor-icon-box">
+                <i class="fas fa-moon"></i>
+              </div>
+              <div class="rupantor-title-wrap">
+                <span class="rupantor-plan-name" data-i18n="nightBooking">নাইট বুকিং প্যাকেজ</span>
+                <strong class="rupantor-duration">সন্ধ্যা ৬:০০ — রাত ১২:০০+</strong>
+              </div>
             </div>
-            <div class="badge badge-confirmed" data-i18n="nightSaveBadge">আন্তর্জাতিক ফ্লাডলাইট</div>
-            <h3 class="card-title" data-i18n="nightBooking">নাইট বুকিং</h3>
-            <p class="card-text" data-i18n="nightBookingDesc">
-              সন্ধ্যা ৬:০০ টা থেকে রাত ১২:০০ টা পর্যন্ত। উচ্চক্ষমতাসম্পন্ন এলইডি ফ্লাডলাইটের উজ্জ্বল আলোয় রোমাঞ্চকর নাইট ফুটবলের সেরা অনুভূতি।
-            </p>
-            <div class="price-current">
-              <span class="price-amount" id="quickNightPrice">৳৯০০</span>
-              <span class="price-label" data-i18n="perHour">/ ঘণ্টা</span>
+            <div class="rupantor-sub-duration">
+              <span class="badge badge-info" style="display: inline-block; padding: 2px 10px; border-radius: 9999px; margin-right: 6px;" data-i18n="nightSaveBadge">আন্তর্জাতিক ফ্লাডলাইট</span>
+              <span>ফ্লিকার-ফ্রি ৪K আল্ট্রা এইচডি আলো</span>
             </div>
-            <a href="booking.html?type=night" class="btn btn-primary btn-block">
-              <i class="fas fa-ticket-alt"></i> <span data-i18n="bookNightSlot">স্লট বুক করুন</span>
+
+            <div class="rupantor-price-box">
+              <span class="rupantor-price-val" id="quickNightPrice">৳৯০০</span>
+              <span class="rupantor-price-period" data-i18n="perHour">/ ঘণ্টা</span>
+            </div>
+
+            <div class="rupantor-features-title">কী কী সুবিধা অন্তর্ভুক্ত</div>
+            <ul class="rupantor-features-list">
+              <li class="rupantor-feature-item">
+                <i class="fas fa-circle-check rupantor-check-icon"></i>
+                <span>উচ্চ লুমেন অ্যান্টি-গ্লেয়ার নাইট ফ্লাডলাইট সিস্টেম</span>
+              </li>
+              <li class="rupantor-feature-item">
+                <i class="fas fa-circle-check rupantor-check-icon"></i>
+                <span>আরামদায়ক ঠান্ডা রাতের আবহাওয়া ও ক্রিস্টাল বল ভিশন</span>
+              </li>
+              <li class="rupantor-feature-item">
+                <i class="fas fa-circle-check rupantor-check-icon"></i>
+                <span>২৪/৭ গভীর রাতের ম্যাচ ও কর্পোরেট টুর্নামেন্ট আয়োজন</span>
+              </li>
+              <li class="rupantor-feature-item">
+                <i class="fas fa-circle-check rupantor-check-icon"></i>
+                <span>ভিআইপি হেল্পলাইন ও অন-গ্রাউন্ড সার্বক্ষণিক নিরাপত্তা</span>
+              </li>
+            </ul>
+
+            <a href="booking.html?type=night" class="rupantor-btn">
+              <i class="fas fa-calendar-check"></i> <span data-i18n="bookNightSlot">স্লট বুক করুন</span>
             </a>
           </article>
         </div>
@@ -362,84 +422,95 @@
           <p class="section-subtitle" data-i18n="pricingSubtitle">সকলের সাধ্যের মধ্যে সেরা সুবিধা ও পেশাদার ইনডোর গ্রাউন্ডের নিশ্চয়তা</p>
         </div>
         <div class="grid-2">
-          <!-- Normal Booking Comparison Card -->
-          <div class="card animate-in stagger-1">
-            <div class="card-title">
-              <i class="fas fa-calendar-day text-accent"></i> <span data-i18n="normalCardTitle">সাধারণ বুকিং</span>
+          <!-- Normal Booking Comparison Card (Rupantor Style) -->
+          <div class="rupantor-card animate-in stagger-1" style="background: var(--color-bg-card); border: 1.5px solid var(--color-border);">
+            <div class="rupantor-header">
+              <div class="rupantor-icon-box" style="color: var(--color-primary-light);">
+                <i class="fas fa-calendar-day"></i>
+              </div>
+              <div class="rupantor-title-wrap">
+                <span class="rupantor-plan-name" data-i18n="normalCardTitle">সাধারণ বুকিং প্যাকেজ</span>
+                <strong class="rupantor-duration">একক ম্যাচ বুকিং</strong>
+              </div>
             </div>
-            <p class="card-text" data-i18n="normalCardDesc">
-              যেকোনো একটি নির্দিষ্ট দিনের জন্য একক বুকিং। যখন খুশি স্লট খালি থাকা সাপেক্ষে বুকিং সম্পন্ন করুন।
+            <p class="rupantor-sub-duration" data-i18n="normalCardDesc">
+              যেকোনো একটি নির্দিষ্ট দিনের জন্য একক বুকিং। যখন খুশি স্লট খালি থাকা সাপেক্ষে দ্রুত বুকিং সম্পন্ন করুন।
             </p>
             
-            <div style="display: flex; flex-direction: column; gap: 1rem; margin: 1.5rem 0;">
-              <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: rgba(0,0,0,0.25); border-radius: var(--radius-md); border: 1px solid var(--color-border);">
+            <div style="display: flex; flex-direction: column; gap: 0.85rem; margin-bottom: 1.5rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.85rem 1.25rem; background: var(--color-surface); border-radius: 18px; border: 1px solid var(--color-border);">
                 <div>
                   <strong style="display: block; color: var(--color-text-primary);" data-i18n="daySessionTitle"><i class="fas fa-sun" style="color: #f59e0b; margin-right: 6px;"></i> ডে সেশন</strong>
                   <small style="color: var(--color-text-muted);" data-i18n="daySessionHours">সকাল ৬:০০ — বিকাল ৫:০০</small>
                 </div>
                 <div style="text-align: right;">
-                  <span class="price-original" id="overviewNormalDayOriginal">৳৬০০</span>
-                  <span style="font-size: 1.35rem; font-weight: 700; color: var(--color-primary-light);" id="overviewNormalDayPrice">৳৫৫০</span>
+                  <span class="rupantor-original-price" id="overviewNormalDayOriginal">৳৬০০</span>
+                  <span style="font-size: 1.4rem; font-weight: 800; color: var(--color-primary-light);" id="overviewNormalDayPrice">৳৫৫০</span>
                   <span class="price-label" data-i18n="perHour">/ঘণ্টা</span>
                 </div>
               </div>
 
-              <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: rgba(0,0,0,0.25); border-radius: var(--radius-md); border: 1px solid var(--color-border);">
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.85rem 1.25rem; background: var(--color-surface); border-radius: 18px; border: 1px solid var(--color-border);">
                 <div>
-                  <strong style="display: block; color: var(--color-text-primary);" data-i18n="nightSessionTitle"><i class="fas fa-moon" style="color: #60a5fa; margin-right: 6px;"></i> নাইট সেশন</strong>
+                  <strong style="display: block; color: var(--color-text-primary);" data-i18n="nightSessionTitle"><i class="fas fa-moon" style="color: #0284c7; margin-right: 6px;"></i> নাইট সেশন</strong>
                   <small style="color: var(--color-text-muted);" data-i18n="nightSessionHours">সন্ধ্যা ৬:০০ — রাত ১২:০০+</small>
                 </div>
                 <div style="text-align: right;">
-                  <span style="font-size: 1.35rem; font-weight: 700; color: var(--color-primary-light);" id="overviewNormalNightPrice">৳৯০০</span>
+                  <span style="font-size: 1.4rem; font-weight: 800; color: #0284c7;" id="overviewNormalNightPrice">৳৯০০</span>
                   <span class="price-label" data-i18n="perHour">/ঘণ্টা</span>
                 </div>
               </div>
             </div>
 
-            <a href="booking.html" class="btn btn-secondary btn-block">
+            <a href="booking.html" class="rupantor-btn" style="background: var(--color-surface); border: 1px solid var(--color-border); color: var(--color-text-primary) !important;">
               <i class="fas fa-calendar-alt"></i> <span data-i18n="bookNow">এখনই বুকিং দিন</span>
             </a>
           </div>
 
-          <!-- Permanent Booking Comparison Card -->
-          <div class="card card-premium animate-in stagger-2">
-            <div class="card-title">
-              <span class="permanent-badge" data-i18n="permanentBadge">
-                <i class="fas fa-crown"></i> বিশেষ নিয়মিত অফার
-              </span>
+          <!-- Permanent Booking Comparison Card (RupantorPay Gold/VIP Style) -->
+          <div class="rupantor-card rupantor-permanent animate-in stagger-2">
+            <div class="rupantor-header">
+              <div class="rupantor-icon-box">
+                <i class="fas fa-crown"></i>
+              </div>
+              <div class="rupantor-title-wrap">
+                <span class="rupantor-plan-name" data-i18n="permanentBadge">👑 বিশেষ নিয়মিত অফার</span>
+                <strong class="rupantor-duration">সাপ্তাহিক স্থায়ী স্লট</strong>
+              </div>
             </div>
-            <p class="card-text" data-i18n="permanentSubtitle">
-              প্রতি সপ্তাহে আপনার দলের জন্য নির্দিষ্ট দিন ও সময় নির্ধারিত থাকবে। সাথে প্রতি ঘণ্টায় নিশ্চিত ৳৫০ সাশ্রয়!
-            </p>
+            <div class="rupantor-sub-duration">
+              <span class="price-save" style="display: inline-block; padding: 2px 10px; border-radius: 9999px; margin-right: 6px;" data-i18n="daySaveBadge">৳৫০ নিশ্চিত সাশ্রয়</span>
+              <span data-i18n="permanentSubtitle">প্রতি সপ্তাহের নির্দিষ্ট দিন ও সময় আপনার দলের জন্য লক থাকবে</span>
+            </div>
             
-            <div style="display: flex; flex-direction: column; gap: 1rem; margin: 1.5rem 0;">
-              <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: rgba(0,0,0,0.3); border-radius: var(--radius-md); border: 1px solid var(--color-border-hover);">
+            <div style="display: flex; flex-direction: column; gap: 0.85rem; margin-bottom: 1.5rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.85rem 1.25rem; background: rgba(0, 0, 0, 0.05); border-radius: 18px; border: 1px solid rgba(234, 179, 8, 0.3);">
                 <div>
                   <strong style="display: block; color: var(--color-text-primary);" data-i18n="permanentDayPricing"><i class="fas fa-sun" style="color: #f59e0b; margin-right: 6px;"></i> স্থায়ী ডে স্লট</strong>
-                  <span class="price-save" data-i18n="daySaveBadge">৳৫০ সাশ্রয়</span>
+                  <small style="color: var(--color-text-muted);">সাপ্তাহিক নিয়মিত ম্যাচ</small>
                 </div>
                 <div style="text-align: right;">
-                  <span class="price-original" id="overviewPermanentDayOriginal">৳৫৫০</span>
-                  <span style="font-size: 1.35rem; font-weight: 700; color: var(--color-accent-light);" id="overviewPermanentDayPrice">৳৫০০</span>
+                  <span class="rupantor-original-price" id="overviewPermanentDayOriginal">৳৫৫০</span>
+                  <span style="font-size: 1.4rem; font-weight: 800; color: #d97706;" id="overviewPermanentDayPrice">৳৫০০</span>
                   <span class="price-label" data-i18n="perHour">/ঘণ্টা</span>
                 </div>
               </div>
 
-              <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: rgba(0,0,0,0.3); border-radius: var(--radius-md); border: 1px solid var(--color-border-hover);">
+              <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.85rem 1.25rem; background: rgba(0, 0, 0, 0.05); border-radius: 18px; border: 1px solid rgba(234, 179, 8, 0.3);">
                 <div>
-                  <strong style="display: block; color: var(--color-text-primary);" data-i18n="permanentNightPricing"><i class="fas fa-moon" style="color: #60a5fa; margin-right: 6px;"></i> স্থায়ী নাইট স্লট</strong>
-                  <span class="price-save" data-i18n="daySaveBadge">৳৫০ সাশ্রয়</span>
+                  <strong style="display: block; color: var(--color-text-primary);" data-i18n="permanentNightPricing"><i class="fas fa-moon" style="color: #0284c7; margin-right: 6px;"></i> স্থায়ী নাইট স্লট</strong>
+                  <small style="color: var(--color-text-muted);">সাপ্তাহিক ফ্লাডলাইট ম্যাচ</small>
                 </div>
                 <div style="text-align: right;">
-                  <span class="price-original" id="overviewPermanentNightOriginal">৳৯০০</span>
-                  <span style="font-size: 1.35rem; font-weight: 700; color: var(--color-accent-light);" id="overviewPermanentNightPrice">৳৮৫০</span>
+                  <span class="rupantor-original-price" id="overviewPermanentNightOriginal">৳৯০০</span>
+                  <span style="font-size: 1.4rem; font-weight: 800; color: #d97706;" id="overviewPermanentNightPrice">৳৮৫০</span>
                   <span class="price-label" data-i18n="perHour">/ঘণ্টা</span>
                 </div>
               </div>
             </div>
 
-            <a href="booking.html?mode=permanent" class="btn btn-primary btn-block">
-              <i class="fas fa-crown"></i> স্থায়ী বুকিং আবেদন করুন
+            <a href="booking.html?mode=permanent" class="rupantor-btn">
+              <i class="fas fa-crown"></i> <span>স্থায়ী বুকিং আবেদন করুন</span>
             </a>
           </div>
         </div>
@@ -608,37 +679,37 @@
         <div class="gallery-grid" id="galleryPreviewGrid">
           <!-- Real Turf Photo 1 -->
           <div class="gallery-item animate-in stagger-1" onclick="window.location.href='gallery.html'" role="button" tabindex="0" title="গ্যালারি দেখুন">
-            <img src="assets/images/1793521507642_1000025672.jpg" alt="EVER GAIN Turf" class="gallery-img" loading="lazy">
+            <img src="assets/images/1793539206852_1000025672.jpg" alt="EVER GAIN Turf" class="gallery-img" loading="lazy">
             <div class="gallery-hover-indicator" aria-hidden="true"><i class="fas fa-expand"></i></div>
           </div>
 
           <!-- Real Turf Photo 2 -->
           <div class="gallery-item animate-in stagger-2" onclick="window.location.href='gallery.html'" role="button" tabindex="0" title="গ্যালারি দেখুন">
-            <img src="assets/images/1793521696187_1000025671.jpg" alt="EVER GAIN Turf" class="gallery-img" loading="lazy">
+            <img src="assets/images/1793539216901_1000025671.jpg" alt="EVER GAIN Turf" class="gallery-img" loading="lazy">
             <div class="gallery-hover-indicator" aria-hidden="true"><i class="fas fa-expand"></i></div>
           </div>
 
           <!-- Real Turf Photo 3 -->
           <div class="gallery-item animate-in stagger-3" onclick="window.location.href='gallery.html'" role="button" tabindex="0" title="গ্যালারি দেখুন">
-            <img src="assets/images/1793521712602_1000025661.jpg" alt="EVER GAIN Turf" class="gallery-img" loading="lazy">
+            <img src="assets/images/1793539242375_1000025661.jpg" alt="EVER GAIN Turf" class="gallery-img" loading="lazy">
             <div class="gallery-hover-indicator" aria-hidden="true"><i class="fas fa-expand"></i></div>
           </div>
 
           <!-- Real Turf Photo 4 -->
           <div class="gallery-item animate-in stagger-4" onclick="window.location.href='gallery.html'" role="button" tabindex="0" title="গ্যালারি দেখুন">
-            <img src="assets/images/1793521726714_1000025663.jpg" alt="EVER GAIN Turf" class="gallery-img" loading="lazy">
+            <img src="assets/images/1793539255106_1000025663.jpg" alt="EVER GAIN Turf" class="gallery-img" loading="lazy">
             <div class="gallery-hover-indicator" aria-hidden="true"><i class="fas fa-expand"></i></div>
           </div>
 
           <!-- Real Turf Photo 5 -->
           <div class="gallery-item animate-in stagger-5" onclick="window.location.href='gallery.html'" role="button" tabindex="0" title="গ্যালারি দেখুন">
-            <img src="assets/images/1793521738771_1000025662.jpg" alt="EVER GAIN Turf" class="gallery-img" loading="lazy">
+            <img src="assets/images/1793539266821_1000025662.jpg" alt="EVER GAIN Turf" class="gallery-img" loading="lazy">
             <div class="gallery-hover-indicator" aria-hidden="true"><i class="fas fa-expand"></i></div>
           </div>
 
           <!-- Real Turf Photo 6 -->
           <div class="gallery-item animate-in stagger-6" onclick="window.location.href='gallery.html'" role="button" tabindex="0" title="গ্যালারি দেখুন">
-            <img src="assets/images/1793521749075_1000025664.jpg" alt="EVER GAIN Turf" class="gallery-img" loading="lazy">
+            <img src="assets/images/1793539275408_1000025664.jpg" alt="EVER GAIN Turf" class="gallery-img" loading="lazy">
             <div class="gallery-hover-indicator" aria-hidden="true"><i class="fas fa-expand"></i></div>
           </div>
         </div>

@@ -136,8 +136,8 @@ function getSampleGalleryItems() {
       title: 'EVER GAIN Turf Match',
       description: '',
       type: 'image',
-      url: 'assets/images/1793521507642_1000025672.jpg',
-      thumbnail: 'assets/images/1793521507642_1000025672.jpg',
+      url: 'assets/images/1793539206852_1000025672.jpg',
+      thumbnail: 'assets/images/1793539206852_1000025672.jpg',
       order: 1
     },
     {
@@ -145,8 +145,8 @@ function getSampleGalleryItems() {
       title: 'EVER GAIN Arena Pitch',
       description: '',
       type: 'image',
-      url: 'assets/images/1793521696187_1000025671.jpg',
-      thumbnail: 'assets/images/1793521696187_1000025671.jpg',
+      url: 'assets/images/1793539216901_1000025671.jpg',
+      thumbnail: 'assets/images/1793539216901_1000025671.jpg',
       order: 2
     },
     {
@@ -154,8 +154,8 @@ function getSampleGalleryItems() {
       title: 'Indoor Football Action',
       description: '',
       type: 'image',
-      url: 'assets/images/1793521712602_1000025661.jpg',
-      thumbnail: 'assets/images/1793521712602_1000025661.jpg',
+      url: 'assets/images/1793539242375_1000025661.jpg',
+      thumbnail: 'assets/images/1793539242375_1000025661.jpg',
       order: 3
     },
     {
@@ -163,8 +163,8 @@ function getSampleGalleryItems() {
       title: 'Turf Night Game',
       description: '',
       type: 'image',
-      url: 'assets/images/1793521726714_1000025663.jpg',
-      thumbnail: 'assets/images/1793521726714_1000025663.jpg',
+      url: 'assets/images/1793539255106_1000025663.jpg',
+      thumbnail: 'assets/images/1793539255106_1000025663.jpg',
       order: 4
     },
     {
@@ -172,8 +172,8 @@ function getSampleGalleryItems() {
       title: 'Turf Arena Lighting',
       description: '',
       type: 'image',
-      url: 'assets/images/1793521738771_1000025662.jpg',
-      thumbnail: 'assets/images/1793521738771_1000025662.jpg',
+      url: 'assets/images/1793539266821_1000025662.jpg',
+      thumbnail: 'assets/images/1793539266821_1000025662.jpg',
       order: 5
     },
     {
@@ -181,8 +181,8 @@ function getSampleGalleryItems() {
       title: 'EVER GAIN Sports Facility',
       description: '',
       type: 'image',
-      url: 'assets/images/1793521749075_1000025664.jpg',
-      thumbnail: 'assets/images/1793521749075_1000025664.jpg',
+      url: 'assets/images/1793539275408_1000025664.jpg',
+      thumbnail: 'assets/images/1793539275408_1000025664.jpg',
       order: 6
     }
   ];
