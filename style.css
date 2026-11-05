@@ -3029,12 +3029,12 @@ header.section.section-header,
 }
 
 .booking-date.selected {
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.4) 0%, rgba(5, 150, 105, 0.6) 100%) !important;
-  border-color: var(--color-primary-light) !important;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  border-color: #6ee7b7 !important;
   color: #ffffff !important;
-  box-shadow: 0 0 20px rgba(16, 185, 129, 0.6), inset 0 0 10px rgba(16, 185, 129, 0.25) !important;
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.65), 0 8px 24px rgba(16, 185, 129, 0.5) !important;
   font-weight: var(--fw-bold);
-  transform: scale(1.02);
+  transform: scale(1.03);
 }
 
 .booking-date-weekday {
@@ -3053,13 +3053,15 @@ header.section.section-header,
 }
 
 .booking-date.selected .booking-date-day {
-  color: #ffffff;
-  text-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+  color: #ffffff !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
 }
 
 .booking-date.selected .booking-date-weekday,
 .booking-date.selected .booking-date-month {
-  color: var(--color-primary-light);
+  color: #ffffff !important;
+  opacity: 0.95;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .booking-date-month {
@@ -3155,20 +3157,21 @@ header.section.section-header,
 }
 
 .booking-slot.selected {
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.45) 0%, rgba(5, 150, 105, 0.65) 100%) !important;
-  border-color: var(--color-primary-light) !important;
-  box-shadow: 0 0 22px rgba(16, 185, 129, 0.6), inset 0 0 12px rgba(16, 185, 129, 0.25) !important;
-  transform: scale(1.02);
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  border-color: #6ee7b7 !important;
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.65), 0 8px 24px rgba(16, 185, 129, 0.5) !important;
+  transform: scale(1.03);
 }
 
 .booking-slot.selected .booking-slot-time {
   color: #ffffff !important;
-  text-shadow: 0 0 8px rgba(16, 185, 129, 0.6);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
 }
 
 .booking-slot.selected .booking-slot-status {
-  color: var(--color-accent-light) !important;
+  color: #ffffff !important;
   font-weight: var(--fw-bold);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .booking-slot.pending {
@@ -6995,82 +6998,161 @@ html {
 }
 
 /* ==========================================================================
-   31. iPhone Style Booking Cards Architecture & Liquid Glass System
+   31. iPhone iOS 18 Liquid Glass System for All Cards & Boxes (Zero Lag)
    ========================================================================== */
 
-/* iPhone Style Rounded Squircle Cards ("gol not square") */
-.booking-category-card {
-  border-radius: 34px !important;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-}
-
-.pricing-card {
+/* iPhone Style Rounded Squircle Cards ("gol not square") & Liquid Glass Material */
+.card,
+.card-premium,
+.card-luxury,
+.rupantor-card,
+.booking-category-card,
+.pricing-card,
+.stat-counter-card,
+.testimonial-card,
+.luxury-feature-card,
+.calc-card,
+.booking-form,
+.booking-summary,
+#slotsSectionCard,
+.rule-card,
+.rules-item,
+.contact-info-card,
+.contact-form-card,
+.gallery-item,
+.gallery-item-card {
   border-radius: 28px !important;
+  background: linear-gradient(145deg, rgba(16, 28, 20, 0.72) 0%, rgba(10, 18, 14, 0.82) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: 
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.22),
+    0 10px 30px rgba(0, 0, 0, 0.35);
+  transition: transform 0.24s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.24s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.24s ease;
+  transform: translateZ(0);
 }
 
-.booking-date {
-  border-radius: 24px !important; /* iPhone smooth squircle */
-  min-height: 86px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1.5px solid rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.14);
-}
-
-.booking-slot {
-  border-radius: 22px !important; /* iPhone smooth rounded slot */
-  background: rgba(255, 255, 255, 0.06);
-  border: 1.5px solid rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
-}
-
-#slotsSectionCard {
-  border-radius: 36px !important;
-}
-
-.booking-form {
-  border-radius: 34px !important;
-}
-
-.booking-summary {
-  border-radius: 34px !important;
-}
-
+/* Extra Large Main Sections (34px Deep Squircle) */
+#slotsSectionCard,
+.booking-form,
+.booking-summary,
+.calc-card,
 #bookingStatusCheckSection .card-premium {
   border-radius: 34px !important;
 }
 
-.condition-box {
-  border-radius: 22px !important;
+/* Hover elevation for all liquid glass cards */
+.card:hover,
+.card-premium:hover,
+.card-luxury:hover,
+.rupantor-card:hover,
+.booking-category-card:hover,
+.pricing-card:hover,
+.stat-counter-card:hover,
+.testimonial-card:hover,
+.luxury-feature-card:hover,
+.rule-card:hover,
+.contact-info-card:hover,
+.gallery-item:hover,
+.gallery-item-card:hover {
+  transform: translateY(-4px) translateZ(0);
+  border-color: rgba(16, 185, 129, 0.45);
+  box-shadow: 
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.35),
+    0 16px 36px rgba(16, 185, 129, 0.16),
+    0 6px 16px rgba(0, 0, 0, 0.35);
 }
 
-.calc-card {
-  border-radius: 34px !important;
+/* Active tap feel for tactile responsive feedback */
+.booking-category-card:active,
+.pricing-card:active,
+.stat-counter-card:active,
+.calc-pill-btn:active {
+  transform: scale(0.97) translateZ(0) !important;
+}
+
+/* iPhone Liquid Glass Date Cards */
+.booking-date {
+  border-radius: 24px !important;
+  min-height: 86px;
+  background: linear-gradient(145deg, rgba(22, 38, 26, 0.65) 0%, rgba(12, 22, 16, 0.75) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: inset 0 1px 1.2px rgba(255, 255, 255, 0.22), 0 6px 18px rgba(0, 0, 0, 0.2) !important;
+  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.22s ease, border-color 0.22s ease !important;
+  transform: translateZ(0);
+}
+
+.booking-date:hover:not(.unavailable) {
+  transform: translateY(-3px) scale(1.02) translateZ(0) !important;
+  border-color: rgba(16, 185, 129, 0.5) !important;
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.3), 0 10px 24px rgba(16, 185, 129, 0.25) !important;
+}
+
+.booking-date:active:not(.unavailable) {
+  transform: scale(0.95) translateZ(0) !important;
+}
+
+/* iPhone Liquid Glass Slot Cards */
+.booking-slot {
+  border-radius: 22px !important;
+  background: linear-gradient(145deg, rgba(22, 38, 26, 0.65) 0%, rgba(12, 22, 16, 0.75) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: inset 0 1px 1.2px rgba(255, 255, 255, 0.22), 0 6px 18px rgba(0, 0, 0, 0.2) !important;
+  transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.22s ease, border-color 0.22s ease !important;
+  transform: translateZ(0);
+}
+
+.booking-slot:hover:not(.booked) {
+  transform: translateY(-3px) scale(1.02) translateZ(0) !important;
+  border-color: rgba(16, 185, 129, 0.5) !important;
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.3), 0 10px 24px rgba(16, 185, 129, 0.25) !important;
+}
+
+.booking-slot:active:not(.booked) {
+  transform: scale(0.95) translateZ(0) !important;
+}
+
+/* Category Cards Selected in Dark Mode */
+.booking-category-card.selected {
+  border-color: #10b981 !important;
+  background: linear-gradient(145deg, rgba(16, 185, 129, 0.25) 0%, rgba(8, 22, 14, 0.9) 100%) !important;
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.35), 0 12px 32px rgba(16, 185, 129, 0.3) !important;
+}
+
+.condition-box {
+  border-radius: 22px !important;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
 
 .calc-pill-btn {
-  border-radius: 9999px !important; /* Pill shaped liquid button */
+  border-radius: 9999px !important;
   position: relative;
   overflow: hidden;
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
-  transition: all 0.24s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: all 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .calc-pill-btn:active {
-  transform: scale(0.96) !important;
+  transform: scale(0.95) !important;
 }
 
 .calc-result-box {
-  border-radius: 28px !important;
+  border-radius: 26px !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 .category-select-btn {
-  border-radius: 9999px !important; /* Liquid glass pill */
+  border-radius: 9999px !important;
 }
 
 /* ==========================================================================
@@ -7158,7 +7240,17 @@ html {
 }
 
 [data-theme="light"] .navbar-logo-text {
-  color: #0f172a !important;
+  background: linear-gradient(135deg, #065f46 0%, #059669 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: #065f46 !important;
+  font-weight: 900 !important;
+}
+
+[data-theme="light"] .navbar-sub-text {
+  color: #059669 !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.18em;
 }
 
 [data-theme="light"] .nav-link {
@@ -7199,11 +7291,28 @@ html {
   color: #0f172a !important;
 }
 
-/* 3. Hero Section (Screenshot 1 & 5 Fix) */
+/* 3. Hero Section (Screenshot 1 Fix: Radiant Apple Glass & Crisp Typography) */
+[data-theme="light"] .hero-luxury {
+  background: linear-gradient(180deg, #ffffff 0%, #f0fdf4 65%, #e8f8f0 100%) !important;
+}
+
+[data-theme="light"] .hero-luxury::before {
+  display: none !important;
+}
+
+[data-theme="light"] .stadium-lighting,
+[data-theme="light"] .pitch-turf-glow,
+[data-theme="light"] .pitch-lines-overlay,
+[data-theme="light"] .hero-overlay {
+  display: none !important;
+}
+
 [data-theme="light"] .hero-prestige-badge {
-  background: #ffffff !important;
-  border: 1.5px solid rgba(16, 185, 129, 0.35) !important;
-  box-shadow: 0 4px 18px rgba(16, 185, 129, 0.12) !important;
+  background: rgba(255, 255, 255, 0.92) !important;
+  border: 1px solid rgba(16, 185, 129, 0.3) !important;
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.95), 0 4px 18px rgba(16, 185, 129, 0.12) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
 }
 
 [data-theme="light"] .badge-title-txt {
@@ -7226,7 +7335,8 @@ html {
 }
 
 [data-theme="light"] .hero-title-prefix {
-  color: #059669 !important;
+  color: #047857 !important;
+  font-weight: 800 !important;
   text-shadow: none !important;
 }
 
@@ -7245,31 +7355,134 @@ html {
 }
 
 [data-theme="light"] .hero-tagline-luxury {
-  color: #059669 !important;
+  color: #047857 !important;
   font-weight: 700 !important;
+  text-shadow: none !important;
 }
 
 [data-theme="light"] .hero-desc-luxury {
+  color: #334155 !important;
+  font-weight: 500 !important;
+}
+
+/* 3.5. Stat Counter Cards in Light Mode (Fixes Screenshot 2 Dark Card Bug) */
+[data-theme="light"] .stats-counter-luxury .stat-counter-card,
+[data-theme="light"] .stat-counter-card {
+  background: rgba(255, 255, 255, 0.88) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  border: 1px solid rgba(16, 185, 129, 0.22) !important;
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.95), 0 10px 30px rgba(15, 23, 42, 0.06) !important;
+}
+
+[data-theme="light"] .stat-counter-card:hover {
+  background: #ffffff !important;
+  border-color: #10b981 !important;
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.95), 0 16px 36px rgba(16, 185, 129, 0.16) !important;
+}
+
+[data-theme="light"] .stat-counter-value {
+  background: linear-gradient(135deg, #065f46 0%, #059669 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: #065f46 !important;
+  font-weight: 900 !important;
+}
+
+[data-theme="light"] .stat-counter-label {
+  color: #334155 !important;
+  font-weight: 600 !important;
+}
+
+/* 3.6. Testimonials & Player Review Cards in Light Mode (Fixes Screenshot 3 Dark Card Bug) */
+[data-theme="light"] .testimonial-card {
+  background: rgba(255, 255, 255, 0.88) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  border: 1px solid rgba(16, 185, 129, 0.2) !important;
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.95), 0 10px 28px rgba(15, 23, 42, 0.05) !important;
+}
+
+[data-theme="light"] .testimonial-card:hover {
+  background: #ffffff !important;
+  border-color: #10b981 !important;
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.95), 0 16px 36px rgba(16, 185, 129, 0.14) !important;
+}
+
+[data-theme="light"] .testimonial-quote {
+  color: #1e293b !important;
+  font-weight: 500 !important;
+}
+
+[data-theme="light"] .testimonial-name {
+  color: #0f172a !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] .testimonial-team {
+  color: #64748b !important;
+  font-weight: 500 !important;
+}
+
+[data-theme="light"] .testimonial-stars {
+  color: #f59e0b !important;
+}
+
+/* 3.7. Booking Category Selection Cards in Light Mode */
+[data-theme="light"] .booking-category-card {
+  background: rgba(255, 255, 255, 0.88) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  border: 1px solid rgba(16, 185, 129, 0.18) !important;
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.95), 0 8px 24px rgba(15, 23, 42, 0.04) !important;
+}
+
+[data-theme="light"] .booking-category-card:hover {
+  background: #ffffff !important;
+  border-color: rgba(16, 185, 129, 0.45) !important;
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.95), 0 12px 28px rgba(16, 185, 129, 0.12) !important;
+}
+
+[data-theme="light"] .booking-category-card.selected {
+  background: linear-gradient(145deg, #ecfdf5 0%, #d1fae5 100%) !important;
+  border-color: #10b981 !important;
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.95), 0 12px 30px rgba(16, 185, 129, 0.22) !important;
+}
+
+[data-theme="light"] .booking-category-name {
+  color: #0f172a !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="light"] .booking-category-desc {
   color: #475569 !important;
 }
 
-[data-theme="light"] .stadium-lighting {
-  opacity: 0.15;
+[data-theme="light"] .booking-category-rate {
+  color: #059669 !important;
+  font-weight: 800 !important;
 }
 
-[data-theme="light"] .hero-overlay {
-  background: linear-gradient(180deg, rgba(248, 250, 252, 0.4) 0%, #f8fafc 100%);
-}
-
-[data-theme="light"] .luxury-feature-card {
+[data-theme="light"] .booking-category-icon {
   background: #ffffff !important;
-  border: 1.5px solid rgba(15, 23, 42, 0.08) !important;
-  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.05) !important;
+  border-color: rgba(16, 185, 129, 0.25) !important;
+  color: #059669 !important;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.12) !important;
+}
+
+/* 3.8 Luxury Features Grid */
+[data-theme="light"] .luxury-feature-card {
+  background: rgba(255, 255, 255, 0.88) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  border: 1px solid rgba(16, 185, 129, 0.18) !important;
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.95), 0 8px 24px rgba(15, 23, 42, 0.05) !important;
 }
 
 [data-theme="light"] .luxury-feature-card:hover {
-  border-color: rgba(16, 185, 129, 0.35) !important;
-  box-shadow: 0 12px 28px rgba(16, 185, 129, 0.12) !important;
+  background: #ffffff !important;
+  border-color: rgba(16, 185, 129, 0.45) !important;
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.95), 0 14px 32px rgba(16, 185, 129, 0.15) !important;
 }
 
 [data-theme="light"] .luxury-feature-card .feature-label {
@@ -7294,9 +7507,12 @@ html {
 
 /* 4. Search Booking Status Card (Screenshot 2 Fix) */
 [data-theme="light"] #bookingStatusCheckSection .card-premium {
-  background: #ffffff !important;
-  border: 1.5px solid rgba(15, 23, 42, 0.08) !important;
-  box-shadow: 0 10px 32px rgba(15, 23, 42, 0.06) !important;
+  border-radius: 34px !important;
+  background: rgba(255, 255, 255, 0.88) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  border: 1px solid rgba(16, 185, 129, 0.18) !important;
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.95), 0 10px 32px rgba(15, 23, 42, 0.06) !important;
 }
 
 [data-theme="light"] #bookingStatusCheckSection .card-title {
@@ -7313,20 +7529,24 @@ html {
 }
 
 [data-theme="light"] .status-result-card {
+  border-radius: 22px !important;
   background: #f8fafc !important;
   border: 1.5px solid #e2e8f0 !important;
   color: #0f172a !important;
 }
 
-/* 5. Booking Page Dates & Slots (Screenshot 3 & 4 Fix - iPhone Style) */
+/* 5. Booking Page Dates & Slots (Fixes Screenshot White-on-White Bug) */
 [data-theme="light"] .booking-calendar {
   background: transparent !important;
 }
 
 [data-theme="light"] .booking-date {
-  background: #ffffff !important;
-  border: 1.5px solid rgba(15, 23, 42, 0.1) !important;
-  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.04) !important;
+  border-radius: 24px !important;
+  background: rgba(255, 255, 255, 0.88) !important;
+  border: 1px solid rgba(16, 185, 129, 0.18) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.95), 0 6px 18px rgba(15, 23, 42, 0.04) !important;
   color: #0f172a !important;
 }
 
@@ -7347,33 +7567,46 @@ html {
 [data-theme="light"] .booking-date:hover:not(.unavailable) {
   background: #ecfdf5 !important;
   border-color: #10b981 !important;
-  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.18) !important;
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.95), 0 8px 22px rgba(16, 185, 129, 0.2) !important;
 }
 
+/* Light Theme Selected Date (Vibrant Apple Emerald Pill with Crisp Pure White Text) */
 [data-theme="light"] .booking-date.selected {
   background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
-  border-color: #059669 !important;
-  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4) !important;
+  border: 1.5px solid #34d399 !important;
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.7), 0 10px 28px rgba(16, 185, 129, 0.45) !important;
   color: #ffffff !important;
 }
 
-[data-theme="light"] .booking-date.selected .booking-date-day,
-[data-theme="light"] .booking-date.selected .booking-date-weekday,
-[data-theme="light"] .booking-date.selected .booking-date-month {
+[data-theme="light"] .booking-date.selected * {
   color: #ffffff !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
+}
+
+.booking-date.selected .badge-info,
+[data-theme="light"] .booking-date.selected .badge-info {
+  background: rgba(255, 255, 255, 0.28) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.45) !important;
   text-shadow: none !important;
 }
 
 [data-theme="light"] #slotsSectionCard {
-  background: #ffffff !important;
-  border: 1.5px solid rgba(15, 23, 42, 0.08) !important;
-  box-shadow: 0 10px 32px rgba(15, 23, 42, 0.05) !important;
+  border-radius: 34px !important;
+  background: rgba(255, 255, 255, 0.88) !important;
+  backdrop-filter: blur(24px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+  border: 1px solid rgba(16, 185, 129, 0.2) !important;
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.95), 0 14px 40px rgba(15, 23, 42, 0.06) !important;
 }
 
 [data-theme="light"] .booking-slot {
-  background: #ffffff !important;
-  border: 1.5px solid rgba(15, 23, 42, 0.1) !important;
-  box-shadow: 0 3px 12px rgba(15, 23, 42, 0.04) !important;
+  border-radius: 22px !important;
+  background: rgba(255, 255, 255, 0.88) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border: 1px solid rgba(16, 185, 129, 0.18) !important;
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.95), 0 4px 14px rgba(15, 23, 42, 0.04) !important;
 }
 
 [data-theme="light"] .booking-slot-time {
@@ -7394,20 +7627,20 @@ html {
 [data-theme="light"] .booking-slot:hover:not(.booked) {
   background: #ecfdf5 !important;
   border-color: #10b981 !important;
-  box-shadow: 0 6px 18px rgba(16, 185, 129, 0.2) !important;
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.95), 0 8px 20px rgba(16, 185, 129, 0.2) !important;
 }
 
+/* Light Theme Selected Slot (Vibrant Apple Emerald Pill with Crisp Pure White Text) */
 [data-theme="light"] .booking-slot.selected {
   background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
-  border-color: #059669 !important;
-  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4) !important;
+  border: 1.5px solid #34d399 !important;
+  box-shadow: inset 0 1px 1.5px rgba(255, 255, 255, 0.7), 0 10px 28px rgba(16, 185, 129, 0.45) !important;
+  color: #ffffff !important;
 }
 
-[data-theme="light"] .booking-slot.selected .booking-slot-time,
-[data-theme="light"] .booking-slot.selected .booking-slot-price,
-[data-theme="light"] .booking-slot.selected .booking-slot-status {
+[data-theme="light"] .booking-slot.selected * {
   color: #ffffff !important;
-  text-shadow: none !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
 }
 
 [data-theme="light"] .booking-slot.booked {
@@ -7416,9 +7649,7 @@ html {
   opacity: 0.65 !important;
 }
 
-[data-theme="light"] .booking-slot.booked .booking-slot-time,
-[data-theme="light"] .booking-slot.booked .booking-slot-price,
-[data-theme="light"] .booking-slot.booked .booking-slot-status {
+[data-theme="light"] .booking-slot.booked * {
   color: #94a3b8 !important;
 }
 
@@ -7532,6 +7763,14 @@ html {
 [data-theme="light"] .pricing-card.active-plan {
   border-color: #10b981 !important;
   box-shadow: 0 8px 24px rgba(16, 185, 129, 0.28), 0 0 0 3px rgba(16, 185, 129, 0.2) !important;
+}
+
+[data-theme="light"] .pricing-card.selected .category-select-btn,
+[data-theme="light"] .pricing-card.active-plan .category-select-btn {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
+  color: #ffffff !important;
+  border-color: #059669 !important;
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35) !important;
 }
 
 /* 9. Booking Steps, Summary & Form Fields */
@@ -7653,6 +7892,7 @@ html {
 [data-theme="light"] .rules-item,
 [data-theme="light"] .contact-info-card,
 [data-theme="light"] .contact-form-card,
+[data-theme="light"] .gallery-item,
 [data-theme="light"] .gallery-item-card {
   background: #ffffff !important;
   border: 1.5px solid rgba(15, 23, 42, 0.08) !important;
