@@ -103,20 +103,42 @@
     </div>
   </div>
 
-  <!-- Page Header -->
-  <header class="section gallery-header text-center">
-    <div class="container">
-      <div class="badge badge-available mb-2 animate-in">
-        <i class="fas fa-camera-retro"></i> <span>ফটো গ্যালারি</span>
+  <!-- Page Header (Ultra-Luxury Stadium Aura & Liquid Glass) -->
+  <header class="section gallery-header text-center position-relative">
+    <div class="gallery-hero-aura" aria-hidden="true"></div>
+    <div class="container position-relative">
+      <div class="badge badge-available mb-2 animate-in gallery-hero-badge">
+        <i class="fas fa-camera-retro text-accent"></i> <span>EVER GAIN ARENA SIGHTS</span>
       </div>
-      <h1 class="section-title animate-in" data-i18n="galleryTitle">আমাদের গ্যালারি</h1>
-      <p class="section-subtitle animate-in" data-i18n="gallerySubtitle">EVER GAIN ইনডোর ফুটবল গ্রাউন্ডের এক্সক্লুসিভ ছবি</p>
+      <h1 class="section-title animate-in gallery-main-title" data-i18n="galleryTitle">আমাদের গ্যালারি</h1>
+      <p class="section-subtitle animate-in gallery-main-subtitle" data-i18n="gallerySubtitle">আন্তর্জাতিক মানের সিন্থেটিক টার্ফ ও আধুনিক নাইট ফ্লাডলাইটের এক্সক্লুসিভ ফ্রেমসমূহ</p>
 
-      <!-- Filter Buttons -->
-      <div class="gallery-filter animate-in" id="galleryFilter" role="tablist" aria-label="গ্যালারি ফিল্টার">
-        <button type="button" class="gallery-filter-btn active" data-filter="all" role="tab" aria-selected="true">
-          <i class="fas fa-images"></i> <span data-i18n="filterAll">সকল ছবি</span>
-        </button>
+      <!-- Arena Feature Highlights Chips (Apple Liquid Glass) -->
+      <div class="gallery-highlights-row animate-in">
+        <div class="gallery-highlight-chip">
+          <i class="fas fa-bolt text-accent"></i> <span>ফ্লিকার-ফ্রি লাইটিং</span>
+        </div>
+        <div class="gallery-highlight-chip">
+          <i class="fas fa-shield-alt text-primary"></i> <span>ফিফা স্ট্যান্ডার্ড টার্ফ</span>
+        </div>
+        <div class="gallery-highlight-chip">
+          <i class="fas fa-camera text-primary"></i> <span>এইচডি ম্যাচ মোমেন্টস</span>
+        </div>
+      </div>
+
+      <!-- Segmented Liquid Glass Filter Tabs -->
+      <div class="gallery-filter-wrapper animate-in">
+        <div class="gallery-filter" id="galleryFilter" role="tablist" aria-label="গ্যালারি ফিল্টার">
+          <button type="button" class="gallery-filter-btn active" data-filter="all" role="tab" aria-selected="true">
+            <i class="fas fa-border-all"></i> <span data-i18n="filterAll">সকল ছবি</span>
+          </button>
+          <button type="button" class="gallery-filter-btn" data-filter="turf" role="tab" aria-selected="false">
+            <i class="fas fa-futbol"></i> <span data-i18n="filterTurf">টার্ফ ও এরিনা</span>
+          </button>
+          <button type="button" class="gallery-filter-btn" data-filter="night" role="tab" aria-selected="false">
+            <i class="fas fa-moon"></i> <span data-i18n="filterNight">নাইট ফ্লাডলাইট</span>
+          </button>
+        </div>
       </div>
     </div>
   </header>
@@ -149,6 +171,28 @@
           <i class="fas fa-rotate-right"></i> পুনরায় লোড করুন
         </button>
       </div>
+
+      <!-- Arena Match Action CTA Banner (Apple Liquid Glass) -->
+      <section class="gallery-cta-section animate-in mt-5 mb-3">
+        <div class="gallery-cta-card">
+          <div class="gallery-cta-glow" aria-hidden="true"></div>
+          <div class="gallery-cta-body">
+            <span class="badge badge-accent mb-2">
+              <i class="fas fa-trophy"></i> আপনার টিম রেডি তো?
+            </span>
+            <h2 class="gallery-cta-title">মাঠে নামুন এবং আপনার সেরা ফুটবল মুহূর্ত তৈরি করুন</h2>
+            <p class="gallery-cta-desc">বিশ্বমানের ইনডোর টার্ফে দিন ও রাতে বন্ধুদের সাথে স্মরণীয় ম্যাচ খেলার জন্য এখনই আপনার সুবিধাজনক স্লট বুক করুন।</p>
+            <div class="gallery-cta-btns">
+              <a href="booking.html" class="btn btn-primary btn-lg">
+                <i class="fas fa-calendar-check"></i> <span>স্লট বুক করুন</span>
+              </a>
+              <a href="https://wa.me/8801700000000" id="galleryWaBtn" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-lg footer-wa-link">
+                <i class="fab fa-whatsapp"></i> <span>হোয়াটসঅ্যাপে যোগাযোগ</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
 
     </div>
   </main>

@@ -910,7 +910,9 @@
       // Gallery Page
       galleryTitle: 'আমাদের গ্যালারি',
       gallerySubtitle: 'EVER GAIN ইনডোর ফুটবল গ্রাউন্ডের ছবি ও ভিডিও',
-      filterAll: 'সব',
+      filterAll: 'সকল ছবি',
+      filterTurf: 'টার্ফ ও এরিনা',
+      filterNight: 'নাইট ফ্লাডলাইট',
       filterImages: 'ছবি',
       filterVideos: 'ভিডিও',
       emptyGalleryMsg: 'গ্যালারিতে এখনো কিছু যোগ করা হয়নি',
@@ -1141,7 +1143,9 @@
       // Gallery Page
       galleryTitle: 'Our Gallery',
       gallerySubtitle: 'Photos and match highlight videos of EVER GAIN Avenue',
-      filterAll: 'All',
+      filterAll: 'All Photos',
+      filterTurf: 'Pitch & Arena',
+      filterNight: 'Night Floodlights',
       filterImages: 'Photos',
       filterVideos: 'Videos',
       emptyGalleryMsg: 'No media items added yet',

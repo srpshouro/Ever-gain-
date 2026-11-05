@@ -134,7 +134,8 @@ function getSampleGalleryItems() {
     {
       id: 'eg-img-1',
       title: 'EVER GAIN Turf Match',
-      description: '',
+      description: 'আন্তর্জাতিক মানের কৃত্রিম টার্ফে প্রাণবন্ত ফুটবল ম্যাচ',
+      category: 'turf',
       type: 'image',
       url: 'assets/images/1793539206852_1000025672.jpg',
       thumbnail: 'assets/images/1793539206852_1000025672.jpg',
@@ -143,7 +144,8 @@ function getSampleGalleryItems() {
     {
       id: 'eg-img-2',
       title: 'EVER GAIN Arena Pitch',
-      description: '',
+      description: 'আধুনিক ইনডোর ফুটবল এরিনা ও প্রশস্ত খেলার মাঠ',
+      category: 'turf',
       type: 'image',
       url: 'assets/images/1793539216901_1000025671.jpg',
       thumbnail: 'assets/images/1793539216901_1000025671.jpg',
@@ -152,7 +154,8 @@ function getSampleGalleryItems() {
     {
       id: 'eg-img-3',
       title: 'Indoor Football Action',
-      description: '',
+      description: 'বন্ধুদের সাথে সেরা আক্রমণাত্মক ও রোমাঞ্চকর খেলা',
+      category: 'turf',
       type: 'image',
       url: 'assets/images/1793539242375_1000025661.jpg',
       thumbnail: 'assets/images/1793539242375_1000025661.jpg',
@@ -161,7 +164,8 @@ function getSampleGalleryItems() {
     {
       id: 'eg-img-4',
       title: 'Turf Night Game',
-      description: '',
+      description: 'চোখ ধাঁধানো ফ্লিকার-ফ্রি ফ্লাডলাইটে নাইট ম্যাচ সেশন',
+      category: 'night',
       type: 'image',
       url: 'assets/images/1793539255106_1000025663.jpg',
       thumbnail: 'assets/images/1793539255106_1000025663.jpg',
@@ -170,7 +174,8 @@ function getSampleGalleryItems() {
     {
       id: 'eg-img-5',
       title: 'Turf Arena Lighting',
-      description: '',
+      description: 'প্রফেশনাল নাইট লাইটিং ও ড্রিম লাইট ফুটবল অভিজ্ঞতা',
+      category: 'night',
       type: 'image',
       url: 'assets/images/1793539266821_1000025662.jpg',
       thumbnail: 'assets/images/1793539266821_1000025662.jpg',
@@ -179,7 +184,8 @@ function getSampleGalleryItems() {
     {
       id: 'eg-img-6',
       title: 'EVER GAIN Sports Facility',
-      description: '',
+      description: 'সিলেটের বিশ্বমানের আধুনিক ফুটবল সুবিধা ও টার্ফ পরিবেশ',
+      category: 'turf',
       type: 'image',
       url: 'assets/images/1793539275408_1000025664.jpg',
       thumbnail: 'assets/images/1793539275408_1000025664.jpg',
@@ -189,7 +195,7 @@ function getSampleGalleryItems() {
 }
 
 /**
- * Filter Gallery Items by Type ('all', 'image', 'video')
+ * Filter Gallery Items by Type ('all', 'turf', 'night', 'image', 'video')
  */
 function filterGallery(type) {
   currentFilter = type || 'all';
@@ -210,8 +216,19 @@ function filterGallery(type) {
   // Filter items array
   if (currentFilter === 'all') {
     currentFilteredItems = [...allGalleryItems];
+  } else if (currentFilter === 'turf') {
+    currentFilteredItems = allGalleryItems.filter(item => 
+      item.category === 'turf' || 
+      (!item.category && item.title && !item.title.toLowerCase().includes('night')) ||
+      (!item.category && !item.title)
+    );
+  } else if (currentFilter === 'night') {
+    currentFilteredItems = allGalleryItems.filter(item => 
+      item.category === 'night' || 
+      (item.title && (item.title.toLowerCase().includes('night') || item.title.toLowerCase().includes('light')))
+    );
   } else {
-    currentFilteredItems = allGalleryItems.filter(item => item.type === currentFilter);
+    currentFilteredItems = allGalleryItems.filter(item => item.type === currentFilter || item.category === currentFilter);
   }
 
   // Render items or empty state
@@ -244,10 +261,19 @@ function renderGallery(items) {
     card.setAttribute('aria-label', `${item.title || 'ছবি'}`);
 
     const thumbUrl = item.thumbnail || item.url || '';
+    const isNight = item.category === 'night' || (item.title && (item.title.toLowerCase().includes('night') || item.title.toLowerCase().includes('light')));
+    const categoryLabel = isNight ? 'নাইট এরিনা' : 'টার্ফ ভিউ';
+    const categoryIcon = isNight ? 'fa-moon' : 'fa-futbol';
 
     card.innerHTML = `
       <div class="gallery-item-inner">
-        <span class="gallery-photo-chip"><i class="fas fa-camera"></i> #${index + 1}</span>
+        <div class="gallery-glass-rim"></div>
+        <span class="gallery-photo-chip">
+          <span class="gallery-beacon-dot"></span>
+          <i class="fas ${categoryIcon}"></i>
+          <span>${categoryLabel}</span>
+          <span class="gallery-chip-idx">#${index + 1}</span>
+        </span>
         <img 
           src="${escapeHtml(thumbUrl)}" 
           alt="${escapeHtml(item.title || 'EVER GAIN Turf')}" 
@@ -257,8 +283,8 @@ function renderGallery(items) {
         >
         <div class="gallery-gradient-overlay" aria-hidden="true"></div>
         <div class="gallery-hover-indicator" aria-hidden="true">
-          <i class="fas fa-magnifying-glass-plus"></i>
-          <span>View Photo</span>
+          <i class="fas fa-expand"></i>
+          <span>ফুল ভিউ</span>
         </div>
       </div>
     `;
@@ -318,7 +344,7 @@ function openLightbox(index) {
     lightboxImg.onerror = function () {
       if (!this.dataset.fallbackTried && this.getAttribute('src') && this.getAttribute('src').indexOf('assets/images/') !== -1) {
         this.dataset.fallbackTried = '1';
-        this.src = 'https://raw.githubusercontent.com/srpshouro/Ever-gain-/main/' + this.getAttribute('src');
+        this.src = 'https://raw.githubusercontent.com/srpshouro/Ever-gain-demo/main/' + this.getAttribute('src');
       }
     };
   }
